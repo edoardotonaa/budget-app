@@ -1,0 +1,314 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.screen { display: none; padding: 2rem 1rem; min-height: 400px; }
+.screen.active { display: flex; flex-direction: column; align-items: center; }
+#home { justify-content: center; gap: 2rem; min-height: 420px; }
+.add-btn { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--color-border-secondary); background: var(--color-background-primary); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 14px; color: var(--color-text-secondary); transition: transform 0.15s, border-color 0.15s; }
+.add-btn:hover { transform: scale(1.05); border-color: var(--color-border-primary); color: var(--color-text-primary); }
+.add-btn i { font-size: 36px; }
+.type-row { display: flex; gap: 1rem; width: 100%; max-width: 400px; }
+.type-card { flex: 1; padding: 1.5rem 1rem; border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; transition: border-color 0.15s, background 0.15s; }
+.type-card:hover { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+.type-card.entrata i { font-size: 32px; color: #1D9E75; }
+.type-card.uscita i { font-size: 32px; color: #E24B4A; }
+.form-wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 1rem; }
+.form-header { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 420px; margin-bottom: 0.5rem; }
+.back-btn { background: none; border: none; cursor: pointer; color: var(--color-text-secondary); font-size: 20px; padding: 4px; }
+.back-btn:hover { color: var(--color-text-primary); }
+.form-title { font-size: 18px; font-weight: 500; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.badge.entrata { background: #E1F5EE; color: #0F6E56; }
+.badge.uscita { background: #FCEBEB; color: #A32D2D; }
+label { font-size: 13px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
+input, select { width: 100%; }
+.amount-wrap { position: relative; }
+.amount-wrap span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--color-text-secondary); pointer-events: none; }
+.amount-wrap input { padding-left: 28px; font-size: 22px; font-weight: 500; }
+.submit-btn { width: 100%; padding: 14px; border-radius: var(--border-radius-lg); border: none; font-size: 16px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+.submit-btn.entrata { background: #1D9E75; color: #fff; }
+.submit-btn.uscita { background: #E24B4A; color: #fff; }
+.submit-btn:hover { opacity: 0.88; }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.data-btn { padding: 10px 20px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-secondary); cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+.data-btn:hover { color: var(--color-text-primary); border-color: var(--color-border-primary); }
+.stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; max-width: 500px; margin-bottom: 1rem; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center; }
+.stat-card .s-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.stat-card .s-val { font-size: 18px; font-weight: 500; }
+.s-val.entrata { color: #1D9E75; }
+.s-val.uscita { color: #E24B4A; }
+.tx-list { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 6px; }
+.tx-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); }
+.tx-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.tx-dot.entrata { background: #1D9E75; }
+.tx-dot.uscita { background: #E24B4A; }
+.tx-info { flex: 1; min-width: 0; }
+.tx-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tx-meta { font-size: 12px; color: var(--color-text-secondary); }
+.tx-amt { font-size: 15px; font-weight: 500; flex-shrink: 0; }
+.tx-amt.entrata { color: #1D9E75; }
+.tx-amt.uscita { color: #E24B4A; }
+.empty { color: var(--color-text-tertiary); font-size: 14px; text-align: center; margin: 2rem 0; }
+.saving-msg { font-size: 13px; color: var(--color-text-secondary); text-align: center; margin-top: 4px; }
+</style>
+
+<h2 class="sr-only">Tracker entrate e uscite personali</h2>
+
+<div id="home" class="screen active">
+  <div style="text-align:center; margin-bottom: 1rem;">
+    <p style="font-size:13px; color:var(--color-text-secondary);">Le tue finanze</p>
+    <p id="saldo-home" style="font-size:28px; font-weight:500;">€ 0</p>
+  </div>
+  <button class="add-btn" onclick="showScreen('type-pick')" aria-label="Aggiungi transazione">
+    <i class="ti ti-plus" aria-hidden="true"></i>
+    <span>Aggiungi</span>
+  </button>
+  <button class="data-btn" onclick="showScreen('dati')" style="margin-top:1rem;">
+    <i class="ti ti-chart-bar" aria-hidden="true"></i> I miei dati
+  </button>
+</div>
+
+<div id="type-pick" class="screen">
+  <div class="form-header">
+    <button class="back-btn" onclick="showScreen('home')"><i class="ti ti-arrow-left"></i></button>
+    <span class="form-title">Cosa vuoi aggiungere?</span>
+  </div>
+  <div class="type-row">
+    <div class="type-card entrata" onclick="pickType('entrata')">
+      <i class="ti ti-trending-up"></i>
+      Entrata
+    </div>
+    <div class="type-card uscita" onclick="pickType('uscita')">
+      <i class="ti ti-trending-down"></i>
+      Spesa
+    </div>
+  </div>
+</div>
+
+<div id="form-screen" class="screen">
+  <div class="form-header">
+    <button class="back-btn" onclick="showScreen('type-pick')"><i class="ti ti-arrow-left"></i></button>
+    <span class="form-title" id="form-title">Aggiungi entrata</span>
+    <span class="badge" id="form-badge"></span>
+  </div>
+  <div class="form-wrap">
+    <div>
+      <label>Importo</label>
+      <div class="amount-wrap">
+        <span>€</span>
+        <input type="number" id="importo" placeholder="0.00" min="0" step="0.01" />
+      </div>
+    </div>
+    <div>
+      <label>Nome / descrizione</label>
+      <input type="text" id="nome" placeholder="es. Affitto, Stipendio..." />
+    </div>
+    <div>
+      <label>Categoria</label>
+      <select id="categoria"></select>
+    </div>
+    <div>
+      <label>Metodo di pagamento</label>
+      <select id="metodo">
+        <option>Contanti</option>
+        <option>Carta di Debito</option>
+        <option>Carta di Credito</option>
+        <option>Bonifico</option>
+        <option>PayPal</option>
+        <option>Satispay</option>
+      </select>
+    </div>
+    <div>
+      <label>Data</label>
+      <input type="date" id="data-tx" />
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="salva()">Salva</button>
+    <p class="saving-msg" id="saving-msg"></p>
+  </div>
+</div>
+
+<div id="dati" class="screen">
+  <div class="form-header" style="margin-bottom:1rem;">
+    <button class="back-btn" onclick="showScreen('home')"><i class="ti ti-arrow-left"></i></button>
+    <span class="form-title">Le mie transazioni</span>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="s-label">Entrate</div>
+      <div class="s-val entrata" id="tot-entrate">€0</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Uscite</div>
+      <div class="s-val uscita" id="tot-uscite">€0</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Saldo</div>
+      <div class="s-val" id="tot-saldo">€0</div>
+    </div>
+  </div>
+  <div class="tx-list" id="tx-list"></div>
+</div>
+
+<script>
+let tipo = 'uscita';
+let transazioni = [];
+
+const catEntrata = ['Stipendio','Freelance','Investimenti','Regalo','Rimborso','Altro'];
+const catUscita = ['Affitto','Cibo & Ristoranti','Trasporti','Salute','Svago','Abbonamenti','Shopping','Bollette','Istruzione','Viaggi','Altro'];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'dati') renderDati();
+  if (id === 'home') updateSaldo();
+}
+
+function pickType(t) {
+  tipo = t;
+  document.getElementById('form-title').textContent = t === 'entrata' ? 'Aggiungi entrata' : 'Aggiungi spesa';
+  const badge = document.getElementById('form-badge');
+  badge.textContent = t === 'entrata' ? 'Entrata' : 'Uscita';
+  badge.className = 'badge ' + t;
+  const btn = document.getElementById('submit-btn');
+  btn.className = 'submit-btn ' + t;
+  const cat = document.getElementById('categoria');
+  cat.innerHTML = (t === 'entrata' ? catEntrata : catUscita).map(c => `<option>${c}</option>`).join('');
+  document.getElementById('data-tx').value = new Date().toISOString().split('T')[0];
+  document.getElementById('importo').value = '';
+  document.getElementById('nome').value = '';
+  document.getElementById('saving-msg').textContent = '';
+  showScreen('form-screen');
+}
+
+async function salva() {
+  const importo = parseFloat(document.getElementById('importo').value);
+  const nome = document.getElementById('nome').value.trim();
+  if (!importo || importo <= 0) { alert('Inserisci un importo valido'); return; }
+  if (!nome) { alert('Inserisci una descrizione'); return; }
+
+  const tx = {
+    nome, importo,
+    tipo,
+    categoria: document.getElementById('categoria').value,
+    metodo: document.getElementById('metodo').value,
+    data: document.getElementById('data-tx').value,
+    mese: new Date(document.getElementById('data-tx').value).toLocaleString('it-IT', {month: 'long', timeZone: 'UTC'}).replace(/^\w/, c => c.toUpperCase())
+  };
+
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('saving-msg');
+  btn.disabled = true;
+  msg.textContent = 'Salvataggio in corso...';
+
+  try {
+    const emoji = tipo === 'entrata' ? '💰 Entrata' : '💸 Uscita';
+    const catEmoji = {
+      'Stipendio':'💼 Stipendio','Freelance':'💻 Freelance','Investimenti':'📈 Investimenti',
+      'Affitto':'🏠 Affitto','Cibo & Ristoranti':'🍕 Cibo & Ristoranti','Trasporti':'🚗 Trasporti',
+      'Salute':'💊 Salute','Svago':'🎉 Svago','Abbonamenti':'📺 Abbonamenti','Shopping':'🛍️ Shopping',
+      'Bollette':'⚡ Bollette','Istruzione':'🎓 Istruzione','Viaggi':'✈️ Viaggi',
+      'Regalo':'🎁 Regali','Rimborso':'❓ Altro','Altro':'❓ Altro'
+    };
+    const metEmoji = {
+      'Contanti':'💵 Contanti','Carta di Credito':'💳 Carta di Credito',
+      'Carta di Debito':'💳 Carta di Debito','Bonifico':'🏦 Bonifico',
+      'PayPal':'📱 PayPal','Satispay':'📱 Satispay'
+    };
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'Sei un assistente che salva dati su Notion. Rispondi SOLO con JSON: {"success": true} oppure {"success": false, "error": "..."}',
+        messages: [{
+          role: 'user',
+          content: `Salva questa transazione nel database Notion con data_source_id "5f31bf59-b9f4-48e2-b728-95a78f0a0418". 
+Usa il tool notion per creare una pagina con queste proprietà:
+- Nome: "${tx.nome}"
+- Tipo: "${emoji}"
+- Importo: ${tx.importo}
+- date:Data:start: "${tx.data}"
+- date:Data:is_datetime: 0
+- Categoria: "${catEmoji[tx.categoria] || '❓ Altro'}"
+- Metodo di Pagamento: "${metEmoji[tx.metodo] || '❓ Altro'}"
+- Mese: "${tx.mese}"
+
+Rispondi solo con {"success": true} se riesci, altrimenti {"success": false, "error": "motivo"}`
+        }],
+        mcp_servers: [{
+          type: 'url',
+          url: 'https://mcp.notion.com/mcp',
+          name: 'notion-mcp'
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(b => b.text || '').join('') || '';
+    let ok = false;
+    try {
+      const clean = text.replace(/```json|```/g, '').trim();
+      const json = JSON.parse(clean);
+      ok = json.success === true;
+    } catch { ok = text.includes('success') && !text.includes('false'); }
+
+    if (ok) {
+      transazioni.unshift(tx);
+      msg.textContent = 'Salvato su Notion!';
+      msg.style.color = '#1D9E75';
+      setTimeout(() => showScreen('home'), 1200);
+    } else {
+      msg.textContent = 'Errore nel salvataggio. Riprova.';
+      msg.style.color = '#E24B4A';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    transazioni.unshift(tx);
+    msg.textContent = 'Salvato localmente (offline).';
+    msg.style.color = 'var(--color-text-secondary)';
+    setTimeout(() => showScreen('home'), 1200);
+  }
+}
+
+function fmt(n) { return '€' + n.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+
+function updateSaldo() {
+  const entrate = transazioni.filter(t => t.tipo === 'entrata').reduce((s,t) => s+t.importo, 0);
+  const uscite = transazioni.filter(t => t.tipo === 'uscita').reduce((s,t) => s+t.importo, 0);
+  const saldo = entrate - uscite;
+  const el = document.getElementById('saldo-home');
+  el.textContent = fmt(saldo);
+  el.style.color = saldo >= 0 ? '#1D9E75' : '#E24B4A';
+}
+
+function renderDati() {
+  const entrate = transazioni.filter(t => t.tipo === 'entrata').reduce((s,t) => s+t.importo, 0);
+  const uscite = transazioni.filter(t => t.tipo === 'uscita').reduce((s,t) => s+t.importo, 0);
+  document.getElementById('tot-entrate').textContent = fmt(entrate);
+  document.getElementById('tot-uscite').textContent = fmt(uscite);
+  const saldo = entrate - uscite;
+  const sel = document.getElementById('tot-saldo');
+  sel.textContent = fmt(saldo);
+  sel.style.color = saldo >= 0 ? '#1D9E75' : '#E24B4A';
+
+  const list = document.getElementById('tx-list');
+  if (transazioni.length === 0) {
+    list.innerHTML = '<p class="empty">Nessuna transazione ancora</p>';
+    return;
+  }
+  list.innerHTML = transazioni.map(t => `
+    <div class="tx-item">
+      <div class="tx-dot ${t.tipo}"></div>
+      <div class="tx-info">
+        <div class="tx-name">${t.nome}</div>
+        <div class="tx-meta">${t.categoria} · ${t.data}</div>
+      </div>
+      <div class="tx-amt ${t.tipo}">${t.tipo === 'entrata' ? '+' : '-'}${fmt(t.importo)}</div>
+    </div>
+  `).join('');
+}
+</script>
