@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#0f0f0f" />
+<title>Budget</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --bg2: #1a1a1a;
+    --bg3: #222;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f0f0;
+    --muted: #888;
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --radius: 18px;
+    --radius-sm: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; }
+  
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; padding: env(safe-area-inset-top, 20px) 20px env(safe-area-inset-bottom, 20px); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s; opacity: 0; pointer-events: none; transform: translateY(20px); overflow-y: auto; }
+  .screen.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+  .screen.slide-up { transform: translateY(100%); opacity: 0; }
+  .screen.slide-left { transform: translateX(-30px); opacity: 0; }
+
+  /* HOME */
+  #home { justify-content: space-between; padding-top: max(env(safe-area-inset-top), 48px); }
+  .home-top { display: flex; flex-direction: column; gap: 6px; }
+  .home-label { font-size: 13px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+  .home-saldo { font-size: 48px; font-weight: 300; letter-spacing: -2px; line-height: 1; }
+  .home-saldo.positive { color: var(--green); }
+  .home-saldo.negative { color: var(--red); }
+
+  .mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+  .mini-stat { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .mini-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .mini-stat-val { font-size: 20px; font-weight: 500; }
+  .mini-stat-val.green { color: var(--green); }
+  .mini-stat-val.red { color: var(--red); }
+
+  .home-center { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .add-btn { width: 80px; height: 80px; border-radius: 50%; border: 0.5px solid rgba(255,255,255,0.15); background: var(--bg2); color: var(--text); font-size: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.15s, background 0.15s; }
+  .add-btn:active { transform: scale(0.93); background: var(--bg3); }
+  .add-btn-label { font-size: 13px; color: var(--muted); }
+
+  .home-bottom { display: flex; justify-content: center; }
+  .data-btn { background: none; border: 0.5px solid var(--border); border-radius: 50px; color: var(--muted); font-size: 13px; font-family: 'DM Sans', sans-serif; padding: 10px 22px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: color 0.15s, border-color 0.15s; }
+  .data-btn:active { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .data-btn svg { opacity: 0.5; }
+
+  /* TYPE PICK */
+  #type-pick { justify-content: center; gap: 20px; }
+  .pick-title { font-size: 22px; font-weight: 500; text-align: center; margin-bottom: 10px; }
+  .type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .type-card { border-radius: var(--radius); border: 0.5px solid var(--border); background: var(--bg2); padding: 28px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.15s, background 0.15s; }
+  .type-card:active { transform: scale(0.96); }
+  .type-card.entrata { border-color: rgba(74,222,128,0.2); }
+  .type-card.entrata:active { background: var(--green-dim); }
+  .type-card.uscita { border-color: rgba(248,113,113,0.2); }
+  .type-card.uscita:active { background: var(--red-dim); }
+  .type-icon { font-size: 36px; }
+  .type-label { font-size: 16px; font-weight: 500; }
+  .type-card.entrata .type-label { color: var(--green); }
+  .type-card.uscita .type-label { color: var(--red); }
+  .back-btn { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; padding: 8px; align-self: flex-start; margin-bottom: 8px; line-height: 1; }
+
+  /* FORM */
+  #form-screen { gap: 0; padding-top: max(env(safe-area-inset-top), 48px); }
+  .form-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .form-title { font-size: 20px; font-weight: 500; flex: 1; }
+  .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .badge.entrata { background: var(--green-dim); color: var(--green); }
+  .badge.uscita { background: var(--red-dim); color: var(--red); }
+
+  .form-fields { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .amount-wrap { position: relative; }
+  .euro-sign { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 24px; color: var(--muted); font-family: 'DM Mono', monospace; pointer-events: none; }
+  input, select { width: 100%; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; padding: 14px 16px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
+  input:focus, select:focus { border-color: rgba(255,255,255,0.25); }
+  #importo { padding-left: 44px; font-size: 24px; font-family: 'DM Mono', monospace; font-weight: 500; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+  select option { background: #222; }
+
+  .submit-btn { width: 100%; padding: 16px; border-radius: var(--radius); border: none; font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 8px; transition: opacity 0.15s, transform 0.1s; }
+  .submit-btn:active { transform: scale(0.98); opacity: 0.85; }
+  .submit-btn.entrata { background: var(--green); color: #0f0f0f; }
+  .submit-btn.uscita { background: var(--red); color: #0f0f0f; }
+  .submit-btn:disabled { opacity: 0.4; }
+  .saving-msg { text-align: center; font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 20px; }
+
+  /* DATI */
+  #dati { padding-top: max(env(safe-area-inset-top), 48px); gap: 0; }
+  .dati-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .dati-title { font-size: 20px; font-weight: 500; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .stat-box { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+  .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .stat-num { font-size: 16px; font-weight: 500; font-family: 'DM Mono', monospace; }
+  .stat-num.g { color: var(--green); }
+  .stat-num.r { color: var(--red); }
+
+  .tx-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 20px; }
+  .tx-item { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+  .tx-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .tx-dot.e { background: var(--green); }
+  .tx-dot.u { background: var(--red); }
+  .tx-info { flex: 1; min-width: 0; }
+  .tx-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tx-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .tx-amt { font-size: 15px; font-weight: 500; font-family: 'DM Mono', monospace; flex-shrink: 0; }
+  .tx-amt.e { color: var(--green); }
+  .tx-amt.u { color: var(--red); }
+  .empty { color: var(--muted); font-size: 14px; text-align: center; padding: 40px 0; }
+
+  /* SUCCESS OVERLAY */
+  #success-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 100; }
+  #success-overlay.show { display: flex; }
+  .success-box { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .success-icon { font-size: 48px; }
+  .success-text { font-size: 18px; font-weight: 500; }
+  .success-sub { font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-top">
+    <div class="home-label">saldo totale</div>
+    <div class="home-saldo" id="saldo-home">€ 0,00</div>
+    <div class="mini-stats">
+      <div class="mini-stat">
+        <div class="mini-stat-label">Entrate</div>
+        <div class="mini-stat-val green" id="home-entrate">€ 0,00</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Uscite</div>
+        <div class="mini-stat-val red" id="home-uscite">€ 0,00</div>
+      </div>
+    </div>
+  </div>
+  <div class="home-center">
+    <button class="add-btn" onclick="showScreen('type-pick')" aria-label="Aggiungi">+</button>
+    <div class="add-btn-label">aggiungi</div>
+  </div>
+  <div class="home-bottom">
+    <button class="data-btn" onclick="showScreen('dati')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="2" height="6" rx="1" fill="currentColor"/><rect x="6" y="4" width="2" height="9" rx="1" fill="currentColor"/><rect x="11" y="1" width="2" height="12" rx="1" fill="currentColor"/></svg>
+      i miei dati
+    </button>
+  </div>
+</div>
+
+<!-- TYPE PICK -->
+<div id="type-pick" class="screen slide-up">
+  <button class="back-btn" onclick="showScreen('home')">←</button>
+  <div class="pick-title">Cosa aggiungi?</div>
+  <div class="type-cards">
+    <div class="type-card entrata" onclick="pickType('entrata')">
+      <div class="type-icon">↑</div>
+      <div class="type-label">Entrata</div>
+    </div>
+    <div class="type-card uscita" onclick="pickType('uscita')">
+      <div class="type-icon">↓</div>
+      <div class="type-label">Spesa</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div id="form-screen" class="screen slide-up">
+  <div class="form-header">
+    <button class="back-btn" style="margin-bottom:0" onclick="showScreen('type-pick')">←</button>
+    <div class="form-title" id="form-title">Aggiungi</div>
+    <span class="badge" id="form-badge"></span>
+  </div>
+  <div class="form-fields">
+    <div class="field">
+      <label>Importo</label>
+      <div class="amount-wrap">
+        <span class="euro-sign">€</span>
+        <input type="number" id="importo" inputmode="decimal" placeholder="0,00" min="0" step="0.01" />
+      </div>
+    </div>
+    <div class="field">
+      <label>Descrizione</label>
+      <input type="text" id="nome" placeholder="es. Affitto, Stipendio..." />
+    </div>
+    <div class="field">
+      <label>Categoria</label>
+      <select id="categoria"></select>
+    </div>
+    <div class="field">
+      <label>Metodo di pagamento</label>
+      <select id="metodo">
+        <option>Contanti</option>
+        <option>Carta di Debito</option>
+        <option>Carta di Credito</option>
+        <option>Bonifico</option>
+        <option>PayPal</option>
+        <option>Satispay</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Data</label>
+      <input type="date" id="data-tx" />
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="salva()">Salva</button>
+    <div class="saving-msg" id="saving-msg"></div>
+  </div>
+</div>
+
+<!-- DATI -->
+<div id="dati" class="screen slide-left">
+  <div class="dati-header">
+    <button class="back-btn" style="margin-bottom:0" onclick="showScreen('home')">←</button>
+    <div class="dati-title">Transazioni</div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-lbl">Entrate</div>
+      <div class="stat-num g" id="tot-entrate">€0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Uscite</div>
+      <div class="stat-num r" id="tot-uscite">€0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Saldo</div>
+      <div class="stat-num" id="tot-saldo">€0</div>
+    </div>
+  </div>
+  <div class="tx-list" id="tx-list"></div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success-overlay">
+  <div class="success-box">
+    <div class="success-icon">✓</div>
+    <div class="success-text">Salvato!</div>
+    <div class="success-sub" id="success-sub">Transazione aggiunta su Notion</div>
+  </div>
+</div>
+
+<script>
+const NOTION_DS = '5f31bf59-b9f4-48e2-b728-95a78f0a0418';
+let tipo = 'uscita';
+let transazioni = JSON.parse(localStorage.getItem('budget_tx') || '[]');
+
+const catEntrata = ['Stipendio','Freelance','Investimenti','Regalo','Rimborso','Altro'];
+const catUscita = ['Affitto','Cibo & Ristoranti','Trasporti','Salute','Svago','Abbonamenti','Shopping','Bollette','Istruzione','Viaggi','Altro'];
+const catEmoji = { 'Stipendio':'💼 Stipendio','Freelance':'💻 Freelance','Investimenti':'📈 Investimenti','Affitto':'🏠 Affitto','Cibo & Ristoranti':'🍕 Cibo & Ristoranti','Trasporti':'🚗 Trasporti','Salute':'💊 Salute','Svago':'🎉 Svago','Abbonamenti':'📺 Abbonamenti','Shopping':'🛍️ Shopping','Bollette':'⚡ Bollette','Istruzione':'🎓 Istruzione','Viaggi':'✈️ Viaggi','Regalo':'🎁 Regali','Rimborso':'❓ Altro','Altro':'❓ Altro' };
+const metEmoji = { 'Contanti':'💵 Contanti','Carta di Credito':'💳 Carta di Credito','Carta di Debito':'💳 Carta di Debito','Bonifico':'🏦 Bonifico','PayPal':'📱 PayPal','Satispay':'📱 Satispay' };
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'dati') renderDati();
+  if (id === 'home') updateHome();
+}
+
+function pickType(t) {
+  tipo = t;
+  document.getElementById('form-title').textContent = t === 'entrata' ? 'Aggiungi entrata' : 'Aggiungi spesa';
+  const badge = document.getElementById('form-badge');
+  badge.textContent = t === 'entrata' ? 'Entrata' : 'Spesa';
+  badge.className = 'badge ' + t;
+  document.getElementById('submit-btn').className = 'submit-btn ' + t;
+  const cat = document.getElementById('categoria');
+  cat.innerHTML = (t === 'entrata' ? catEntrata : catUscita).map(c => `<option>${c}</option>`).join('');
+  document.getElementById('data-tx').value = new Date().toISOString().split('T')[0];
+  document.getElementById('importo').value = '';
+  document.getElementById('nome').value = '';
+  document.getElementById('saving-msg').textContent = '';
+  showScreen('form-screen');
+}
+
+function fmt(n) { return '€\u00a0' + Math.abs(n).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+
+function updateHome() {
+  const entrate = transazioni.filter(t => t.tipo === 'entrata').reduce((s,t) => s+t.importo, 0);
+  const uscite = transazioni.filter(t => t.tipo === 'uscita').reduce((s,t) => s+t.importo, 0);
+  const saldo = entrate - uscite;
+  const el = document.getElementById('saldo-home');
+  el.textContent = (saldo < 0 ? '- ' : '') + fmt(saldo);
+  el.className = 'home-saldo ' + (saldo >= 0 ? 'positive' : 'negative');
+  document.getElementById('home-entrate').textContent = fmt(entrate);
+  document.getElementById('home-uscite').textContent = fmt(uscite);
+}
+
+async function salva() {
+  const importo = parseFloat(document.getElementById('importo').value);
+  const nome = document.getElementById('nome').value.trim();
+  if (!importo || importo <= 0) { alert('Inserisci un importo valido'); return; }
+  if (!nome) { alert('Inserisci una descrizione'); return; }
+  const tx = {
+    nome, importo, tipo,
+    categoria: document.getElementById('categoria').value,
+    metodo: document.getElementById('metodo').value,
+    data: document.getElementById('data-tx').value,
+    mese: new Date(document.getElementById('data-tx').value + 'T12:00:00').toLocaleString('it-IT', {month: 'long'}).replace(/^\w/, c => c.toUpperCase())
+  };
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('saving-msg');
+  btn.disabled = true;
+  msg.textContent = 'Salvataggio...';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        system: 'Salva la transazione su Notion e rispondi SOLO con {"ok":true} o {"ok":false}.',
+        messages: [{ role: 'user', content: `Crea una pagina nel database Notion data_source_id "${NOTION_DS}" con: Nome="${tx.nome}", Tipo="${tipo==='entrata'?'💰 Entrata':'💸 Uscita'}", Importo=${tx.importo}, date:Data:start="${tx.data}", date:Data:is_datetime=0, Categoria="${catEmoji[tx.categoria]||'❓ Altro'}", Metodo di Pagamento="${metEmoji[tx.metodo]||'❓ Altro'}", Mese="${tx.mese}". Rispondi solo {"ok":true}.` }],
+        mcp_servers: [{ type: 'url', url: 'https://mcp.notion.com/mcp', name: 'notion' }]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content||[]).map(b=>b.text||'').join('');
+    const ok = text.includes('"ok":true') || text.includes('success');
+    transazioni.unshift(tx);
+    localStorage.setItem('budget_tx', JSON.stringify(transazioni.slice(0,200)));
+    showSuccess(ok ? 'Salvato su Notion ✓' : 'Salvato in locale');
+  } catch(e) {
+    transazioni.unshift(tx);
+    localStorage.setItem('budget_tx', JSON.stringify(transazioni.slice(0,200)));
+    showSuccess('Salvato in locale');
+  }
+  btn.disabled = false;
+  msg.textContent = '';
+}
+
+function showSuccess(sub) {
+  document.getElementById('success-sub').textContent = sub;
+  const ov = document.getElementById('success-overlay');
+  ov.classList.add('show');
+  setTimeout(() => { ov.classList.remove('show'); showScreen('home'); }, 1400);
+}
+
+function renderDati() {
+  const entrate = transazioni.filter(t => t.tipo === 'entrata').reduce((s,t) => s+t.importo, 0);
+  const uscite = transazioni.filter(t => t.tipo === 'uscita').reduce((s,t) => s+t.importo, 0);
+  const saldo = entrate - uscite;
+  document.getElementById('tot-entrate').textContent = fmt(entrate);
+  document.getElementById('tot-uscite').textContent = fmt(uscite);
+  const sel = document.getElementById('tot-saldo');
+  sel.textContent = fmt(saldo);
+  sel.style.color = saldo >= 0 ? 'var(--green)' : 'var(--red)';
+  const list = document.getElementById('tx-list');
+  if (!transazioni.length) { list.innerHTML = '<div class="empty">Nessuna transazione ancora</div>'; return; }
+  list.innerHTML = transazioni.map(t => `
+    <div class="tx-item">
+      <div class="tx-dot ${t.tipo==='entrata'?'e':'u'}"></div>
+      <div class="tx-info">
+        <div class="tx-name">${t.nome}</div>
+        <div class="tx-meta">${t.categoria} · ${t.data}</div>
+      </div>
+      <div class="tx-amt ${t.tipo==='entrata'?'e':'u'}">${t.tipo==='entrata'?'+':'-'}${fmt(t.importo)}</div>
+    </div>`).join('');
+}
+
+updateHome();
+</script>
+</body>
+</html>
