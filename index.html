@@ -1789,6 +1789,22 @@ async function salva(){
 }
 
 function save(){try{localStorage.setItem('btx',JSON.stringify(txs.slice(0,500)))}catch(e){}}
+async function pushGoalToSupabase(goal){
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  if(goal.supa_id){
+    await s.from('goals').update({nome:goal.nome,target:goal.target,saved:goal.saved,monthly:goal.monthly}).eq('id',goal.supa_id).eq('user_id',supaUser.id);
+  }else{
+    const{data}=await s.from('goals').insert({user_id:supaUser.id,nome:goal.nome,target:goal.target,saved:goal.saved,monthly:goal.monthly}).select().single();
+    if(data)goal.supa_id=data.id;
+  }
+  saveGoals();
+}
+
+async function deleteGoalFromSupabase(goal){
+  if(!supaUser||!goal.supa_id)return;const s=initSupa();if(!s)return;
+  await s.from('goals').delete().eq('id',goal.supa_id).eq('user_id',supaUser.id);
+}
+
 function saveGoals(){try{localStorage.setItem('bgoals',JSON.stringify(goals))}catch(e){}}
 
 function elimina(id){txs=txs.filter(t=>t.id!==id);save();haptic('medium');deleteTxFromSupabase(id);renderDati();updHome()}
@@ -1873,12 +1889,14 @@ function renderGoals(){
 function addGoal(){
   const nome=document.getElementById('goal-nome').value.trim(),target=parseFloat(document.getElementById('goal-target').value),monthly=parseFloat(document.getElementById('goal-monthly').value)||0;
   if(!nome||!target){alert('Inserisci nome e obiettivo');return}
-  goals.push({nome,target,monthly,saved:0});saveGoals();
+  const newGoal={nome,target,monthly,saved:0};
+  goals.push(newGoal);saveGoals();
+  pushGoalToSupabase(newGoal);
   document.getElementById('goal-nome').value='';document.getElementById('goal-target').value='';document.getElementById('goal-monthly').value='';
   renderGoals();haptic('medium');
 }
-function delGoal(i){goals.splice(i,1);saveGoals();renderGoals()}
-function addToGoal(i){const amt=parseFloat(prompt('Quanto hai risparmiato? €'));if(!amt||amt<=0)return;goals[i].saved+=amt;saveGoals();if(goals[i].saved>=goals[i].target){launchConfetti();showAlert('🎉 "'+goals[i].nome+'" raggiunto!','green');playSound('success')}else{playSound('save')}renderGoals();haptic('heavy')}
+function delGoal(i){deleteGoalFromSupabase(goals[i]);goals.splice(i,1);saveGoals();renderGoals()}
+function addToGoal(i){const amt=parseFloat(prompt('Quanto hai risparmiato? €'));if(!amt||amt<=0)return;goals[i].saved+=amt;saveGoals();pushGoalToSupabase(goals[i]);if(goals[i].saved>=goals[i].target){launchConfetti();showAlert('🎉 "'+goals[i].nome+'" raggiunto!','green');playSound('success')}else{playSound('save')}renderGoals();haptic('heavy')}
 
 // SETTINGS
 function setDefaultCur(cur){
@@ -3243,7 +3261,7 @@ async function syncFromSupabase(){
   }
   const{data:gData}=await s.from('goals').select('*').eq('user_id',supaUser.id);
   if(gData&&gData.length>0){
-    goals=gData.map(g=>({id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
+    goals=gData.map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
     saveGoals();
   }
 }
