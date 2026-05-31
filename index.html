@@ -234,6 +234,41 @@ select option{background:#222}
 #alert-banner{position:fixed;top:0;left:0;right:0;color:#fff;font-size:13px;font-weight:500;text-align:center;padding:14px 20px;transform:translateY(-100%);transition:transform .3s;z-index:300;display:none}
 #alert-banner.show{display:block;transform:translateY(0)}
 
+/* ONBOARDING */
+#onboarding{position:fixed;inset:0;background:var(--bg);z-index:250;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px}
+#onboarding.show{display:flex}
+.ob-steps{display:flex;gap:6px;margin-bottom:32px}
+.ob-step{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.ob-step.active{background:var(--green);width:24px;border-radius:99px;transition:width .3s}
+.ob-slide{display:none;flex-direction:column;align-items:center;text-align:center;gap:16px;width:100%}
+.ob-slide.active{display:flex}
+.ob-emoji{font-size:64px;line-height:1}
+.ob-title{font-size:24px;font-weight:500;line-height:1.2}
+.ob-desc{font-size:15px;color:var(--muted);line-height:1.6}
+.ob-btn{width:100%;padding:16px;border-radius:var(--r);border:none;background:var(--green);color:#0f0f0f;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:8px}
+.ob-btn:active{opacity:.85}
+.ob-skip{font-size:14px;color:var(--muted);cursor:pointer;margin-top:12px}
+
+/* CONFETTI */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:500;display:none}
+
+/* SAVING MODE */
+.saving-mode-bar{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(248,113,113,.08));border:.5px solid rgba(251,191,36,.25);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;display:none;align-items:center;gap:10px}
+.saving-mode-bar.show{display:flex}
+.saving-mode-bar span{font-size:13px;flex:1}
+.saving-mode-toggle{background:none;border:.5px solid rgba(251,191,36,.3);border-radius:99px;color:var(--yellow);font-size:12px;padding:4px 10px;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+/* WIDGET PERSONALIZZABILI */
+.widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.widget{border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:6px;cursor:pointer;position:relative;overflow:hidden}
+.widget-lbl{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.05em}
+.widget-val{font-size:22px;font-weight:500}
+.widget-sub{font-size:12px;opacity:.6}
+.widget.blue{background:linear-gradient(135deg,rgba(96,165,250,.2),rgba(96,165,250,.05));border:.5px solid rgba(96,165,250,.2)}
+.widget.green{background:linear-gradient(135deg,rgba(74,222,128,.2),rgba(74,222,128,.05));border:.5px solid rgba(74,222,128,.2)}
+.widget.purple{background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(167,139,250,.05));border:.5px solid rgba(167,139,250,.2)}
+.widget.yellow{background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(251,191,36,.05));border:.5px solid rgba(251,191,36,.2)}
+
 /* NAV */
 .nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,15,15,.95);border-top:.5px solid var(--border);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(10px);z-index:50}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px;color:var(--muted);font-size:10px;letter-spacing:.02em;text-transform:uppercase}
@@ -271,6 +306,15 @@ body.light .share-box{background:#fff}
 </head>
 <body>
 
+<!-- ONBOARDING -->
+<div id="onboarding">
+  <div class="ob-steps"><div class="ob-step active" id="obs0"></div><div class="ob-step" id="obs1"></div><div class="ob-step" id="obs2"></div><div class="ob-step" id="obs3"></div></div>
+  <div class="ob-slide active" id="ob0"><div class="ob-emoji">👋</div><div class="ob-title">Benvenuto su Budly</div><div class="ob-desc">Il modo più semplice per tenere traccia delle tue spese. In pochi secondi sei pronto.</div><button class="ob-btn" onclick="obNext()">Iniziamo →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
+  <div class="ob-slide" id="ob1"><div class="ob-emoji">💸</div><div class="ob-title">Aggiungi in un tap</div><div class="ob-desc">Premi il tasto + al centro. Voce, scontrino o manuale.</div><button class="ob-btn" onclick="obNext()">Avanti →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
+  <div class="ob-slide" id="ob2"><div class="ob-emoji">🎯</div><div class="ob-title">Imposta i tuoi Goals</div><div class="ob-desc">Vacanza, auto, risparmio. Tieni traccia di quanto manca ogni mese.</div><button class="ob-btn" onclick="obNext()">Avanti →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
+  <div class="ob-slide" id="ob3"><div class="ob-emoji">🌍</div><div class="ob-title">Scegli valuta</div><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px"><button onclick="obSetCur('EUR')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">€ EUR</button><button onclick="obSetCur('USD')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">$ USD</button><button onclick="obSetCur('GBP')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">£ GBP</button><button onclick="obSetCur('CHF')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">CHF</button></div><button class="ob-btn" onclick="obDone()" style="margin-top:16px">Inizia 🚀</button></div>
+</div>
+<canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:500;display:none"></canvas>
 <!-- PIN LOCK -->
 <div id="pin-screen">
   <div class="pin-title" id="pin-title">Inserisci PIN</div>
@@ -304,6 +348,7 @@ body.light .share-box{background:#fff}
       <button class="icon-btn" onclick="goNav('p-settings')">⚙️</button>
     </div>
   </div>
+  <div class="saving-mode-bar" id="saving-mode-bar"><span>🟡 Modalità risparmio attiva — stai attento alle spese!</span><button class="saving-mode-toggle" onclick="toggleSavingMode()">Disattiva</button></div>
   <div class="accounts-scroll" id="accounts-scroll"></div>
   <div class="lbl">saldo del mese</div>
   <div class="saldo pos" id="saldo">€ 0,00</div>
@@ -385,7 +430,7 @@ body.light .share-box{background:#fff}
 
 <!-- DATI -->
 <div id="p-dati" class="page">
-  <div class="dhdr"><div class="dttl">Transazioni</div></div>
+  <div class="dhdr"><div class="dttl">Transazioni</div><button onclick="goNav('p-annual')" style="background:none;border:.5px solid var(--border);border-radius:99px;color:var(--muted);font-size:12px;padding:6px 12px;cursor:pointer;font-family:inherit">📅 Vista annuale</button></div>
   <div class="month-scroll" id="month-scroll"></div>
   <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" id="search" placeholder="Cerca per nome, categoria, tag..." oninput="renderDati()"/></div>
   <div class="sgrid">
@@ -474,7 +519,7 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="setting-group">
-    <div class="setting-lbl">🎨 Tema</div>
+    <div class="setting-group"><div class="setting-lbl">🟡 Modalità risparmio</div><button class="export-btn" onclick="toggleSavingMode()" id="saving-btn">Attiva / Disattiva</button><div class="setting-desc">Ti avvisa quando stai spendendo troppo in una categoria</div></div><div class="setting-lbl">🎨 Tema</div>
     <button class="export-btn" onclick="toggleTheme()">🌙 / ☀️ Cambia tema</button>
   </div>
 
@@ -501,6 +546,34 @@ body.light .share-box{background:#fff}
   </div>
 </div>
 
+<!-- GAMIFICATION PAGE -->
+<div id="p-game" class="page">
+  <div class="top-bar"><div class="app-name">🎮 Budly</div></div>
+  <div id="streak-card" style="background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,191,36,.05));border:.5px solid rgba(251,191,36,.2);border-radius:var(--r);padding:20px;margin-bottom:14px;text-align:center">
+    <div style="font-size:48px" id="streak-num">0</div>
+    <div style="font-size:14px;color:var(--yellow);font-weight:500">🔥 giorni di streak</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px" id="streak-sub"></div>
+  </div>
+  <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Il tuo livello</div>
+  <div id="level-card" style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="font-size:36px" id="level-ico">🌱</div>
+      <div><div style="font-size:18px;font-weight:500" id="level-name">Principiante</div><div style="font-size:13px;color:var(--muted)" id="level-sub"></div></div>
+    </div>
+    <div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden"><div id="level-bar" style="height:100%;border-radius:99px;background:var(--green);transition:width .5s"></div></div>
+  </div>
+  <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Badge</div>
+  <div id="badges-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-bottom:20px"></div>
+</div>
+
+<!-- ANNUAL VIEW PAGE -->
+<div id="p-annual" class="page">
+  <div class="top-bar"><div class="app-name">📅 Vista Annuale</div><button class="icon-btn" onclick="goNav('p-dati')">←</button></div>
+  <div id="annual-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
+  <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Mese per mese</div>
+  <div id="annual-list" style="display:flex;flex-direction:column;gap:8px;padding-bottom:20px"></div>
+</div>
+
 <div id="overlay"><div class="obox"><div class="oico" id="oico">✓</div><div class="ottl" id="ottl">Salvato!</div><div class="osub" id="osub"></div></div></div>
 <div id="alert-banner"></div>
 
@@ -509,6 +582,7 @@ body.light .share-box{background:#fff}
   
   <div class="nav-item" id="nav-p-dati" onclick="goNav('p-dati')"><span>📊</span><span>Dati</span></div>
   <div class="nav-item" id="nav-p-goals" onclick="goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
+  <div class="nav-item" id="nav-p-game" onclick="goNav('p-game')"><span>🎮</span><span>Rank</span></div>
 </nav>
 
 <script>
@@ -584,7 +658,7 @@ async function tryBiometric(){
   }catch(e){document.getElementById('pin-error').textContent='Biometrica non disponibile';setTimeout(()=>document.getElementById('pin-error').textContent='',2000)}
 }
 
-function initApp(){
+function initApp(){initSavingMode();
   renderAccounts();updHome();
   setTimeout(()=>loadInsight(),1500);
 }
@@ -783,7 +857,8 @@ async function salva(){
   const importo=parseFloat(document.getElementById('imp').value);
   const nome=document.getElementById('nome').value.trim();
   if(!importo||importo<=0){alert('Inserisci un importo valido');return}
-  if(!nome){alert('Inserisci una descrizione');return}
+  if(!nome){alert("Inserisci una descrizione");return}
+  if(tipo==="uscita")checkSavingModeAlert(document.getElementById("cat").value,importo);
   const dv=document.getElementById('dt').value;
   const ricorrente=document.getElementById('recurr').checked;
   const tag=document.getElementById('tag').value.trim();
@@ -900,7 +975,7 @@ function addGoal(){
   renderGoals();haptic('medium');
 }
 function delGoal(i){goals.splice(i,1);saveGoals();renderGoals()}
-function addToGoal(i){const amt=parseFloat(prompt('Quanto hai risparmiato? €'));if(!amt||amt<=0)return;goals[i].saved+=amt;saveGoals();if(goals[i].saved>=goals[i].target){showAlert('🎉 "'+goals[i].nome+'" raggiunto!','green')}renderGoals();haptic('heavy')}
+function addToGoal(i){const amt=parseFloat(prompt('Quanto hai risparmiato? €'));if(!amt||amt<=0)return;goals[i].saved+=amt;saveGoals();if(goals[i].saved>=goals[i].target){launchConfetti();showAlert('🎉 "'+goals[i].nome+'" raggiunto!','green')}renderGoals();haptic('heavy')}
 
 // SETTINGS
 function setDefaultCur(cur){
@@ -932,8 +1007,236 @@ function exportJSON(){
 }
 function resetAll(){if(!confirm('Sei sicuro? Tutti i dati verranno cancellati.'))return;txs=[];goals=[];save();saveGoals();updHome();showAlert('🗑️ Dati cancellati');haptic('heavy')}
 
-checkPin();
-if(!pinSet)initApp();
+
+// ── ONBOARDING ──
+let obCurrent=0;
+function obNext(){
+  document.getElementById('ob'+obCurrent).classList.remove('active');
+  document.getElementById('obs'+obCurrent).classList.remove('active');
+  obCurrent++;
+  document.getElementById('ob'+obCurrent).classList.add('active');
+  document.getElementById('obs'+obCurrent).classList.add('active');
+}
+function obSetCur(c){defaultCur=c;localStorage.setItem('default_cur',c)}
+function obDone(){
+  document.getElementById('onboarding').classList.remove('show');
+  localStorage.setItem('ob_done','1');
+  initApp();
+}
+function checkOnboarding(){
+  if(!localStorage.getItem('ob_done')){
+    document.getElementById('onboarding').classList.add('show');
+  } else {
+    checkPin();
+    if(!pinSet)initApp();
+  }
+}
+
+// ── CONFETTI ──
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  canvas.style.display='block';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  const pieces=[];
+  const colors=['#4ade80','#f87171','#60a5fa','#fbbf24','#a78bfa','#fb923c'];
+  for(let i=0;i<120;i++){
+    pieces.push({
+      x:Math.random()*canvas.width,y:-10,
+      r:Math.random()*6+3,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      vx:(Math.random()-0.5)*4,vy:Math.random()*4+2,
+      rot:Math.random()*360,vr:(Math.random()-0.5)*8,
+      alpha:1
+    });
+  }
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.5);
+      ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.vy+=0.08;
+      if(frame>60)p.alpha-=0.015;
+    });
+    frame++;
+    if(frame<130)requestAnimationFrame(draw);
+    else{ctx.clearRect(0,0,canvas.width,canvas.height);canvas.style.display='none'}
+  }
+  draw();
+}
+
+// ── SAVING MODE ──
+let savingMode=false;
+try{savingMode=localStorage.getItem('saving_mode')==='1'}catch(e){}
+function initSavingMode(){
+  const bar=document.getElementById('saving-mode-bar');
+  if(savingMode)bar.classList.add('show');else bar.classList.remove('show');
+}
+function toggleSavingMode(){
+  savingMode=!savingMode;
+  localStorage.setItem('saving_mode',savingMode?'1':'0');
+  initSavingMode();
+  showAlert(savingMode?'🟡 Modalità risparmio attiva!':'✅ Modalità risparmio disattivata','green');
+}
+function checkSavingModeAlert(cat,importo){
+  if(!savingMode)return;
+  const mc=getMC();
+  const catSpent=txs.filter(t=>t.tipo==='uscita'&&t.mese===mc&&t.categoria===cat).reduce((s,t)=>s+t.importo,0);
+  if(catSpent>200){showAlert('⚠️ Risparmio: hai già speso '+fmt(catSpent)+' in '+cat+' questo mese!')}
+  else if(importo>100){showAlert('⚠️ Risparmio: spesa di '+fmt(importo)+' — sei sicuro?','yellow')}
+}
+
+// ── NOTIFICHE PUSH ──
+let notifScheduled=false;
+async function requestNotifications(){
+  if(!("Notification" in window)){showAlert("⚠️ Notifiche non supportate");return}
+  const perm=await Notification.requestPermission();
+  if(perm==="granted"){
+    localStorage.setItem("notif_enabled","1");
+    scheduleEvening();
+    showAlert("🔔 Notifiche attivate! Ogni sera alle 21:00","green");
+  }else{showAlert("⚠️ Permesso negato. Abilitale nelle impostazioni.")}
+}
+function scheduleEvening(){
+  if(!localStorage.getItem("notif_enabled")||notifScheduled)return;
+  notifScheduled=true;
+  const now=new Date();
+  const target=new Date(now.getFullYear(),now.getMonth(),now.getDate(),21,0,0);
+  if(now>target)target.setDate(target.getDate()+1);
+  setTimeout(()=>{
+    const todayStr=new Date().toISOString().split("T")[0];
+    const hasTx=txs.some(t=>t.data===todayStr);
+    if(!hasTx&&Notification.permission==="granted"){
+      new Notification("💰 Budly",{body:"Hai inserito le spese di oggi?",icon:"/icon.svg"});
+    }
+    notifScheduled=false;
+    scheduleEvening();
+  },target-now);
+}
+if(localStorage.getItem("notif_enabled"))scheduleEvening();
+
+// ── GAMIFICATION ──
+const LEVELS=[
+  {name:"Principiante",ico:"🌱",min:0,max:5},
+  {name:"Attento",ico:"👀",min:5,max:15},
+  {name:"Disciplinato",ico:"📊",min:15,max:30},
+  {name:"Esperto",ico:"💡",min:30,max:60},
+  {name:"Master",ico:"🏆",min:60,max:100},
+  {name:"Guru Finanziario",ico:"🧘",min:100,max:9999},
+];
+const ALL_BADGES=[
+  {id:"first",ico:"🎉",name:"Prima spesa",desc:"Prima transazione inserita",check:()=>txs.length>=1},
+  {id:"tx10",ico:"✏️",name:"10 transazioni",desc:"Hai inserito 10 transazioni",check:()=>txs.length>=10},
+  {id:"tx50",ico:"📝",name:"50 transazioni",desc:"Hai inserito 50 transazioni",check:()=>txs.length>=50},
+  {id:"week",ico:"7️⃣",name:"Una settimana",desc:"7 giorni di streak",check:()=>getStreak()>=7},
+  {id:"month",ico:"📅",name:"Un mese",desc:"30 giorni di streak",check:()=>getStreak()>=30},
+  {id:"budget",ico:"🎯",name:"Budget rispettato",desc:"Rispettato il budget mensile",check:()=>budgetMensile>0&&getMonthUscite()<=budgetMensile},
+  {id:"goal1",ico:"🏁",name:"Goal raggiunto",desc:"Completato un obiettivo",check:()=>goals.some(g=>g.saved>=g.target)},
+  {id:"saver",ico:"💰",name:"Risparmiatore",desc:"Risparmiato >20% delle entrate",check:()=>{const mc=getMC();const e=txs.filter(t=>t.mese===mc&&t.tipo==="entrata").reduce((s,t)=>s+t.importo,0);const u=txs.filter(t=>t.mese===mc&&t.tipo==="uscita").reduce((s,t)=>s+t.importo,0);return e>0&&(e-u)/e>=0.2}},
+  {id:"diverso",ico:"🌈",name:"Diversificato",desc:"Usate 5 categorie diverse",check:()=>new Set(txs.map(t=>t.categoria)).size>=5},
+];
+function getStreak(){
+  const today=new Date();let streak=0;
+  for(let i=0;i<365;i++){
+    const d=new Date(today);d.setDate(d.getDate()-i);
+    const ds=d.toISOString().split("T")[0];
+    if(txs.some(t=>t.data===ds))streak++;
+    else if(i>0)break;
+  }
+  return streak;
+}
+function getMonthUscite(){return txs.filter(t=>t.mese===getMC()&&t.tipo==="uscita").reduce((s,t)=>s+t.importo,0)}
+function renderGame(){
+  const streak=getStreak();
+  document.getElementById("streak-num").textContent=streak;
+  document.getElementById("streak-sub").textContent=streak===0?"Inserisci una spesa oggi per iniziare!":streak===1?"Ottimo inizio! Continua domani 💪":"Non fermarti! Sei a "+streak+" giorni 🔥";
+  const pts=Math.min(txs.length,200);
+  const lvl=LEVELS.find(l=>pts>=l.min&&pts<l.max)||LEVELS[LEVELS.length-1];
+  const pct=Math.round((pts-lvl.min)/(lvl.max-lvl.min)*100);
+  document.getElementById("level-ico").textContent=lvl.ico;
+  document.getElementById("level-name").textContent=lvl.name;
+  document.getElementById("level-sub").textContent=pts+" / "+lvl.max+" transazioni";
+  document.getElementById("level-bar").style.width=pct+"%";
+  const earned=ALL_BADGES.filter(b=>b.check());
+  const locked=ALL_BADGES.filter(b=>!b.check());
+  document.getElementById("badges-grid").innerHTML=[
+    ...earned.map(b=>`<div style="background:var(--bg2);border:.5px solid rgba(74,222,128,.2);border-radius:var(--rs);padding:12px;text-align:center"><div style="font-size:28px">${b.ico}</div><div style="font-size:12px;font-weight:500;margin-top:4px">${b.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${b.desc}</div></div>`),
+    ...locked.map(b=>`<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center;opacity:.4"><div style="font-size:28px;filter:grayscale(1)">${b.ico}</div><div style="font-size:12px;font-weight:500;margin-top:4px">${b.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${b.desc}</div></div>`)
+  ].join("");
+}
+
+// ── VISTA ANNUALE ──
+function renderAnnual(){
+  const totE=txs.filter(t=>t.tipo==="entrata").reduce((s,t)=>s+t.importo,0);
+  const totU=txs.filter(t=>t.tipo==="uscita").reduce((s,t)=>s+t.importo,0);
+  const yr=new Date().getFullYear();
+  document.getElementById("annual-stats").innerHTML=`
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Entrate ${yr}</div><div style="font-size:20px;font-weight:500;color:var(--green)">${fmt(totE)}</div></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Uscite ${yr}</div><div style="font-size:20px;font-weight:500;color:var(--red)">${fmt(totU)}</div></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Risparmio</div><div style="font-size:20px;font-weight:500;color:${totE-totU>=0?"var(--green)":"var(--red)"}">${fmt(totE-totU)}</div></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Transazioni</div><div style="font-size:20px;font-weight:500">${txs.length}</div></div>
+  `;
+  const mesi=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+  const maxU=Math.max(...mesi.map(m=>txs.filter(t=>t.mese===m&&t.tipo==="uscita").reduce((s,t)=>s+t.importo,0)),1);
+  document.getElementById("annual-list").innerHTML=mesi.map(m=>{
+    const e=txs.filter(t=>t.mese===m&&t.tipo==="entrata").reduce((s,t)=>s+t.importo,0);
+    const u=txs.filter(t=>t.mese===m&&t.tipo==="uscita").reduce((s,t)=>s+t.importo,0);
+    const pct=Math.round(u/maxU*100);
+    const diff=e-u;
+    return`<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px 15px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:14px;font-weight:500">${m}</span><span style="font-size:13px;font-weight:500;color:${diff>=0?"var(--green)":"var(--red)"}">${diff>=0?"+":""}${fmt(diff)}</span></div><div style="background:var(--bg3);border-radius:99px;height:4px;overflow:hidden"><div style="width:${pct}%;height:100%;border-radius:99px;background:${pct>80?"var(--red)":pct>60?"var(--yellow)":"var(--green)"}"></div></div><div style="display:flex;justify-content:space-between;margin-top:5px"><span style="font-size:11px;color:var(--muted)">↑ ${fmt(e)}</span><span style="font-size:11px;color:var(--muted)">↓ ${fmt(u)}</span></div></div>`;
+  }).join("");
+}
+
+// ── GIORNO MIGLIORE ──
+function getBestDay(){
+  const days=["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+  const spending=Array(7).fill(0),counts=Array(7).fill(0);
+  txs.filter(t=>t.tipo==="uscita").forEach(t=>{
+    const d=new Date(t.data+"T12:00:00").getDay();
+    spending[d]+=t.importo;counts[d]++;
+  });
+  const avg=spending.map((s,i)=>counts[i]>0?s/counts[i]:999);
+  const minDay=avg.indexOf(Math.min(...avg));
+  const maxDay=counts.indexOf(Math.max(...counts));
+  return{best:days[minDay],worst:days[maxDay]};
+}
+
+// ── RISPARMIO AUTOMATICO ──
+function checkAutoSave(){
+  if(!goals.length||!budgetMensile)return;
+  const oggi=new Date().getDate();
+  const giorniMese=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+  if(oggi===giorniMese){
+    const uM=getMonthUscite();
+    const diff=budgetMensile-uM;
+    if(diff>10){
+      const g=goals.find(g=>g.saved<g.target);
+      if(g)showAlert('💡 Hai risparmiato '+fmt(diff)+' dal budget! Aggiungilo al goal "'+g.nome+'"?',"green");
+    }
+  }
+}
+
+// ── ABBONAMENTI ──
+function renderSubscriptions(){
+  const subs=txs.filter(t=>t.ricorrente&&t.tipo==="uscita");
+  const unique=[...new Map(subs.map(s=>[s.nome,s])).values()];
+  return unique;
+}
+
+
+// patch goNav for new pages
+const _goNavOrig=goNav;
+function goNav(id){
+  _goNavOrig(id);
+  if(id==="p-game")renderGame();
+  if(id==="p-annual")renderAnnual();
+}
+
+checkOnboarding();
+
 </script>
 </body>
 </html>
