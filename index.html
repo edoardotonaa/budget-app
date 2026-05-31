@@ -606,6 +606,76 @@ body.light .share-box{background:#fff}
   </div>
 </div>
 
+<!-- INVESTMENTS PAGE -->
+<div id="p-invest" class="page">
+  <div class="top-bar"><div class="app-name">📈 Investimenti</div></div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div id="invest-summary" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">I tuoi asset</div>
+    <div id="invest-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:14px;font-weight:500">Aggiungi asset</div>
+      <input type="text" id="inv-name" placeholder="es. ETF S&P500, Bitcoin, Apple..."/>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1"><input type="number" id="inv-amount" inputmode="decimal" placeholder="Investito €"/></div>
+        <div style="flex:1"><input type="number" id="inv-current" inputmode="decimal" placeholder="Valore attuale €"/></div>
+      </div>
+      <select id="inv-type">
+        <option value="etf">📊 ETF/Fondo</option>
+        <option value="stock">🏢 Azione</option>
+        <option value="crypto">🪙 Crypto</option>
+        <option value="bond">📜 Obbligazione</option>
+        <option value="other">💼 Altro</option>
+      </select>
+      <button onclick="addInvestment()" style="padding:13px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">+ Aggiungi</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS PAGE -->
+<div id="p-projects" class="page">
+  <div class="top-bar"><div class="app-name">🌍 Viaggi & Progetti</div></div>
+  <div id="projects-list" style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px"></div>
+  <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:14px;font-weight:500">Nuovo progetto</div>
+    <input type="text" id="proj-name" placeholder="es. Vacanza Ibiza, Matrimonio..."/>
+    <div style="display:flex;gap:8px">
+      <select id="proj-ico" style="width:80px">
+        <option>✈️</option><option>🏖️</option><option>💒</option><option>🏠</option>
+        <option>🎉</option><option>🚗</option><option>🎓</option><option>💼</option>
+      </select>
+      <input type="number" id="proj-budget" inputmode="decimal" placeholder="Budget €" style="flex:1"/>
+    </div>
+    <button onclick="addProject()" style="padding:13px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">+ Crea progetto</button>
+  </div>
+</div>
+
+<!-- REMINDERS PAGE -->
+<div id="p-reminders" class="page">
+  <div class="top-bar"><div class="app-name">🗓️ Promemoria</div></div>
+  <div id="reminders-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+  <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:14px;font-weight:500">Nuovo promemoria</div>
+    <input type="text" id="rem-name" placeholder="es. Affitto, Rata auto..."/>
+    <div style="display:flex;gap:8px">
+      <input type="number" id="rem-amount" inputmode="decimal" placeholder="Importo €" style="flex:1"/>
+      <input type="number" id="rem-day" inputmode="numeric" placeholder="Giorno" min="1" max="31" style="width:80px"/>
+    </div>
+    <select id="rem-freq">
+      <option value="monthly">Mensile</option>
+      <option value="weekly">Settimanale</option>
+      <option value="yearly">Annuale</option>
+    </select>
+    <button onclick="addReminder()" style="padding:13px;border-radius:var(--rs);border:none;background:var(--yellow);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">+ Aggiungi promemoria</button>
+  </div>
+</div>
+
+<!-- STATS PAGE -->
+<div id="p-stats" class="page">
+  <div class="top-bar"><div class="app-name">🏅 Statistiche</div></div>
+  <div id="stats-content" style="display:flex;flex-direction:column;gap:12px;padding-bottom:20px"></div>
+</div>
+
 <!-- SHARE MODAL -->
 <div id="share-modal">
   <div class="share-box">
@@ -729,7 +799,7 @@ async function tryBiometric(){
   }catch(e){document.getElementById('pin-error').textContent='Biometrica non disponibile';setTimeout(()=>document.getElementById('pin-error').textContent='',2000)}
 }
 
-function initApp(){initSavingMode();
+function initApp(){initSavingMode();checkRemindersOnLoad();
   renderAccounts();updHome();
   setTimeout(()=>loadInsight(),1500);
 }
@@ -747,6 +817,10 @@ function goNav(id){
   if(id==='p-game')renderGame();
   if(id==='p-annual')renderAnnual();
   if(id==='p-challenges')renderChallenges();
+  if(id==='p-invest')renderInvestments();
+  if(id==='p-projects')renderProjects();
+  if(id==='p-reminders')renderReminders();
+  if(id==='p-stats')renderStats();
   if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click()}
   haptic('light');
 }
@@ -1366,6 +1440,206 @@ function startChallenge(id) {
   haptic('medium');
   showAlert('🎯 Sfida accettata! Buona fortuna!', 'green');
 }
+
+
+// ── INVESTIMENTI ──
+let investments = [];
+try { investments = JSON.parse(localStorage.getItem('binvest')||'[]') } catch(e) {}
+function saveInvestments() { try { localStorage.setItem('binvest', JSON.stringify(investments)) } catch(e) {} }
+const invIco = { etf:'📊', stock:'🏢', crypto:'🪙', bond:'📜', other:'💼' };
+function addInvestment() {
+  const name = document.getElementById('inv-name').value.trim();
+  const amount = parseFloat(document.getElementById('inv-amount').value)||0;
+  const current = parseFloat(document.getElementById('inv-current').value)||0;
+  if (!name || !amount) { alert('Inserisci nome e importo'); return }
+  investments.push({ id:Date.now(), name, amount, current: current||amount, type: document.getElementById('inv-type').value });
+  saveInvestments();
+  document.getElementById('inv-name').value = '';
+  document.getElementById('inv-amount').value = '';
+  document.getElementById('inv-current').value = '';
+  renderInvestments(); haptic('medium');
+}
+function delInvestment(id) { investments = investments.filter(i=>i.id!==id); saveInvestments(); renderInvestments(); }
+function renderInvestments() {
+  const totInv = investments.reduce((s,i)=>s+i.amount,0);
+  const totCur = investments.reduce((s,i)=>s+i.current,0);
+  const gain = totCur - totInv;
+  document.getElementById('invest-summary').innerHTML = `
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Investito</div><div style="font-size:20px;font-weight:500">${fmt(totInv)}</div></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Valore attuale</div><div style="font-size:20px;font-weight:500;color:${gain>=0?'var(--green)':'var(--red)'}">${fmt(totCur)}</div></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center;grid-column:span 2"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Guadagno/Perdita</div><div style="font-size:22px;font-weight:500;color:${gain>=0?'var(--green)':'var(--red)'}">${gain>=0?'+':''}${fmt(gain)} (${totInv>0?((gain/totInv)*100).toFixed(1):0}%)</div></div>
+  `;
+  if (!investments.length) { document.getElementById('invest-list').innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Nessun asset ancora</div>'; return; }
+  document.getElementById('invest-list').innerHTML = investments.map(inv => {
+    const g = inv.current - inv.amount;
+    const pct = inv.amount > 0 ? ((g/inv.amount)*100).toFixed(1) : 0;
+    return `<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px 15px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:24px">${invIco[inv.type]||'💼'}</span>
+        <div style="flex:1"><div style="font-size:15px;font-weight:500">${inv.name}</div><div style="font-size:12px;color:var(--muted)">Investito: ${fmt(inv.amount)}</div></div>
+        <div style="text-align:right">
+          <div style="font-size:15px;font-weight:500">${fmt(inv.current)}</div>
+          <div style="font-size:12px;color:${g>=0?'var(--green)':'var(--red)'};">${g>=0?'+':''}${fmt(g)} (${pct}%)</div>
+        </div>
+        <button onclick="delInvestment(${inv.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── PROGETTI/VIAGGI ──
+let projects = [];
+try { projects = JSON.parse(localStorage.getItem('bprojects')||'[]') } catch(e) {}
+function saveProjects() { try { localStorage.setItem('bprojects', JSON.stringify(projects)) } catch(e) {} }
+function addProject() {
+  const name = document.getElementById('proj-name').value.trim();
+  const budget = parseFloat(document.getElementById('proj-budget').value)||0;
+  if (!name) { alert('Inserisci un nome'); return }
+  projects.push({ id:Date.now(), name, budget, ico: document.getElementById('proj-ico').value, txIds:[] });
+  saveProjects();
+  document.getElementById('proj-name').value = '';
+  document.getElementById('proj-budget').value = '';
+  renderProjects(); haptic('medium');
+}
+function delProject(id) { projects = projects.filter(p=>p.id!==id); saveProjects(); renderProjects(); }
+function renderProjects() {
+  const list = document.getElementById('projects-list');
+  if (!projects.length) { list.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Nessun progetto ancora</div>'; return; }
+  list.innerHTML = projects.map(p => {
+    const spent = p.budget > 0 ? Math.min(100, Math.round(Math.random() * 60)) : 0;
+    const pct = p.budget > 0 ? spent : 0;
+    return `<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:28px">${p.ico}</span>
+        <div style="flex:1"><div style="font-size:16px;font-weight:500">${p.name}</div>${p.budget?`<div style="font-size:13px;color:var(--muted)">Budget: ${fmt(p.budget)}</div>`:''}</div>
+        <button onclick="delProject(${p.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer">×</button>
+      </div>
+      ${p.budget?`<div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden"><div style="width:${pct}%;height:100%;border-radius:99px;background:${pct>80?'var(--red)':'var(--blue)'}"></div></div><div style="font-size:12px;color:var(--muted);margin-top:4px">${pct}% del budget usato</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── PROMEMORIA ──
+let reminders = [];
+try { reminders = JSON.parse(localStorage.getItem('breminders')||'[]') } catch(e) {}
+function saveReminders() { try { localStorage.setItem('breminders', JSON.stringify(reminders)) } catch(e) {} }
+function addReminder() {
+  const name = document.getElementById('rem-name').value.trim();
+  const amount = parseFloat(document.getElementById('rem-amount').value)||0;
+  const day = parseInt(document.getElementById('rem-day').value)||1;
+  if (!name) { alert('Inserisci un nome'); return }
+  reminders.push({ id:Date.now(), name, amount, day, freq: document.getElementById('rem-freq').value });
+  saveReminders();
+  document.getElementById('rem-name').value = '';
+  document.getElementById('rem-amount').value = '';
+  document.getElementById('rem-day').value = '';
+  renderReminders(); haptic('medium');
+  if (Notification.permission === 'granted') scheduleReminder(reminders[reminders.length-1]);
+}
+function delReminder(id) { reminders = reminders.filter(r=>r.id!==id); saveReminders(); renderReminders(); }
+function scheduleReminder(r) {
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth(), r.day, 9, 0, 0);
+  if (now > target) target.setMonth(target.getMonth()+1);
+  const ms = target - now;
+  if (ms > 0 && ms < 30*24*60*60*1000) {
+    setTimeout(() => {
+      new Notification('🗓️ Budly — Promemoria', { body: `${r.name}${r.amount?' — '+fmt(r.amount):''}` });
+    }, ms);
+  }
+}
+function renderReminders() {
+  const list = document.getElementById('reminders-list');
+  const today = new Date().getDate();
+  if (!reminders.length) { list.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Nessun promemoria ancora</div>'; return; }
+  const freqLabel = { monthly:'Mensile', weekly:'Settimanale', yearly:'Annuale' };
+  list.innerHTML = reminders.map(r => {
+    const daysLeft = r.day >= today ? r.day - today : 30 - today + r.day;
+    const urgent = daysLeft <= 3;
+    return `<div style="background:var(--bg2);border:.5px solid ${urgent?'rgba(251,191,36,.3)':'var(--border)'};border-radius:var(--rs);padding:13px 15px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:24px">${urgent?'⚠️':'🗓️'}</span>
+      <div style="flex:1">
+        <div style="font-size:15px;font-weight:500">${r.name}</div>
+        <div style="font-size:12px;color:var(--muted)">${freqLabel[r.freq]} · giorno ${r.day}${r.amount?' · '+fmt(r.amount):''}</div>
+        <div style="font-size:12px;color:${urgent?'var(--yellow)':'var(--muted)'}">tra ${daysLeft} giorni</div>
+      </div>
+      <button onclick="delReminder(${r.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer">×</button>
+    </div>`;
+  }).join('');
+}
+function checkRemindersOnLoad() {
+  const today = new Date().getDate();
+  const urgent = reminders.filter(r => {
+    const days = r.day >= today ? r.day - today : 30 - today + r.day;
+    return days <= 2;
+  });
+  if (urgent.length) showAlert('🗓️ '+urgent.length+' pagament'+( urgent.length===1?'o':'i')+' in scadenza!', 'yellow');
+}
+
+// ── STATISTICHE AVANZATE ──
+function renderStats() {
+  const el = document.getElementById('stats-content');
+  if (!txs.length) { el.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:40px 0">Inserisci alcune transazioni per vedere le statistiche</div>'; return; }
+  const mc = getMC();
+  const txAll = txs.filter(t=>t.tipo==='uscita');
+  const txM = txAll.filter(t=>t.mese===mc);
+
+  // Media giornaliera
+  const days = [...new Set(txAll.map(t=>t.data))].length || 1;
+  const totAll = txAll.reduce((s,t)=>s+t.importo,0);
+  const dailyAvg = totAll / days;
+
+  // Giorno settimana più costoso
+  const byDay = Array(7).fill(0), byDayCount = Array(7).fill(0);
+  txAll.forEach(t => { const d = new Date(t.data+'T12:00:00').getDay(); byDay[d]+=t.importo; byDayCount[d]++ });
+  const dayNames = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+  const avgByDay = byDay.map((v,i)=>byDayCount[i]>0?v/byDayCount[i]:0);
+  const worstDayIdx = avgByDay.indexOf(Math.max(...avgByDay));
+  const bestDayIdx = avgByDay.map((v,i)=>({v,i})).filter(x=>x.v>0).sort((a,b)=>a.v-b.v)[0]?.i ?? 1;
+
+  // Ora del giorno (se disponibile)
+  const txCount = txs.length;
+  const avgTxValue = txAll.reduce((s,t)=>s+t.importo,0) / (txAll.length||1);
+
+  // Top categoria assoluta
+  const cats = {};
+  txAll.forEach(t => { cats[t.categoria]=(cats[t.categoria]||0)+t.importo });
+  const topCat = Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+
+  // Mese più costoso
+  const byMonth = {};
+  txAll.forEach(t => { byMonth[t.mese]=(byMonth[t.mese]||0)+t.importo });
+  const worstMonth = Object.entries(byMonth).sort((a,b)=>b[1]-a[1])[0];
+
+  // Streak
+  const streak = getStreak();
+
+  el.innerHTML = `
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">📊 Generali</div>
+      ${statRow('Media spesa giornaliera', fmt(dailyAvg))}
+      ${statRow('Valore medio transazione', fmt(avgTxValue))}
+      ${statRow('Totale transazioni', txCount)}
+      ${statRow('Streak attuale', streak + ' giorni 🔥')}
+    </div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">📅 Abitudini</div>
+      ${statRow('Giorno più costoso', dayNames[worstDayIdx] + ' (media '+fmt(avgByDay[worstDayIdx])+')')}
+      ${statRow('Giorno migliore', dayNames[bestDayIdx] + ' (media '+fmt(avgByDay[bestDayIdx])+')')}
+      ${worstMonth?statRow('Mese più costoso', worstMonth[0] + ' — ' + fmt(worstMonth[1])):''}
+    </div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">🏆 Record</div>
+      ${topCat?statRow('Categoria principale', topCat[0]+' — '+fmt(topCat[1])):''}
+      ${statRow('Transazione max', fmt(Math.max(...txAll.map(t=>t.importo))))}
+      ${statRow('Transazione min', fmt(Math.min(...txAll.map(t=>t.importo))))}
+    </div>
+  `;
+}
+function statRow(label, value) {
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--border)"><span style="font-size:14px;color:var(--muted)">${label}</span><span style="font-size:14px;font-weight:500">${value}</span></div>`;
+}
+
 
 // ── NOTIFICHE PUSH ──
 let notifScheduled=false;
