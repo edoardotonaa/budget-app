@@ -729,7 +729,7 @@ function updHome(){
 }
 
 async function loadInsight(){
-  if(!txs.length)return;
+  if(txs.length < 3)return;
   const card=document.getElementById('insight-card');card.classList.add('show');
   document.getElementById('insight-text').textContent='Analisi in corso...';
   const mc=getMC();
