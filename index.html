@@ -11,6 +11,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
 <link rel="apple-touch-icon" href="icon-512.png"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:#0f0f0f;color:#f0f0f0;font-family:'DM Sans',sans-serif;overflow-x:hidden}
@@ -378,29 +379,6 @@ select option{background:#222}
 .inv-type-btn{padding:6px 12px;border-radius:99px;border:.5px solid var(--border);background:var(--bg3);font-size:12px;cursor:pointer;font-family:inherit;color:var(--muted)}
 .inv-type-btn.sel{border-color:var(--blue);color:var(--blue);background:rgba(96,165,250,.1)}
 
-/* ── PROMEMORIA ── */
-#p-reminders{padding-top:52px}
-.rem-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
-.rem-card.overdue{border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.04)}
-.rem-card.today{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.04)}
-.rem-card.soon{border-color:rgba(96,165,250,.25)}
-.rem-left{display:flex;flex-direction:column;align-items:center;justify-content:center;width:42px;flex-shrink:0;background:var(--bg3);border-radius:10px;padding:7px 4px}
-.rem-day{font-size:17px;font-weight:700;font-family:'DM Mono',monospace;line-height:1}
-.rem-month{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:1px}
-.rem-info{flex:1;min-width:0}
-.rem-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rem-meta{font-size:12px;color:var(--muted);margin-top:2px}
-.rem-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
-.rem-amt{font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:var(--red)}
-.rem-badge{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:500}
-.rem-badge.overdue{background:rgba(248,113,113,.15);color:var(--red)}
-.rem-badge.today{background:rgba(251,191,36,.15);color:var(--yellow)}
-.rem-badge.soon{background:rgba(96,165,250,.12);color:var(--blue)}
-.rem-badge.ok{background:rgba(74,222,128,.1);color:var(--green)}
-.rem-del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px}
-.rem-add-form{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px;margin-top:4px;display:flex;flex-direction:column;gap:11px}
-.rem-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
 /* ── WIDGET ── */
 #p-widget{padding-top:52px}
 .widget-info-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
@@ -419,8 +397,106 @@ select option{background:#222}
 .widget-copy-btn{width:100%;padding:13px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:8px}
 .widget-copy-btn:active{opacity:.8}
 
+/* ── ABBONAMENTI ── */
+.sub-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:13px 15px;display:flex;align-items:center;gap:12px}
+.sub-card.detected{border-style:dashed;opacity:.85}
+.sub-ico{font-size:24px;flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:10px}
+.sub-info{flex:1;min-width:0}
+.sub-name{font-size:14px;font-weight:500}
+.sub-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.sub-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.sub-amt{font-size:14px;font-weight:500;font-family:'DM Mono',monospace;color:var(--red)}
+.sub-yearly{font-size:11px;color:var(--muted)}
+.sub-del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px}
+
 /* LIGHT */
 body.light{background:#f5f5f5;color:#111}
+body.light .page{background:#f5f5f5}
+body.light .card,.light .txi,.light .sbox,.light .donut-wrap,.light .recurr-row,.light .add-goal-form,.light .goal-card,.light .barchart-wrap,.light .preview-card,.light .action-btn,.light .split-section,.light .cal-wrap,.light .insight-card,.light .share-box{background:#fff!important;border-color:rgba(0,0,0,.08)!important}
+body.light input,body.light select,body.light textarea{background:#fff;border-color:rgba(0,0,0,.1);color:#111}
+body.light select option{background:#fff;color:#111}
+body.light .m-chip,.light .acc-chip,.light .cur-chip{background:#fff;border-color:rgba(0,0,0,.1);color:#666}
+body.light .m-chip.active{background:rgba(0,0,0,.08);color:#111}
+body.light .tcard,.light .add,.light .export-btn,.light .pin-key,.light #pin-screen{background:#fff;border-color:rgba(0,0,0,.1);color:#111}
+body.light .nav{background:rgba(245,245,245,.95);border-color:rgba(0,0,0,.08)}
+body.light .lbl,.light .muted,.light .card-lbl,.light .legend-name,.light .txi-meta,.light .slbl,.light .budget-lbl,.light .add-lbl,.light .barchart-title,.light .goal-pct,.light .goal-amounts,.light .setting-desc,.light .setting-lbl,.light .bar-lbl,.light .cal-day-lbl{color:#999}
+body.light #pin-screen{background:#f5f5f5}
+body.light .share-box{background:#fff}
+
+/* ── LEAFLET DARK OVERRIDE ── */
+.leaflet-container{background:#1a1a1a!important}
+.leaflet-tile{filter:brightness(.7) saturate(.6) hue-rotate(180deg)}
+.leaflet-popup-content-wrapper{background:var(--bg2);color:#f0f0f0;border:.5px solid var(--border);border-radius:var(--rs);box-shadow:none}
+.leaflet-popup-tip{background:var(--bg2)}
+.leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5;margin:10px 14px}
+.leaflet-control-zoom a{background:var(--bg2)!important;color:#f0f0f0!important;border-color:var(--border)!important}
+
+/* ── MAPPA SPESE ── */
+#p-map{padding-top:52px}
+#spend-map{height:300px;border-radius:var(--r);overflow:hidden;margin-bottom:14px;border:.5px solid var(--border)}
+.map-country-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.map-country-item{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:12px 15px;display:flex;align-items:center;gap:12px}
+.map-flag{font-size:24px;flex-shrink:0}
+.map-country-info{flex:1}
+.map-country-name{font-size:14px;font-weight:500}
+.map-country-meta{font-size:12px;color:var(--muted);margin-top:1px}
+.map-country-amt{font-size:14px;font-weight:500;font-family:'DM Mono',monospace;color:var(--red)}
+.map-country-bar{height:3px;border-radius:99px;background:var(--red);margin-top:6px;transition:width .5s}
+.map-tag-input{display:flex;gap:8px;margin-bottom:10px}
+.map-tag-input select{flex:1}
+
+/* ── WRAPPED ── */
+#p-wrapped{padding-top:52px;overflow:hidden}
+.wrapped-slide{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:0 10px;gap:16px}
+.wrapped-slide.active{display:flex}
+.wrapped-emoji{font-size:72px;line-height:1;animation:popIn .4s ease}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+.wrapped-title{font-size:26px;font-weight:600;letter-spacing:-.5px;line-height:1.2}
+.wrapped-sub{font-size:15px;color:var(--muted);line-height:1.5;max-width:300px}
+.wrapped-big{font-size:52px;font-weight:300;letter-spacing:-2px;font-family:'DM Mono',monospace}
+.wrapped-big.green{color:var(--green)}.wrapped-big.red{color:var(--red)}.wrapped-big.yellow{color:var(--yellow)}.wrapped-big.blue{color:var(--blue)}.wrapped-big.purple{color:var(--purple)}
+.wrapped-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:320px}
+.wrapped-list-item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border-radius:var(--rs);padding:10px 14px}
+.wrapped-list-rank{font-size:18px;font-weight:700;font-family:'DM Mono',monospace;color:var(--muted);width:28px;flex-shrink:0}
+.wrapped-list-name{flex:1;font-size:14px;text-align:left}
+.wrapped-list-val{font-size:13px;font-family:'DM Mono',monospace;color:var(--red)}
+.wrapped-nav{display:flex;gap:12px;align-items:center;margin-top:8px}
+.wrapped-btn{padding:12px 28px;border-radius:99px;border:none;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;transition:transform .1s}
+.wrapped-btn:active{transform:scale(.95)}
+.wrapped-btn.next{background:var(--green);color:#0f0f0f}
+.wrapped-btn.prev{background:var(--bg2);color:var(--muted);border:.5px solid var(--border)}
+.wrapped-dots{display:flex;gap:6px}
+.wrapped-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
+.wrapped-dot.active{background:var(--green);width:18px;border-radius:99px;transition:width .3s}
+.wrapped-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.wrapped-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
+
+/* ── STIPENDIO COUNTDOWN ── */
+#p-salary{padding-top:52px}
+.salary-hero{background:linear-gradient(135deg,rgba(74,222,128,.12),rgba(74,222,128,.03));border:.5px solid rgba(74,222,128,.2);border-radius:var(--r);padding:24px 20px;text-align:center;margin-bottom:14px}
+.salary-days{font-size:64px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-3px;color:var(--green);line-height:1}
+.salary-days.urgent{color:var(--yellow)}.salary-days.arrived{color:var(--green)}
+.salary-label{font-size:13px;color:var(--muted);margin-top:4px}
+.salary-progress-wrap{background:var(--bg3);border-radius:99px;height:8px;overflow:hidden;margin:16px 0 8px}
+.salary-progress{height:100%;border-radius:99px;transition:width .5s,background .3s}
+.salary-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.salary-setup{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:11px}
+
+/* ── SIMULATORE WHAT IF ── */
+#p-whatif{padding-top:52px}
+.whatif-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.whatif-result{background:linear-gradient(135deg,rgba(74,222,128,.1),rgba(96,165,250,.08));border:.5px solid rgba(74,222,128,.2);border-radius:var(--r);padding:20px;margin-bottom:12px;text-align:center;display:none}
+.whatif-result.show{display:block}
+.whatif-result-big{font-size:42px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-1.5px;color:var(--green)}
+.whatif-result-sub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.whatif-scenarios{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.whatif-scenario{background:var(--bg3);border-radius:var(--rs);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.whatif-scenario:active{opacity:.7}
+.whatif-scenario-lbl{font-size:13px}
+.whatif-scenario-val{font-size:13px;font-family:'DM Mono',monospace;color:var(--green);font-weight:500}
+.whatif-slider-wrap{display:flex;flex-direction:column;gap:6px}
+.whatif-slider{width:100%;accent-color:var(--green);height:4px}
+.whatif-slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
 body.light .page{background:#f5f5f5}
 body.light .card,.light .txi,.light .sbox,.light .donut-wrap,.light .recurr-row,.light .add-goal-form,.light .goal-card,.light .barchart-wrap,.light .preview-card,.light .action-btn,.light .split-section,.light .cal-wrap,.light .insight-card,.light .share-box{background:#fff!important;border-color:rgba(0,0,0,.08)!important}
 body.light input,body.light select,body.light textarea{background:#fff;border-color:rgba(0,0,0,.1);color:#111}
@@ -508,6 +584,7 @@ body.light .share-box{background:#fff}
     <button class="add" onclick="goNav('p-type')">+</button>
     <div class="add-lbl">aggiungi</div>
   </div>
+  <div id="daily-quote" style="text-align:center;padding:18px 24px 4px;font-size:13px;color:var(--muted);line-height:1.55;font-style:italic"></div>
 </div>
 
 <!-- DRAWER HAMBURGER -->
@@ -518,16 +595,15 @@ body.light .share-box{background:#fff}
     <div style="font-size:12px;color:var(--muted)">Menu</div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:12px 8px">
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-home')"><span>🏠</span><span>Home</span></div>
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-chat')"><span>💬</span><span>Assistente AI</span></div>
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-challenges')"><span>🏆</span><span>Sfide risparmio</span></div>
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-game')"><span>🎮</span><span>Rank & Badge</span></div>
-    <div style="height:.5px;background:var(--border);margin:8px 12px"></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-dati')"><span>📊</span><span>Dati & Grafici</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-converter')"><span>💱</span><span>Convertitore valute</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-invest')"><span>📈</span><span>Investimenti</span></div>
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-reminders')"><span>🗓️</span><span>Promemoria pagamenti</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-subs')"><span>🧾</span><span>Analisi abbonamenti</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-map')"><span>🌍</span><span>Mappa spese</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-wrapped')"><span>🎵</span><span>Wrapped finanziario</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-salary')"><span>📆</span><span>Stipendio countdown</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-whatif')"><span>🔮</span><span>Simulatore What if</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-widget')"><span>📱</span><span>Widget schermata home</span></div>
     <div style="height:.5px;background:var(--border);margin:8px 12px"></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-settings')"><span>⚙️</span><span>Impostazioni</span></div>
@@ -866,41 +942,6 @@ body.light .share-box{background:#fff}
 </div>
 
 <!-- ══════════════════════════════════════════
-     🗓️ PROMEMORIA PAGAMENTI
-══════════════════════════════════════════ -->
-<div id="p-reminders" class="page">
-  <div class="top-bar"><div class="app-name">🗓️ Promemoria</div></div>
-
-  <div id="rem-summary" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
-    <div class="inv-sbox"><div class="inv-slbl">In scadenza</div><div class="inv-snum" id="rem-cnt-soon" style="color:var(--yellow)">0</div></div>
-    <div class="inv-sbox"><div class="inv-slbl">Scaduti</div><div class="inv-snum" id="rem-cnt-over" style="color:var(--red)">0</div></div>
-    <div class="inv-sbox"><div class="inv-slbl">Tot. mese</div><div class="inv-snum" id="rem-cnt-amt">€0</div></div>
-  </div>
-
-  <div id="rem-list" style="display:flex;flex-direction:column;gap:0;margin-bottom:16px"></div>
-
-  <div class="rem-add-form">
-    <div style="font-size:14px;font-weight:500">+ Nuovo promemoria</div>
-    <div class="field"><label>Nome</label><input type="text" id="rem-nome" placeholder="es. Affitto, Assicurazione auto"/></div>
-    <div class="rem-form-grid">
-      <div class="field"><label>Importo €</label><div class="aw"><span class="esign">€</span><input type="number" id="rem-amt-input" inputmode="decimal" placeholder="500" style="padding-left:42px"/></div></div>
-      <div class="field"><label>Giorno del mese</label><input type="number" id="rem-day" inputmode="numeric" placeholder="1-31" min="1" max="31"/></div>
-    </div>
-    <div class="field"><label>Categoria</label>
-      <select id="rem-cat">
-        <option>Affitto</option><option>Bollette</option><option>Abbonamenti</option><option>Assicurazione</option>
-        <option>Rata</option><option>Mutuo</option><option>Tasse</option><option>Altro</option>
-      </select>
-    </div>
-    <div class="recurr-row">
-      <span>🔁 Ripeti ogni mese</span>
-      <label class="toggle"><input type="checkbox" id="rem-monthly" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
-    </div>
-    <button class="goal-add-btn" onclick="addReminder()" style="background:var(--yellow);color:#0f0f0f">Aggiungi promemoria</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
      📱 WIDGET SCHERMATA HOME
 ══════════════════════════════════════════ -->
 <div id="p-widget" class="page">
@@ -968,6 +1009,146 @@ body.light .share-box{background:#fff}
     <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Questi dati vengono letti dal widget. Si aggiornano ad ogni apertura dell'app.</div>
     <div style="background:var(--bg3);border-radius:var(--rs);padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:#a0c4ff;line-height:1.6;overflow-x:auto;white-space:pre;max-height:120px;overflow-y:auto" id="widget-json-preview"></div>
     <button class="widget-copy-btn" onclick="copyWidgetJSON()" style="background:var(--bg3);color:var(--blue);border:.5px solid rgba(96,165,250,.3);margin-top:8px">📋 Copia JSON</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🧾 ANALISI ABBONAMENTI
+══════════════════════════════════════════ -->
+<div id="p-subs" class="page">
+  <div class="top-bar"><div class="app-name">🧾 Abbonamenti</div></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+    <div class="inv-sbox"><div class="inv-slbl">Mensile</div><div class="inv-snum" id="subs-monthly" style="color:var(--red)">€0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Annuale</div><div class="inv-snum" id="subs-yearly" style="color:var(--red)">€0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Attivi</div><div class="inv-snum" id="subs-count">0</div></div>
+  </div>
+
+  <div id="subs-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
+
+  <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">💡 Rilevati dalle transazioni</div>
+    <div id="subs-detected" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🌍 MAPPA SPESE GEOGRAFICA
+══════════════════════════════════════════ -->
+<div id="p-map" class="page">
+  <div class="top-bar"><div class="app-name">🌍 Mappa spese</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div class="inv-sbox"><div class="inv-slbl">Paesi visitati</div><div class="inv-snum" id="map-countries">0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Speso all'estero</div><div class="inv-snum" id="map-total" style="color:var(--red)">€0</div></div>
+  </div>
+  <div id="spend-map"></div>
+  <div class="lbl" style="margin-bottom:8px">Per paese</div>
+  <div class="map-country-list" id="map-country-list"></div>
+  <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px">
+    <div style="font-size:13px;font-weight:500;margin-bottom:10px">📍 Assegna paese a una spesa</div>
+    <div class="map-tag-input">
+      <select id="map-tx-sel" style="flex:1;font-size:13px"></select>
+      <select id="map-country-sel" style="width:130px;font-size:13px"></select>
+    </div>
+    <button onclick="assignCountry()" style="width:100%;padding:11px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:14px;font-family:inherit;cursor:pointer;margin-top:6px">Assegna paese</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🎵 WRAPPED FINANZIARIO
+══════════════════════════════════════════ -->
+<div id="p-wrapped" class="page" style="padding:52px 0 80px;overflow:hidden;position:relative">
+  <div class="wrapped-bg" id="wrapped-bg"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;height:100%">
+    <div class="wrapped-dots" id="wrapped-dots" style="margin-bottom:16px"></div>
+    <div id="wrapped-slides" style="width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px"></div>
+    <div class="wrapped-nav" style="margin-top:16px">
+      <button class="wrapped-btn prev" id="wrapped-prev" onclick="wrappedPrev()">←</button>
+      <button class="wrapped-btn next" id="wrapped-next" onclick="wrappedNext()">Avanti →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     📆 STIPENDIO COUNTDOWN
+══════════════════════════════════════════ -->
+<div id="p-salary" class="page">
+  <div class="top-bar"><div class="app-name">📆 Stipendio</div></div>
+
+  <div class="salary-hero" id="salary-hero">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:8px">prossimo stipendio tra</div>
+    <div class="salary-days" id="salary-days">—</div>
+    <div class="salary-label" id="salary-label">Imposta il giorno di accredito</div>
+    <div class="salary-progress-wrap"><div class="salary-progress" id="salary-progress" style="width:0%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span id="salary-period-start">—</span><span id="salary-period-end">—</span></div>
+  </div>
+
+  <div class="salary-stats">
+    <div class="inv-sbox"><div class="inv-slbl">Speso</div><div class="inv-snum" id="salary-spent" style="color:var(--red)">€0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Rimasto</div><div class="inv-snum" id="salary-left" style="color:var(--green)">€0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Al giorno</div><div class="inv-snum" id="salary-per-day">€0</div></div>
+  </div>
+
+  <div class="salary-setup">
+    <div style="font-size:14px;font-weight:500">⚙️ Impostazioni stipendio</div>
+    <div class="inv-form-grid">
+      <div class="field"><label>Importo netto €</label><div class="aw"><span class="esign">€</span><input type="number" id="salary-amt" inputmode="decimal" placeholder="1800" style="padding-left:42px" oninput="saveSalarySettings()"/></div></div>
+      <div class="field"><label>Giorno accredito</label><input type="number" id="salary-day" inputmode="numeric" placeholder="27" min="1" max="31" oninput="saveSalarySettings()"/></div>
+    </div>
+    <div style="font-size:12px;color:var(--muted)">Il countdown parte dal giorno di accredito al mese successivo.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🔮 SIMULATORE WHAT IF
+══════════════════════════════════════════ -->
+<div id="p-whatif" class="page">
+  <div class="top-bar"><div class="app-name">🔮 What if…</div></div>
+
+  <div class="whatif-card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:12px">Se risparmiassi…</div>
+    <div class="field" style="margin-bottom:10px">
+      <label>Categoria da ridurre</label>
+      <select id="wi-cat">
+        <option value="">Tutte le uscite</option>
+        <option>Cibo & Ristoranti</option><option>Shopping</option><option>Svago</option>
+        <option>Trasporti</option><option>Abbonamenti</option><option>Bollette</option>
+        <option>Viaggi</option><option>Salute</option><option>Istruzione</option>
+      </select>
+    </div>
+    <div class="whatif-slider-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Risparmio mensile</label>
+        <span id="wi-slider-val" style="font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:var(--green)">€50</span>
+      </div>
+      <input type="range" class="whatif-slider" id="wi-slider" min="10" max="500" step="10" value="50" oninput="updateWhatIf()"/>
+      <div class="whatif-slider-labels"><span>€10</span><span>€500</span></div>
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label>In quanto tempo?</label>
+      <select id="wi-months" onchange="updateWhatIf()">
+        <option value="3">3 mesi</option><option value="6" selected>6 mesi</option>
+        <option value="12">1 anno</option><option value="24">2 anni</option>
+        <option value="60">5 anni</option>
+      </select>
+    </div>
+    <button onclick="updateWhatIf()" style="width:100%;padding:12px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:10px">Calcola →</button>
+  </div>
+
+  <div class="whatif-result" id="wi-result">
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avresti risparmiato</div>
+    <div class="whatif-result-big" id="wi-total">€0</div>
+    <div class="whatif-result-sub" id="wi-sub"></div>
+  </div>
+
+  <div class="whatif-card" id="wi-scenarios-card" style="display:none">
+    <div style="font-size:13px;font-weight:500;margin-bottom:10px">📊 Confronto scenari</div>
+    <div class="whatif-scenarios" id="wi-scenarios"></div>
+  </div>
+
+  <div class="whatif-card">
+    <div style="font-size:13px;font-weight:500;margin-bottom:10px">💡 Idee rapide basate sulle tue spese</div>
+    <div id="wi-suggestions" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
 </div>
 
@@ -1087,8 +1268,12 @@ function goNav(id){
   if(id==='p-chat'){initChat()}
   if(id==='p-challenges'){renderChallenges()}
   if(id==='p-invest'){renderInvestments()}
-  if(id==='p-reminders'){renderReminders()}
   if(id==='p-widget'){initWidget()}
+  if(id==='p-subs'){renderSubs()}
+  if(id==='p-map'){initMap()}
+  if(id==='p-wrapped'){initWrapped()}
+  if(id==='p-salary'){renderSalary()}
+  if(id==='p-whatif'){initWhatIf()}
   if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click()}
   haptic('light');
 }
@@ -1982,116 +2167,6 @@ function renderInvestments(){
 }
 
 // ══════════════════════════════════════════
-// 🗓️ PROMEMORIA PAGAMENTI
-// ══════════════════════════════════════════
-let reminders=[];
-try{reminders=JSON.parse(localStorage.getItem('brem')||'[]')}catch(e){}
-function saveReminders(){try{localStorage.setItem('brem',JSON.stringify(reminders))}catch(e){}}
-
-function addReminder(){
-  const nome=(document.getElementById('rem-nome').value||'').trim();
-  const amt=parseFloat(document.getElementById('rem-amt-input').value)||0;
-  const day=parseInt(document.getElementById('rem-day').value)||1;
-  const cat=document.getElementById('rem-cat').value;
-  const monthly=document.getElementById('rem-monthly').checked;
-  if(!nome||amt<=0||day<1||day>31){showAlert('⚠️ Compila tutti i campi');return}
-  reminders.push({id:Date.now(),nome,amt,day,cat,monthly});
-  saveReminders();
-  document.getElementById('rem-nome').value='';document.getElementById('rem-amt-input').value='';document.getElementById('rem-day').value='';
-  renderReminders();haptic('medium');showAlert('✅ Promemoria aggiunto','green');
-  scheduleReminderNotif();
-}
-
-function delReminder(id){reminders=reminders.filter(r=>r.id!==id);saveReminders();renderReminders()}
-
-function getRemStatus(day){
-  const today=new Date().getDate();
-  const diff=day-today;
-  if(diff<0)return'overdue';
-  if(diff===0)return'today';
-  if(diff<=5)return'soon';
-  return'ok';
-}
-
-function getRemLabel(day){
-  const today=new Date().getDate();
-  const diff=day-today;
-  if(diff<0)return`Scaduto ${Math.abs(diff)} gg fa`;
-  if(diff===0)return'Oggi!';
-  if(diff===1)return'Domani';
-  return`Fra ${diff} giorni`;
-}
-
-function renderReminders(){
-  const now=new Date();
-  const sorted=[...reminders].sort((a,b)=>{
-    const da=a.day-now.getDate(), db=b.day-now.getDate();
-    // overdue last, future first
-    if(da<0&&db>=0)return 1;if(db<0&&da>=0)return-1;
-    return Math.abs(da)-Math.abs(db);
-  });
-
-  let cntSoon=0,cntOver=0,totAmt=0;
-  sorted.forEach(r=>{
-    const s=getRemStatus(r.day);
-    if(s==='overdue')cntOver++;
-    if(s==='soon'||s==='today')cntSoon++;
-    totAmt+=r.amt;
-  });
-  document.getElementById('rem-cnt-soon').textContent=cntSoon;
-  document.getElementById('rem-cnt-over').textContent=cntOver;
-  document.getElementById('rem-cnt-amt').textContent=fmt(totAmt);
-
-  const list=document.getElementById('rem-list');
-  if(!sorted.length){list.innerHTML='<div class="empty">Nessun promemoria</div>';return}
-
-  const BADGES={overdue:'overdue',today:'today',soon:'soon',ok:'ok'};
-  const BADGE_TXT={overdue:'Scaduto',today:'Oggi',soon:'In scadenza',ok:'Ok'};
-
-  list.innerHTML=sorted.map(r=>{
-    const st=getRemStatus(r.day);
-    const lbl=getRemLabel(r.day);
-    const monthStr=now.toLocaleString('it-IT',{month:'short'}).toUpperCase();
-    return`<div class="rem-card ${st}">
-      <div class="rem-left">
-        <div class="rem-day">${r.day}</div>
-        <div class="rem-month">${monthStr}</div>
-      </div>
-      <div class="rem-info">
-        <div class="rem-name">${r.nome}</div>
-        <div class="rem-meta">${r.cat}${r.monthly?' · 🔁 mensile':''}</div>
-      </div>
-      <div class="rem-right">
-        <div class="rem-amt">-${fmt(r.amt)}</div>
-        <div class="rem-badge ${BADGES[st]}">${BADGE_TXT[st]}</div>
-        <button class="rem-del" onclick="delReminder(${r.id})">×</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function scheduleReminderNotif(){
-  if(!localStorage.getItem('notif_enabled'))return;
-  const today=new Date().getDate();
-  reminders.forEach(r=>{
-    const diff=r.day-today;
-    if(diff===1&&Notification.permission==='granted'){
-      setTimeout(()=>{new Notification('🗓️ Budly',{body:`Domani scade: ${r.nome} — ${fmt(r.amt)}`,icon:'/icon.svg'})},500);
-    }
-    if(diff===0&&Notification.permission==='granted'){
-      setTimeout(()=>{new Notification('⚠️ Budly',{body:`Oggi scade: ${r.nome} — ${fmt(r.amt)}`,icon:'/icon.svg'})},500);
-    }
-  });
-}
-
-// Controlla promemoria ad ogni avvio
-function checkRemindersOnLoad(){
-  if(!reminders.length)return;
-  const urgent=reminders.filter(r=>{const s=getRemStatus(r.day);return s==='today'||s==='overdue'});
-  if(urgent.length)setTimeout(()=>showAlert(`🗓️ ${urgent.length} pagament${urgent.length===1?'o':'i'} in scadenza/scadut${urgent.length===1?'o':'i'}!`,'yellow'),2000);
-}
-
-// ══════════════════════════════════════════
 // 📱 WIDGET SCHERMATA HOME
 // ══════════════════════════════════════════
 const SCRIPTABLE_CODE=`// Budly Widget — Scriptable iOS
@@ -2218,8 +2293,495 @@ function copyWidgetJSON(){
     .catch(()=>showAlert('Copia manualmente il JSON'));
 }
 
+// ══════════════════════════════════════════
+// 💬 QUOTE GIORNALIERA
+// ══════════════════════════════════════════
+const QUOTES=[
+  '"Il modo migliore per prevedere il futuro è crearlo." — Peter Drucker',
+  '"Non è quanto guadagni che conta, è quanto riesci a tenere." — Robert Kiyosaki',
+  '"Un investimento nella conoscenza paga sempre il miglior interesse." — Benjamin Franklin',
+  '"Non rimandare a domani il risparmio che puoi fare oggi."',
+  '"La ricchezza non è avere molti soldi, è avere molte opzioni." — Chris Rock',
+  '"Piccole spese frequenti fanno grandi fori in tasca." — Benjamin Franklin',
+  '"Il segreto di andare avanti è cominciare." — Mark Twain',
+  '"Spendi meno di quello che guadagni. Investi la differenza. Sii paziente."',
+  '"Il budget è dire ai tuoi soldi dove andare, invece di chiederti dove sono andati." — Dave Ramsey',
+  '"Chi non sa gestire poco, non sa gestire molto."',
+  '"La libertà finanziaria è disponibile per chiunque la voglia davvero."',
+  '"Il denaro è uno strumento. Come tutti gli strumenti, il suo valore dipende da chi lo usa."',
+  '"Risparmia quando puoi, non quando sei costretto."',
+  '"Ogni euro risparmiato oggi è un euro che lavora per te domani."',
+  '"La cosa più difficile è smettere di spendere quello che non hai ancora guadagnato."',
+  '"Un piano finanziario non serve a limitarti, serve a liberarti."',
+  '"Le abitudini finanziarie si costruiscono un giorno alla volta."',
+  '"Il miglior momento per iniziare a risparmiare era ieri. Il secondo miglior momento è adesso."',
+  '"Tieni traccia di ogni euro: la consapevolezza è il primo passo."',
+  '"Distingui tra quello che vuoi e quello di cui hai bisogno."',
+  '"Non comprare cose che non ti servono con soldi che non hai per impressionare persone che non conosci." — Will Rogers',
+  '"La semplicità è la sofisticazione massima." — Leonardo da Vinci',
+  '"Ogni grande fortuna è iniziata con un piccolo risparmio."',
+  '"Il lusso di ieri è la necessità di oggi. Attenzione all\'abitudine."',
+  '"Investire in te stesso è il miglior rendimento che puoi ottenere."',
+  '"La pazienza è la virtù più redditizia in finanza."',
+  '"Non è il reddito che ti rende ricco, è il tuo stile di vita."',
+  '"Comincia in piccolo, pensa in grande, agisci adesso."',
+  '"La disciplina finanziaria oggi è la libertà finanziaria domani."',
+  '"Conosci il prezzo di tutto e il valore di niente? Rileggi le tue spese."',
+];
+
+function renderDailyQuote(){
+  const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
+  const q=QUOTES[dayOfYear%QUOTES.length];
+  const el=document.getElementById('daily-quote');
+  if(el)el.textContent=q;
+}
+
+// ══════════════════════════════════════════
+// 🧾 ANALISI ABBONAMENTI
+// ══════════════════════════════════════════
+const SUB_ICONS={
+  'netflix':'🎬','spotify':'🎵','disney':'🏰','prime':'📦','dazn':'⚽','sky':'📡',
+  'hulu':'📺','apple':'🍎','google':'🔍','youtube':'▶️','icloud':'☁️','dropbox':'📂',
+  'adobe':'🎨','microsoft':'💻','office':'📝','gym':'💪','palestra':'💪',
+  'assicurazione':'🛡️','mutuo':'🏠','affitto':'🏠','rata':'💳','default':'📺'
+};
+
+function getSubIcon(name){
+  const n=name.toLowerCase();
+  for(const[k,v]of Object.entries(SUB_ICONS)){if(n.includes(k))return v}
+  return SUB_ICONS.default;
+}
+
+function renderSubs(){
+  // Rileva abbonamenti dalle transazioni ricorrenti
+  const recurring=txs.filter(t=>t.ricorrente&&t.tipo==='uscita');
+  // Raggruppa per nome (deduplica)
+  const byName={};
+  recurring.forEach(t=>{
+    const key=t.nome.toLowerCase().trim();
+    if(!byName[key]){byName[key]={nome:t.nome,importo:t.importo,categoria:t.categoria,count:0,lastDate:t.data,id:t.id}}
+    byName[key].count++;
+    if(t.data>byName[key].lastDate)byName[key].lastDate=t.data;
+  });
+  const subs=Object.values(byName).sort((a,b)=>b.importo-a.importo);
+
+  const totMonthly=subs.reduce((s,sub)=>s+sub.importo,0);
+  document.getElementById('subs-monthly').textContent=fmt(totMonthly);
+  document.getElementById('subs-yearly').textContent=fmt(totMonthly*12);
+  document.getElementById('subs-count').textContent=subs.length;
+
+  // Lista abbonamenti rilevati dalle transazioni ricorrenti
+  const list=document.getElementById('subs-list');
+  if(!subs.length){
+    list.innerHTML='<div class="empty">Nessun abbonamento rilevato.<br><span style="font-size:12px">Segna una transazione come 🔁 Ricorrente per vederla qui.</span></div>';
+  }else{
+    list.innerHTML=subs.map(s=>`
+      <div class="sub-card">
+        <div class="sub-ico">${getSubIcon(s.nome)}</div>
+        <div class="sub-info">
+          <div class="sub-name">${s.nome}</div>
+          <div class="sub-meta">${s.categoria} · pagato ${s.count}× · ultimo ${s.lastDate}</div>
+        </div>
+        <div class="sub-right">
+          <div class="sub-amt">-${fmt(s.importo)}/mese</div>
+          <div class="sub-yearly">${fmt(s.importo*12)}/anno</div>
+        </div>
+      </div>`).join('');
+  }
+
+  // Rileva potenziali abbonamenti NON segnati come ricorrenti
+  const known=['netflix','spotify','disney','prime','dazn','sky','hulu','apple','google','youtube','icloud','dropbox','adobe','microsoft','office','gym','palestra'];
+  const detected=[];
+  const seen=new Set();
+  txs.filter(t=>!t.ricorrente&&t.tipo==='uscita').forEach(t=>{
+    const n=t.nome.toLowerCase();
+    const match=known.find(k=>n.includes(k));
+    if(match&&!seen.has(match)){
+      seen.add(match);
+      // Conta quante volte appare
+      const count=txs.filter(tx=>tx.nome.toLowerCase().includes(match)&&tx.tipo==='uscita').length;
+      if(count>=2)detected.push({nome:t.nome,importo:t.importo,match,count});
+    }
+  });
+
+  const detEl=document.getElementById('subs-detected');
+  if(!detected.length){
+    detEl.innerHTML='<div style="font-size:13px;color:var(--muted)">Nessun abbonamento nascosto rilevato 👍</div>';
+  }else{
+    detEl.innerHTML=detected.map(d=>`
+      <div class="sub-card detected">
+        <div class="sub-ico">${getSubIcon(d.nome)}</div>
+        <div class="sub-info">
+          <div class="sub-name">${d.nome}</div>
+          <div class="sub-meta" style="color:var(--yellow)">⚠️ Trovato ${d.count}× — non segnato come ricorrente</div>
+        </div>
+        <div class="sub-right">
+          <div class="sub-amt">-${fmt(d.importo)}</div>
+          <div class="sub-yearly" style="color:var(--yellow);font-size:11px">~${fmt(d.importo*12)}/anno</div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════
+// 🌍 MAPPA SPESE GEOGRAFICA
+// ══════════════════════════════════════════
+let mapInstance=null;
+let txCountries={};
+try{txCountries=JSON.parse(localStorage.getItem('btx_countries')||'{}')}catch(e){}
+function saveTxCountries(){try{localStorage.setItem('btx_countries',JSON.stringify(txCountries))}catch(e){}}
+
+const COUNTRIES=[
+  {name:'Italia',code:'IT',flag:'🇮🇹',lat:41.9,lng:12.5},
+  {name:'Francia',code:'FR',flag:'🇫🇷',lat:46.2,lng:2.2},
+  {name:'Spagna',code:'ES',flag:'🇪🇸',lat:40.4,lng:-3.7},
+  {name:'Germania',code:'DE',flag:'🇩🇪',lat:51.2,lng:10.4},
+  {name:'UK',code:'GB',flag:'🇬🇧',lat:55.4,lng:-3.4},
+  {name:'USA',code:'US',flag:'🇺🇸',lat:37.1,lng:-95.7},
+  {name:'Giappone',code:'JP',flag:'🇯🇵',lat:36.2,lng:138.2},
+  {name:'Portogallo',code:'PT',flag:'🇵🇹',lat:39.4,lng:-8.2},
+  {name:'Grecia',code:'GR',flag:'🇬🇷',lat:39.1,lng:21.8},
+  {name:'Olanda',code:'NL',flag:'🇳🇱',lat:52.1,lng:5.3},
+  {name:'Svizzera',code:'CH',flag:'🇨🇭',lat:46.8,lng:8.2},
+  {name:'Austria',code:'AT',flag:'🇦🇹',lat:47.5,lng:14.5},
+  {name:'Belgio',code:'BE',flag:'🇧🇪',lat:50.5,lng:4.5},
+  {name:'Svezia',code:'SE',flag:'🇸🇪',lat:60.1,lng:18.6},
+  {name:'Norvegia',code:'NO',flag:'🇳🇴',lat:60.5,lng:8.5},
+  {name:'Danimarca',code:'DK',flag:'🇩🇰',lat:56.3,lng:9.5},
+  {name:'Polonia',code:'PL',flag:'🇵🇱',lat:51.9,lng:19.1},
+  {name:'Croazia',code:'HR',flag:'🇭🇷',lat:45.1,lng:15.2},
+  {name:'Turchia',code:'TR',flag:'🇹🇷',lat:38.9,lng:35.2},
+  {name:'Marocco',code:'MA',flag:'🇲🇦',lat:31.8,lng:-7.1},
+  {name:'Egitto',code:'EG',flag:'🇪🇬',lat:26.8,lng:30.8},
+  {name:'Thailandia',code:'TH',flag:'🇹🇭',lat:15.9,lng:100.9},
+  {name:'Emirati',code:'AE',flag:'🇦🇪',lat:23.4,lng:53.8},
+  {name:'Messico',code:'MX',flag:'🇲🇽',lat:23.6,lng:-102.6},
+  {name:'Brasile',code:'BR',flag:'🇧🇷',lat:-14.2,lng:-51.9},
+  {name:'Argentina',code:'AR',flag:'🇦🇷',lat:-38.4,lng:-63.6},
+  {name:'Australia',code:'AU',flag:'🇦🇺',lat:-25.3,lng:133.8},
+  {name:'Canada',code:'CA',flag:'🇨🇦',lat:56.1,lng:-106.3},
+  {name:'Cina',code:'CN',flag:'🇨🇳',lat:35.9,lng:104.2},
+  {name:'India',code:'IN',flag:'🇮🇳',lat:20.6,lng:78.9},
+];
+
+function initMap(){
+  // Popola select transazioni
+  const sel=document.getElementById('map-tx-sel');
+  sel.innerHTML=txs.slice(0,50).map(t=>`<option value="${t.id}">${t.data} — ${t.nome} (${fmt(t.importo)})</option>`).join('');
+  // Popola select paesi
+  const csel=document.getElementById('map-country-sel');
+  csel.innerHTML=COUNTRIES.map(c=>`<option value="${c.code}">${c.flag} ${c.name}</option>`).join('');
+
+  renderMapData();
+
+  // Init Leaflet (lazy)
+  if(!mapInstance){
+    if(typeof L==='undefined'){
+      const s=document.createElement('script');
+      s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      s.onload=()=>drawLeafletMap();
+      document.head.appendChild(s);
+    }else{drawLeafletMap()}
+  }else{
+    drawLeafletMap();
+  }
+}
+
+function renderMapData(){
+  // Calcola spese per paese
+  const byCountry={};
+  Object.entries(txCountries).forEach(([txId,code])=>{
+    const tx=txs.find(t=>String(t.id)===String(txId));
+    if(!tx)return;
+    if(!byCountry[code])byCountry[code]=0;
+    byCountry[code]+=tx.importo;
+  });
+
+  const sorted=Object.entries(byCountry).sort((a,b)=>b[1]-a[1]);
+  const maxAmt=sorted[0]?sorted[0][1]:1;
+  const totExt=sorted.reduce((s,[,v])=>s+v,0);
+
+  document.getElementById('map-countries').textContent=sorted.length;
+  document.getElementById('map-total').textContent=fmt(totExt);
+
+  const list=document.getElementById('map-country-list');
+  if(!sorted.length){
+    list.innerHTML='<div class="empty">Nessuna spesa geografica ancora.<br><span style="font-size:12px">Assegna un paese alle tue transazioni qui sotto.</span></div>';
+    return;
+  }
+  list.innerHTML=sorted.map(([code,amt])=>{
+    const c=COUNTRIES.find(x=>x.code===code)||{flag:'🌍',name:code};
+    const pct=Math.round(amt/maxAmt*100);
+    return`<div class="map-country-item">
+      <div class="map-flag">${c.flag}</div>
+      <div class="map-country-info" style="flex:1">
+        <div class="map-country-name">${c.name}</div>
+        <div class="map-country-meta">${Object.values(txCountries).filter(v=>v===code).length} transazioni</div>
+        <div class="map-country-bar" style="width:${pct}%"></div>
+      </div>
+      <div class="map-country-amt">-${fmt(amt)}</div>
+    </div>`;
+  }).join('');
+}
+
+function drawLeafletMap(){
+  const el=document.getElementById('spend-map');
+  if(!el||typeof L==='undefined')return;
+  if(mapInstance){mapInstance.remove();mapInstance=null}
+
+  mapInstance=L.map('spend-map',{zoomControl:true,scrollWheelZoom:false}).setView([30,10],2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© OSM',maxZoom:10
+  }).addTo(mapInstance);
+
+  const byCountry={};
+  Object.entries(txCountries).forEach(([txId,code])=>{
+    const tx=txs.find(t=>String(t.id)===String(txId));
+    if(!tx)return;
+    if(!byCountry[code])byCountry[code]=0;
+    byCountry[code]+=tx.importo;
+  });
+
+  Object.entries(byCountry).forEach(([code,amt])=>{
+    const c=COUNTRIES.find(x=>x.code===code);
+    if(!c)return;
+    const r=Math.max(14,Math.min(40,Math.sqrt(amt)*1.5));
+    L.circleMarker([c.lat,c.lng],{
+      radius:r,fillColor:'#f87171',color:'#f87171',weight:1,
+      opacity:.8,fillOpacity:.35
+    }).addTo(mapInstance).bindPopup(`<strong>${c.flag} ${c.name}</strong><br>Speso: ${fmt(amt)}`);
+  });
+}
+
+function assignCountry(){
+  const txId=document.getElementById('map-tx-sel').value;
+  const code=document.getElementById('map-country-sel').value;
+  if(!txId||!code){showAlert('⚠️ Seleziona transazione e paese');return}
+  txCountries[txId]=code;
+  saveTxCountries();
+  renderMapData();
+  if(typeof L!=='undefined')drawLeafletMap();
+  showAlert('✅ Paese assegnato!','green');haptic('medium');
+}
+
+// ══════════════════════════════════════════
+// 🎵 WRAPPED FINANZIARIO
+// ══════════════════════════════════════════
+let wrappedIdx=0;
+let wrappedSlides=[];
+
+function buildWrappedSlides(){
+  const yr=new Date().getFullYear();
+  const txY=txs.filter(t=>t.data&&t.data.startsWith(yr));
+  const totE=txY.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const totU=txY.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const saved=totE-totU;
+  const cats={};txY.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const topCats=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topCat=topCats[0]||['—',0];
+  const txCount=txY.length;
+  const avgDay=txY.filter(t=>t.tipo==='uscita').length>0?totU/365:0;
+  const bestMonth=()=>{
+    const mesi={};txY.forEach(t=>{if(!mesi[t.mese])mesi[t.mese]={e:0,u:0};if(t.tipo==='entrata')mesi[t.mese].e+=t.importo;else mesi[t.mese].u+=t.importo});
+    return Object.entries(mesi).sort((a,b)=>(b[1].e-b[1].u)-(a[1].e-a[1].u))[0]||['—',{e:0,u:0}];
+  };
+  const bm=bestMonth();
+  const savePct=totE>0?Math.round((saved/totE)*100):0;
+  const personality=savePct>=30?{ico:'🧘',name:'Guru del risparmio'}:savePct>=15?{ico:'💡',name:'Risparmiatore sagace'}:savePct>=0?{ico:'⚖️',name:'Equilibrista'}:{ico:'🎢',name:'Viveur'};
+
+  return [
+    {bg:'linear-gradient(135deg,#1a1a2e,#16213e)',content:`
+      <div class="wrapped-emoji" style="animation:popIn .5s ease">🎵</div>
+      <div class="wrapped-title">Il tuo ${yr}<br>in cifre</div>
+      <div class="wrapped-sub">Ecco come è andata finanziariamente quest'anno</div>`},
+    {bg:'linear-gradient(135deg,rgba(74,222,128,.15),rgba(74,222,128,.03))',content:`
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Hai guadagnato</div>
+      <div class="wrapped-big green">${fmt(totE)}</div>
+      <div class="wrapped-sub">in entrate totali nel ${yr}</div>`},
+    {bg:'linear-gradient(135deg,rgba(248,113,113,.15),rgba(248,113,113,.03))',content:`
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Hai speso</div>
+      <div class="wrapped-big red">${fmt(totU)}</div>
+      <div class="wrapped-sub">in ${txCount} transazioni — in media ${fmt(avgDay)}/giorno</div>`},
+    {bg:'linear-gradient(135deg,rgba(96,165,250,.15),rgba(96,165,250,.03))',content:`
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">La tua categoria #1</div>
+      <div class="wrapped-emoji">${topCat[0]==='—'?'🤔':'💸'}</div>
+      <div class="wrapped-title">${topCat[0]}</div>
+      <div class="wrapped-big blue">${fmt(topCat[1])}</div>
+      <div class="wrapped-sub">${topCat[1]>0?Math.round(topCat[1]/totU*100)+'% di tutte le uscite':''}</div>`},
+    {bg:'linear-gradient(135deg,rgba(251,191,36,.12),rgba(251,191,36,.03))',content:`
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Top 5 categorie</div>
+      <div class="wrapped-list">${topCats.map(([c,v],i)=>`<div class="wrapped-list-item"><div class="wrapped-list-rank">${i+1}</div><div class="wrapped-list-name">${c}</div><div class="wrapped-list-val">-${fmt(v)}</div></div>`).join('')}</div>`},
+    {bg:'linear-gradient(135deg,rgba(74,222,128,.12),rgba(96,165,250,.08))',content:`
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Hai risparmiato</div>
+      <div class="wrapped-big ${saved>=0?'green':'red'}">${fmt(Math.abs(saved))}</div>
+      <div class="wrapped-sub">${savePct}% delle entrate · Mese migliore: <strong>${bm[0]}</strong></div>`},
+    {bg:'linear-gradient(135deg,rgba(167,139,250,.15),rgba(167,139,250,.03))',content:`
+      <div class="wrapped-emoji">${personality.ico}</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">La tua personalità finanziaria</div>
+      <div class="wrapped-title">${personality.name}</div>
+      <div class="wrapped-sub">${savePct>=30?'Eccezionale! Risparmi oltre il 30% delle entrate.':savePct>=15?'Ottimo equilibrio tra spesa e risparmio.':savePct>=0?'Stai pareggiando — prova a mettere da parte qualcosa in più.':'Hai speso più di quanto guadagnato — rivedi il budget.'}</div>`},
+  ];
+}
+
+function initWrapped(){
+  wrappedSlides=buildWrappedSlides();
+  wrappedIdx=0;
+  renderWrappedSlide();
+}
+
+function renderWrappedSlide(){
+  const s=wrappedSlides[wrappedIdx];
+  const cont=document.getElementById('wrapped-slides');
+  const bg=document.getElementById('wrapped-bg');
+  bg.style.background=s.bg;
+  cont.innerHTML=`<div class="wrapped-content">${s.content}</div>`;
+  // Dots
+  document.getElementById('wrapped-dots').innerHTML=wrappedSlides.map((_,i)=>`<div class="wrapped-dot${i===wrappedIdx?' active':''}"></div>`).join('');
+  // Nav buttons
+  document.getElementById('wrapped-prev').style.visibility=wrappedIdx===0?'hidden':'visible';
+  document.getElementById('wrapped-next').textContent=wrappedIdx===wrappedSlides.length-1?'🎉 Fine':'Avanti →';
+}
+
+function wrappedNext(){
+  if(wrappedIdx<wrappedSlides.length-1){wrappedIdx++;renderWrappedSlide();haptic('light')}
+  else{showAlert('🎉 Questo è stato il tuo anno!','green')}
+}
+function wrappedPrev(){if(wrappedIdx>0){wrappedIdx--;renderWrappedSlide();haptic('light')}}
+
+// ══════════════════════════════════════════
+// 📆 STIPENDIO COUNTDOWN
+// ══════════════════════════════════════════
+let salaryAmt=0,salaryDay=27;
+try{salaryAmt=parseFloat(localStorage.getItem('salary_amt')||'0')}catch(e){}
+try{salaryDay=parseInt(localStorage.getItem('salary_day')||'27')}catch(e){}
+
+function saveSalarySettings(){
+  salaryAmt=parseFloat(document.getElementById('salary-amt').value)||0;
+  salaryDay=parseInt(document.getElementById('salary-day').value)||27;
+  localStorage.setItem('salary_amt',salaryAmt);
+  localStorage.setItem('salary_day',salaryDay);
+  renderSalary();
+}
+
+function renderSalary(){
+  if(document.getElementById('salary-amt'))document.getElementById('salary-amt').value=salaryAmt||'';
+  if(document.getElementById('salary-day'))document.getElementById('salary-day').value=salaryDay||'';
+
+  const now=new Date();
+  const today=now.getDate();
+  const yr=now.getFullYear(),mo=now.getMonth();
+
+  // Data prossimo stipendio
+  let nextSalary;
+  if(today<salaryDay){nextSalary=new Date(yr,mo,salaryDay)}
+  else{nextSalary=new Date(yr,mo+1,salaryDay)}
+
+  const daysLeft=Math.ceil((nextSalary-now)/(1000*60*60*24));
+
+  // Data ultimo stipendio
+  let lastSalary;
+  if(today>=salaryDay){lastSalary=new Date(yr,mo,salaryDay)}
+  else{lastSalary=new Date(yr,mo-1,salaryDay)}
+
+  const totalDays=Math.ceil((nextSalary-lastSalary)/(1000*60*60*24));
+  const elapsed=totalDays-daysLeft;
+  const pct=Math.min(100,Math.round(elapsed/totalDays*100));
+
+  document.getElementById('salary-days').textContent=daysLeft===0?'Oggi! 🎉':daysLeft;
+  document.getElementById('salary-days').className='salary-days'+(daysLeft<=3?' urgent':'');
+  document.getElementById('salary-label').textContent=daysLeft===0?'Oggi arriva lo stipendio!':daysLeft===1?'Domani arriva lo stipendio!':'giorni allo stipendio';
+
+  const prog=document.getElementById('salary-progress');
+  prog.style.width=pct+'%';
+  prog.style.background=pct>80?'var(--green)':pct>50?'var(--yellow)':'var(--red)';
+
+  document.getElementById('salary-period-start').textContent=lastSalary.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+  document.getElementById('salary-period-end').textContent=nextSalary.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+
+  // Spese dal giorno dello stipendio
+  const lastStr=lastSalary.toISOString().split('T')[0];
+  const spent=txs.filter(t=>t.tipo==='uscita'&&t.data>=lastStr).reduce((s,t)=>s+t.importo,0);
+  const left=salaryAmt>0?salaryAmt-spent:0;
+  const perDay=elapsed>0?spent/elapsed:0;
+
+  document.getElementById('salary-spent').textContent=fmt(spent);
+  const leftEl=document.getElementById('salary-left');
+  leftEl.textContent=salaryAmt>0?fmt(Math.max(0,left)):'—';
+  leftEl.style.color=left<0?'var(--red)':left<salaryAmt*0.2?'var(--yellow)':'var(--green)';
+  document.getElementById('salary-per-day').textContent=fmt(perDay);
+}
+
+// ══════════════════════════════════════════
+// 🔮 SIMULATORE WHAT IF
+// ══════════════════════════════════════════
+function initWhatIf(){
+  // Popola categorie con quelle reali dell'utente
+  const mc=getMC();
+  const cats={};txs.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const catSel=document.getElementById('wi-cat');
+  const existing=[...catSel.options].map(o=>o.value);
+  Object.keys(cats).forEach(c=>{if(!existing.includes(c)){const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o)}});
+
+  renderWhatIfSuggestions();
+  updateWhatIf();
+}
+
+function updateWhatIf(){
+  const slider=document.getElementById('wi-slider');
+  const val=parseInt(slider.value);
+  document.getElementById('wi-slider-val').textContent='€'+val;
+  const months=parseInt(document.getElementById('wi-months').value);
+  const total=val*months;
+
+  document.getElementById('wi-result').classList.add('show');
+  document.getElementById('wi-total').textContent=fmt(total);
+
+  const cat=document.getElementById('wi-cat').value;
+  const mc=getMC();
+  const currentSpend=cat
+    ?txs.filter(t=>t.tipo==='uscita'&&t.categoria===cat&&t.mese===mc).reduce((s,t)=>s+t.importo,0)
+    :txs.filter(t=>t.tipo==='uscita'&&t.mese===mc).reduce((s,t)=>s+t.importo,0);
+
+  const pctReduction=currentSpend>0?Math.round(val/currentSpend*100):0;
+  const label=cat?`su ${cat}`:'in totale';
+  document.getElementById('wi-sub').innerHTML=
+    `Riducendo <strong>€${val}/mese</strong> ${label} per <strong>${months} mesi</strong>`+
+    (currentSpend>0?`<br>Equivale al <strong>${pctReduction}%</strong> della tua spesa attuale in questa categoria`:'');
+
+  // Scenari
+  const scenarios=[
+    {label:'☕ Niente caffè fuori (€3/die)',save:3*30},
+    {label:'🍕 -2 ristoranti/mese (€25 cad.)',save:50},
+    {label:'📺 Disdici 1 abbonamento',save:12},
+    {label:'🛍️ Niente shopping impulsivo',save:80},
+    {label:'🚗 Meno taxi/Uber',save:40},
+  ];
+  const scCard=document.getElementById('wi-scenarios-card');
+  scCard.style.display='block';
+  document.getElementById('wi-scenarios').innerHTML=scenarios.map(sc=>{
+    const tot=sc.save*months;
+    return`<div class="whatif-scenario" onclick="document.getElementById('wi-slider').value=${sc.save};updateWhatIf()">
+      <span class="whatif-scenario-lbl">${sc.label}</span>
+      <span class="whatif-scenario-val">+${fmt(tot)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderWhatIfSuggestions(){
+  const mc=getMC();
+  const cats={};txs.filter(t=>t.tipo==='uscita'&&t.mese===mc).forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const sorted=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  document.getElementById('wi-suggestions').innerHTML=sorted.map(([c,v])=>{
+    const cut10=v*0.1,cut20=v*0.2;
+    return`<div class="whatif-scenario" onclick="document.getElementById('wi-cat').value='${c}';document.getElementById('wi-slider').value=${Math.round(cut20)};updateWhatIf()">
+      <span class="whatif-scenario-lbl">Taglia 20% da <strong>${c}</strong></span>
+      <span class="whatif-scenario-val">-${fmt(cut20)}/mese</span>
+    </div>`;
+  }).join('')||'<div style="font-size:13px;color:var(--muted)">Aggiungi qualche transazione per vedere i suggerimenti</div>';
+}
+
 checkOnboarding();
-checkRemindersOnLoad();
+renderDailyQuote();
 
 </script>
 </body>
