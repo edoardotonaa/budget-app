@@ -378,6 +378,16 @@ body.light .share-box{background:#fff}
     <button class="add" onclick="goNav('p-type')">+</button>
     <div class="add-lbl">aggiungi</div>
   </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px">
+    <button onclick="goNav('p-dati')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">📊 Dati</button>
+    <button onclick="goNav('p-converter')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">💱 Converti</button>
+    <button onclick="goNav('p-challenges')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🎯 Sfide</button>
+    <button onclick="goNav('p-import')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🏦 Importa</button>
+    <button onclick="goNav('p-invest')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">📈 Invest</button>
+    <button onclick="goNav('p-projects')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🌍 Progetti</button>
+    <button onclick="goNav('p-reminders')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🗓️ Promemoria</button>
+    <button onclick="goNav('p-stats')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🏅 Stats</button>
+  </div>
 </div>
 
 <!-- TYPE -->
@@ -1640,6 +1650,80 @@ function statRow(label, value) {
   return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--border)"><span style="font-size:14px;color:var(--muted)">${label}</span><span style="font-size:14px;font-weight:500">${value}</span></div>`;
 }
 
+
+
+// ── LINGUA ──
+const TRANSLATIONS = {
+  it: { home:'Home', data:'Dati', goals:'Goals', rank:'Rank', ai:'AI',
+        add:'aggiungi', totalBalance:'saldo del mese', income:'Entrate', expenses:'Uscite',
+        topExpenses:'Top spese questo mese', convert:'Converti', challenges:'Sfide',
+        importBank:'Importa', invest:'Invest', projects:'Progetti', reminders:'Promemoria', stats:'Stats',
+        entrata:'Entrata', spesa:'Spesa', save:'Salva', settings:'Impostazioni' },
+  en: { home:'Home', data:'Data', goals:'Goals', rank:'Rank', ai:'AI',
+        add:'add', totalBalance:'monthly balance', income:'Income', expenses:'Expenses',
+        topExpenses:'Top expenses this month', convert:'Convert', challenges:'Challenges',
+        importBank:'Import', invest:'Invest', projects:'Projects', reminders:'Reminders', stats:'Stats',
+        entrata:'Income', spesa:'Expense', save:'Save', settings:'Settings' },
+  es: { home:'Inicio', data:'Datos', goals:'Metas', rank:'Rango', ai:'IA',
+        add:'agregar', totalBalance:'saldo mensual', income:'Ingresos', expenses:'Gastos',
+        topExpenses:'Top gastos este mes', convert:'Convertir', challenges:'Retos',
+        importBank:'Importar', invest:'Invertir', projects:'Proyectos', reminders:'Recordatorios', stats:'Stats',
+        entrata:'Ingreso', spesa:'Gasto', save:'Guardar', settings:'Ajustes' },
+  fr: { home:'Accueil', data:'Données', goals:'Objectifs', rank:'Rang', ai:'IA',
+        add:'ajouter', totalBalance:'solde mensuel', income:'Revenus', expenses:'Dépenses',
+        topExpenses:'Top dépenses ce mois', convert:'Convertir', challenges:'Défis',
+        importBank:'Importer', invest:'Investir', projects:'Projets', reminders:'Rappels', stats:'Stats',
+        entrata:'Revenu', spesa:'Dépense', save:'Enregistrer', settings:'Réglages' },
+  de: { home:'Startseite', data:'Daten', goals:'Ziele', rank:'Rang', ai:'KI',
+        add:'hinzufügen', totalBalance:'Monatssaldo', income:'Einnahmen', expenses:'Ausgaben',
+        topExpenses:'Top Ausgaben diesen Monat', convert:'Umrechnen', challenges:'Herausforderungen',
+        importBank:'Importieren', invest:'Investieren', projects:'Projekte', reminders:'Erinnerungen', stats:'Stats',
+        entrata:'Einnahme', spesa:'Ausgabe', save:'Speichern', settings:'Einstellungen' },
+};
+let currentLang = 'it';
+try { currentLang = localStorage.getItem('app_lang') || 'it'; } catch(e) {}
+
+function t(key) { return (TRANSLATIONS[currentLang] || TRANSLATIONS.it)[key] || key; }
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('app_lang', lang);
+  document.querySelectorAll('[id^="lang-"]').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('lang-' + lang);
+  if (el) el.classList.add('active');
+  applyTranslations();
+  showAlert('🌐 ' + (TRANSLATIONS[lang]?.settings || lang), 'green');
+}
+
+function applyTranslations() {
+  // Nav labels
+  const navMap = { 'nav-p-home':'home', 'nav-p-dati':'data', 'nav-p-goals':'goals', 'nav-p-game':'rank', 'nav-p-chat':'ai' };
+  Object.entries(navMap).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) { const spans = el.querySelectorAll('span'); if (spans[1]) spans[1].textContent = t(key); }
+  });
+  // Home labels
+  const lblEl = document.querySelector('.add-lbl');
+  if (lblEl) lblEl.textContent = t('add');
+  const balEl = document.querySelector('.lbl');
+  if (balEl) balEl.textContent = t('totalBalance');
+  // Cards
+  const cards = document.querySelectorAll('.card-lbl');
+  if (cards[0]) cards[0].textContent = t('income');
+  if (cards[1]) cards[1].textContent = t('expenses');
+  // Settings title
+  const sttl = document.querySelector('.sttl');
+  if (sttl) sttl.textContent = t('settings');
+}
+
+// Apply on load
+applyTranslations();
+// Set active chip
+setTimeout(() => {
+  document.querySelectorAll('[id^="lang-"]').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('lang-' + currentLang);
+  if (el) el.classList.add('active');
+}, 100);
 
 // ── NOTIFICHE PUSH ──
 let notifScheduled=false;
