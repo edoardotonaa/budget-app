@@ -1053,6 +1053,36 @@ body.light .share-box{background:#fff}
 <div id="p-challenges" class="page">
   <div class="top-bar"><div class="app-name">🎯 Sfide</div></div>
 
+  <!-- SFIDA DEL GIORNO -->
+  <div id="daily-challenge-card" style="background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(167,139,250,.05));border:.5px solid rgba(167,139,250,.3);border-radius:var(--r);padding:18px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="font-size:28px" id="dc-ico">🎲</div>
+      <div style="flex:1">
+        <div style="font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Sfida del giorno</div>
+        <div style="font-size:16px;font-weight:600;margin-top:2px" id="dc-title">—</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:right">
+        <div id="dc-timer">si rinnova tra</div>
+        <div style="font-weight:500;font-family:'DM Mono',monospace" id="dc-countdown">—</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5" id="dc-desc">—</div>
+    <div id="dc-progress-wrap" style="display:none;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px">
+        <span id="dc-progress-lbl">Progresso</span>
+        <span id="dc-progress-val">—</span>
+      </div>
+      <div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden">
+        <div id="dc-progress-bar" style="height:100%;border-radius:99px;background:var(--purple);transition:width .5s"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button id="dc-btn" onclick="acceptDailyChallenge()" style="flex:1;padding:10px;border-radius:var(--rs);border:none;background:var(--purple);color:#fff;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer">Accetta sfida →</button>
+      <button onclick="skipDailyChallenge()" id="dc-skip" style="padding:10px 14px;border-radius:var(--rs);border:.5px solid var(--border);background:none;color:var(--muted);font-size:13px;font-family:inherit;cursor:pointer">Salta</button>
+    </div>
+    <div id="dc-completed-badge" style="display:none;text-align:center;padding:8px;font-size:13px;color:var(--green);font-weight:500">✅ Sfida completata oggi!</div>
+  </div>
+
   <div id="active-challenges-section" style="display:none">
     <div class="lbl" style="margin-bottom:10px">Le tue sfide attive</div>
     <div id="active-challenges-list"></div>
@@ -1535,7 +1565,7 @@ function goNav(id){
   if(id==='p-annual')renderAnnual();
   if(id==='p-converter'){initConverter()}
   if(id==='p-chat'){initChat()}
-  if(id==='p-challenges'){renderChallenges()}
+  if(id==='p-challenges'){renderChallenges();renderDailyChallenge()}
   if(id==='p-invest'){renderInvestments()}
   if(id==='p-widget'){initWidget()}
   if(id==='p-subs'){renderSubs()}
@@ -3399,9 +3429,180 @@ function selectAvatar(emoji){
   showAlert('✅ Avatar aggiornato','green');haptic('light');
 }
 
+// ══════════════════════════════════════════
+// 🎲 SFIDA GIORNALIERA
+// ══════════════════════════════════════════
+const DAILY_CHALLENGES=[
+  {ico:'🍕',title:'Niente ristoranti oggi',desc:'Cucina a casa per tutto il giorno. Ogni pasto fuori conta come fallimento.',cat:'Cibo & Ristoranti',type:'avoid',limit:0},
+  {ico:'☕',title:'Niente bar oggi',desc:'Preparati il caffè a casa. Risparmia €2-5 in un colpo solo.',cat:'Cibo & Ristoranti',type:'avoid_keyword',keyword:'bar'},
+  {ico:'🛍️',title:'Zero acquisti non essenziali',desc:'Niente shopping oggi — solo cibo e necessità. Tutto il resto può aspettare.',cat:'Shopping',type:'avoid',limit:0},
+  {ico:'🚗',title:'Spendi meno di €5 in trasporti',desc:'Prendi la bici, cammina o usa i mezzi pubblici economici.',cat:'Trasporti',type:'limit',limit:5},
+  {ico:'💸',title:'Spendi meno di €20 in totale',desc:'Una giornata da minimalista. Tieni le uscite sotto i €20.',cat:null,type:'total_limit',limit:20},
+  {ico:'🍔',title:'Cucina tutti i pasti',desc:'Zero cibo fuori casa — colazione, pranzo e cena fatti in casa.',cat:'Cibo & Ristoranti',type:'avoid',limit:0},
+  {ico:'📱',title:'Niente abbonamenti oggi',desc:'Controlla se puoi disdire qualcosa che non usi. Almeno non aggiungerne.',cat:'Abbonamenti',type:'avoid',limit:0},
+  {ico:'🏦',title:'Risparmia €10 oggi',desc:'Trova un modo per mettere da parte €10 extra — una spesa evitata conta!',cat:null,type:'save',limit:10},
+  {ico:'🎯',title:'Una sola spesa oggi',desc:'Permetti a te stesso massimo 1 transazione in uscita. Sceglila bene.',cat:null,type:'max_tx',limit:1},
+  {ico:'⚡',title:'Spendi meno di €3 in bollette/utility',desc:'Stacca la spina dagli sprechi — luci spente, riscaldamento al minimo.',cat:'Bollette',type:'limit',limit:3},
+  {ico:'🎬',title:'Niente svago a pagamento',desc:'Cinema, concerti, aperitivi — oggi solo divertimento gratuito.',cat:'Svago',type:'avoid',limit:0},
+  {ico:'🛒',title:'Spesa massimo €15',desc:'Vai al supermercato con lista e budget. Niente impulsi.',cat:'Cibo & Ristoranti',type:'limit',limit:15},
+  {ico:'💰',title:'Registra ogni singola spesa',desc:'Anche il caffè da €1. Traccia tutto al centesimo per 24h.',cat:null,type:'tracking'},
+  {ico:'🚶',title:'Usa solo i piedi oggi',desc:'Niente taxi, niente Uber, niente carburante. A piedi o bici.',cat:'Trasporti',type:'avoid',limit:0},
+  {ico:'🧘',title:'Giornata da €0 di uscite discrezionali',desc:'Solo spese fisse e necessarie. Tutto il resto aspetta domani.',cat:null,type:'total_limit',limit:0},
+];
+
+function getDailyChallenge(){
+  // Stessa sfida per tutto il giorno, cambia a mezzanotte
+  const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
+  return DAILY_CHALLENGES[dayOfYear%DAILY_CHALLENGES.length];
+}
+
+function getDailyChallengeKey(){
+  return 'dc_'+new Date().toISOString().split('T')[0];
+}
+
+function getDailyChallengeProgress(ch){
+  const today=new Date().toISOString().split('T')[0];
+  const todayTxs=txs.filter(t=>t.data===today&&t.tipo==='uscita');
+  if(ch.type==='avoid'||ch.type==='avoid_keyword'){
+    const match=ch.type==='avoid_keyword'
+      ?todayTxs.filter(t=>t.nome.toLowerCase().includes(ch.keyword||''))
+      :todayTxs.filter(t=>t.categoria===ch.cat);
+    const spent=match.reduce((s,t)=>s+t.importo,0);
+    return{spent,success:spent===0,pct:spent===0?100:0,label:spent===0?'Nessuna spesa ✅':'⚠️ '+fmt(spent)+' spesi'};
+  }
+  if(ch.type==='limit'){
+    const spent=todayTxs.filter(t=>ch.cat?t.categoria===ch.cat:true).reduce((s,t)=>s+t.importo,0);
+    const pct=ch.limit>0?Math.min(100,Math.round(spent/ch.limit*100)):spent===0?100:0;
+    return{spent,success:spent<=ch.limit,pct:ch.limit>0?100-pct:spent===0?100:0,label:fmt(spent)+' / '+fmt(ch.limit)};
+  }
+  if(ch.type==='total_limit'){
+    const spent=todayTxs.reduce((s,t)=>s+t.importo,0);
+    const pct=ch.limit>0?Math.min(100,Math.round(spent/ch.limit*100)):spent===0?100:0;
+    return{spent,success:spent<=ch.limit,pct:ch.limit>0?100-pct:spent===0?100:0,label:fmt(spent)+(ch.limit>0?' / '+fmt(ch.limit):'')};
+  }
+  if(ch.type==='max_tx'){
+    return{spent:todayTxs.length,success:todayTxs.length<=ch.limit,pct:Math.min(100,todayTxs.length/ch.limit*100),label:todayTxs.length+' / '+ch.limit+' transazioni'};
+  }
+  if(ch.type==='tracking'){
+    return{spent:todayTxs.length,success:todayTxs.length>=3,pct:Math.min(100,todayTxs.length/3*100),label:todayTxs.length+' spese registrate'};
+  }
+  return{spent:0,success:false,pct:0,label:'—'};
+}
+
+let dcCountdownInterval=null;
+function renderDailyChallenge(){
+  const ch=getDailyChallenge();
+  const key=getDailyChallengeKey();
+  const state=JSON.parse(localStorage.getItem(key)||'{}');
+
+  document.getElementById('dc-ico').textContent=ch.ico;
+  document.getElementById('dc-title').textContent=ch.title;
+  document.getElementById('dc-desc').textContent=ch.desc;
+
+  // Countdown a mezzanotte
+  if(dcCountdownInterval)clearInterval(dcCountdownInterval);
+  function updateCountdown(){
+    const now=new Date();
+    const midnight=new Date(now);
+    midnight.setHours(24,0,0,0);
+    const diff=midnight-now;
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    document.getElementById('dc-countdown').textContent=`${h}h ${m}m ${s}s`;
+  }
+  updateCountdown();
+  dcCountdownInterval=setInterval(updateCountdown,1000);
+
+  const btn=document.getElementById('dc-btn');
+  const skip=document.getElementById('dc-skip');
+  const completed=document.getElementById('dc-completed-badge');
+  const progressWrap=document.getElementById('dc-progress-wrap');
+
+  if(state.completed){
+    btn.style.display='none';skip.style.display='none';
+    completed.style.display='block';
+    progressWrap.style.display='block';
+    document.getElementById('dc-progress-lbl').textContent='Risultato finale';
+    document.getElementById('dc-progress-val').textContent='✅ Completata!';
+    document.getElementById('dc-progress-bar').style.width='100%';
+    document.getElementById('dc-progress-bar').style.background='var(--green)';
+  } else if(state.skipped){
+    btn.style.display='none';skip.style.display='none';
+    completed.style.display='block';
+    completed.style.color='var(--muted)';
+    completed.textContent='⏭️ Sfida saltata oggi';
+  } else if(state.accepted){
+    btn.textContent='Verifica progresso';
+    btn.onclick=checkDailyChallengeProgress;
+    skip.style.display='none';
+    progressWrap.style.display='block';
+    const prog=getDailyChallengeProgress(ch);
+    document.getElementById('dc-progress-lbl').textContent='Progresso di oggi';
+    document.getElementById('dc-progress-val').textContent=prog.label;
+    document.getElementById('dc-progress-bar').style.width=prog.pct+'%';
+    document.getElementById('dc-progress-bar').style.background=prog.success?'var(--green)':'var(--purple)';
+    if(prog.success){completeDailyChallenge()}
+  } else {
+    btn.textContent='Accetta sfida →';
+    btn.onclick=acceptDailyChallenge;
+    skip.style.display='block';
+    progressWrap.style.display='none';
+    completed.style.display='none';
+  }
+}
+
+function acceptDailyChallenge(){
+  const key=getDailyChallengeKey();
+  localStorage.setItem(key,JSON.stringify({accepted:true,ts:Date.now()}));
+  renderDailyChallenge();
+  showAlert('🎲 Sfida accettata! Ce la fai!','green');
+  haptic('medium');playSound('save');
+}
+
+function skipDailyChallenge(){
+  const key=getDailyChallengeKey();
+  localStorage.setItem(key,JSON.stringify({skipped:true}));
+  renderDailyChallenge();
+  showAlert('⏭️ Sfida saltata','yellow');
+}
+
+function checkDailyChallengeProgress(){
+  const ch=getDailyChallenge();
+  const prog=getDailyChallengeProgress(ch);
+  if(prog.success){completeDailyChallenge()}
+  else{showAlert('💪 Continua così: '+prog.label,'yellow');renderDailyChallenge()}
+}
+
+function completeDailyChallenge(){
+  const key=getDailyChallengeKey();
+  const state=JSON.parse(localStorage.getItem(key)||'{}');
+  if(state.completed)return;
+  localStorage.setItem(key,JSON.stringify({...state,completed:true}));
+  renderDailyChallenge();
+  launchConfetti();
+  showAlert('🎉 Sfida del giorno completata!','green');
+  playSound('success');
+}
+
+function scheduleDailyChallengeNotif(){
+  if(!localStorage.getItem('notif_enabled'))return;
+  const now=new Date();
+  const target=new Date(now.getFullYear(),now.getMonth(),now.getDate(),9,0,0);
+  if(now>target)target.setDate(target.getDate()+1);
+  setTimeout(()=>{
+    const ch=getDailyChallenge();
+    if(Notification.permission==='granted'){
+      new Notification('🎲 Sfida del giorno!',{body:ch.ico+' '+ch.title,icon:'/icon-192.png'});
+    }
+    scheduleDailyChallengeNotif();
+  },target-now);
+}
+
 checkOnboarding();
 renderDailyQuote();
 supaInit();
+scheduleDailyChallengeNotif();
 
 </script>
 </body>
