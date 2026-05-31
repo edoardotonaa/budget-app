@@ -537,6 +537,75 @@ body.light .share-box{background:#fff}
   </div>
 </div>
 
+<!-- CHATBOT PAGE -->
+<div id="p-chat" class="page">
+  <div class="top-bar"><div class="app-name">🤖 AI Assistant</div></div>
+  <div id="chat-messages" style="flex:1;display:flex;flex-direction:column;gap:12px;padding-bottom:16px;overflow-y:auto">
+    <div style="background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(167,139,250,.1));border:.5px solid rgba(96,165,250,.2);border-radius:var(--r);padding:14px;font-size:14px;line-height:1.6">
+      Ciao! Sono il tuo assistente finanziario 🤖<br><br>
+      Puoi chiedermi cose come:<br>
+      • "Quanto ho speso in cibo questo mese?"<br>
+      • "Qual è la mia categoria più costosa?"<br>
+      • "Sono in positivo o negativo?"<br>
+      • "Dammi consigli per risparmiare"
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;padding-top:8px;border-top:.5px solid var(--border)">
+    <input type="text" id="chat-input" placeholder="Chiedimi qualcosa..." style="flex:1" onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button onclick="sendChat()" style="padding:13px 18px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:16px;cursor:pointer">→</button>
+  </div>
+</div>
+
+<!-- CHALLENGES PAGE -->
+<div id="p-challenges" class="page">
+  <div class="top-bar"><div class="app-name">🎯 Sfide</div></div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Accetta una sfida e risparmia di più!</div>
+  <div id="challenges-list" style="display:flex;flex-direction:column;gap:12px;padding-bottom:20px"></div>
+</div>
+
+<!-- CURRENCY CONVERTER PAGE -->
+<div id="p-converter" class="page">
+  <div class="top-bar"><div class="app-name">💱 Convertitore</div></div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div class="field"><label>Importo</label><input type="number" id="conv-amount" inputmode="decimal" placeholder="100" oninput="convert()"/></div>
+    <div class="field"><label>Da</label><select id="conv-from" onchange="convert()">
+      <option value="EUR">€ Euro</option><option value="USD">$ Dollaro</option><option value="GBP">£ Sterlina</option>
+      <option value="CHF">CHF Franco</option><option value="JPY">¥ Yen</option><option value="CAD">CAD Dollaro CA</option>
+      <option value="AUD">AUD Dollaro AU</option><option value="DKK">DKK Corona DK</option>
+    </select></div>
+    <div class="field"><label>A</label><select id="conv-to" onchange="convert()">
+      <option value="USD">$ Dollaro</option><option value="EUR">€ Euro</option><option value="GBP">£ Sterlina</option>
+      <option value="CHF">CHF Franco</option><option value="JPY">¥ Yen</option><option value="CAD">CAD Dollaro CA</option>
+      <option value="AUD">AUD Dollaro AU</option><option value="DKK">DKK Corona DK</option>
+    </select></div>
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:24px;text-align:center">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Risultato</div>
+      <div style="font-size:36px;font-weight:300;font-family:'DM Mono',monospace" id="conv-result">—</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px" id="conv-rate">Tasso: —</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px" id="conv-updated"></div>
+    </div>
+    <button onclick="convert(true)" style="padding:14px;border-radius:var(--r);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">🔄 Aggiorna tassi live</button>
+  </div>
+</div>
+
+<!-- PDF IMPORT PAGE -->
+<div id="p-import" class="page">
+  <div class="top-bar"><div class="app-name">🏦 Importa Estratto</div></div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer" onclick="document.getElementById('pdf-input').click()">
+      <div style="font-size:48px;margin-bottom:12px">📄</div>
+      <div style="font-size:16px;font-weight:500;margin-bottom:6px">Carica estratto conto PDF</div>
+      <div style="font-size:13px;color:var(--muted)">Supporta estratti di qualsiasi banca italiana</div>
+      <input type="file" id="pdf-input" accept=".pdf,image/*" style="display:none" onchange="importStatement(this)"/>
+    </div>
+    <div id="import-status" style="display:none;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px">
+      <div style="font-size:14px;font-weight:500;margin-bottom:8px" id="import-title">Analisi in corso...</div>
+      <div id="import-list" style="display:flex;flex-direction:column;gap:8px"></div>
+      <button id="import-confirm" style="display:none;width:100%;margin-top:12px;padding:14px;border-radius:var(--r);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer" onclick="confirmImport()">✓ Importa tutto</button>
+    </div>
+  </div>
+</div>
+
 <!-- SHARE MODAL -->
 <div id="share-modal">
   <div class="share-box">
@@ -581,10 +650,10 @@ body.light .share-box{background:#fff}
 
 <nav class="nav">
   <div class="nav-item active" id="nav-p-home" onclick="goNav('p-home')"><span>🏠</span><span>Home</span></div>
-  
   <div class="nav-item" id="nav-p-dati" onclick="goNav('p-dati')"><span>📊</span><span>Dati</span></div>
   <div class="nav-item" id="nav-p-goals" onclick="goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
   <div class="nav-item" id="nav-p-game" onclick="goNav('p-game')"><span>🎮</span><span>Rank</span></div>
+  <div class="nav-item" id="nav-p-chat" onclick="goNav('p-chat')"><span>🤖</span><span>AI</span></div>
 </nav>
 
 <script>
@@ -677,6 +746,7 @@ function goNav(id){
   if(id==='p-goals')renderGoals();
   if(id==='p-game')renderGame();
   if(id==='p-annual')renderAnnual();
+  if(id==='p-challenges')renderChallenges();
   if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click()}
   haptic('light');
 }
@@ -1091,6 +1161,210 @@ function checkSavingModeAlert(cat,importo){
   const catSpent=txs.filter(t=>t.tipo==='uscita'&&t.mese===mc&&t.categoria===cat).reduce((s,t)=>s+t.importo,0);
   if(catSpent>200){showAlert('⚠️ Risparmio: hai già speso '+fmt(catSpent)+' in '+cat+' questo mese!')}
   else if(importo>100){showAlert('⚠️ Risparmio: spesa di '+fmt(importo)+' — sei sicuro?','yellow')}
+}
+
+
+// ── CHATBOT AI ──
+let chatHistory = [];
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const msgs = document.getElementById('chat-messages');
+
+  // User bubble
+  msgs.innerHTML += `<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px 14px;font-size:14px;align-self:flex-end;max-width:85%;margin-left:auto">${msg}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Typing indicator
+  const typingId = 'typing-' + Date.now();
+  msgs.innerHTML += `<div id="${typingId}" style="color:var(--muted);font-size:13px;padding:4px 0">🤖 Sto pensando...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Build context
+  const mc = getMC();
+  const txM = txs.filter(t => t.mese === mc);
+  const eM = txM.filter(t => t.tipo === 'entrata').reduce((s,t) => s+t.importo, 0);
+  const uM = txM.filter(t => t.tipo === 'uscita').reduce((s,t) => s+t.importo, 0);
+  const cats = {};
+  txM.filter(t => t.tipo === 'uscita').forEach(t => { cats[t.categoria] = (cats[t.categoria]||0) + t.importo });
+  const catStr = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`${c}: €${v.toFixed(0)}`).join(', ');
+
+  const context = `Dati finanziari dell'utente per ${mc}: Entrate €${eM.toFixed(0)}, Uscite €${uM.toFixed(0)}, Saldo €${(eM-uM).toFixed(0)}. Spese per categoria: ${catStr||'nessuna'}. Totale transazioni: ${txs.length}. Budget mensile: ${budgetMensile>0?'€'+budgetMensile:'non impostato'}.`;
+
+  chatHistory.push({ role: 'user', content: msg });
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        system: `Sei un assistente finanziario personale dentro l'app Budly. Rispondi in italiano, in modo breve e diretto (max 3 frasi). Usa emoji. ${context}`,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = (data.content||[]).map(b=>b.text||'').join('').trim();
+    chatHistory.push({ role: 'assistant', content: reply });
+    document.getElementById(typingId).remove();
+    msgs.innerHTML += `<div style="background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(167,139,250,.1));border:.5px solid rgba(96,165,250,.2);border-radius:var(--r);padding:12px 14px;font-size:14px;line-height:1.6">${reply}</div>`;
+  } catch(e) {
+    document.getElementById(typingId).remove();
+    msgs.innerHTML += `<div style="color:var(--muted);font-size:13px;padding:4px 0">⚠️ Errore di connessione</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── CONVERTITORE VALUTA ──
+let exchangeRates = { EUR:1, USD:1.08, GBP:0.86, CHF:0.97, JPY:161, CAD:1.47, AUD:1.65, DKK:7.46 };
+let ratesUpdated = '';
+async function convert(forceUpdate=false) {
+  const amount = parseFloat(document.getElementById('conv-amount').value) || 0;
+  const from = document.getElementById('conv-from').value;
+  const to = document.getElementById('conv-to').value;
+  if (forceUpdate) {
+    try {
+      const res = await fetch(`https://api.anthropic.com/v1/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 200,
+          system: 'Rispondi SOLO con JSON dei tassi di cambio aggiornati rispetto a EUR.',
+          messages: [{ role: 'user', content: 'Dammi i tassi di cambio attuali per EUR,USD,GBP,CHF,JPY,CAD,AUD,DKK come {"EUR":1,"USD":X,...}' }],
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }]
+        })
+      });
+      const d = await res.json();
+      const txt = (d.content||[]).map(b=>b.text||'').join('');
+      const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
+      if (parsed.EUR) { exchangeRates = parsed; ratesUpdated = new Date().toLocaleTimeString('it-IT'); showAlert('✅ Tassi aggiornati!','green'); }
+    } catch(e) { showAlert('⚠️ Uso tassi salvati'); }
+  }
+  if (!amount) { document.getElementById('conv-result').textContent = '—'; return; }
+  const inEur = amount / (exchangeRates[from]||1);
+  const result = inEur * (exchangeRates[to]||1);
+  const rate = (exchangeRates[to]||1) / (exchangeRates[from]||1);
+  document.getElementById('conv-result').textContent = result.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' ' + to;
+  document.getElementById('conv-rate').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+  document.getElementById('conv-updated').textContent = ratesUpdated ? 'Aggiornato: ' + ratesUpdated : 'Tassi indicativi';
+}
+
+// ── IMPORTA ESTRATTO PDF ──
+let importedTxs = [];
+async function importStatement(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const status = document.getElementById('import-status');
+  const title = document.getElementById('import-title');
+  const list = document.getElementById('import-list');
+  status.style.display = 'block';
+  title.textContent = '🔍 Analisi in corso...';
+  list.innerHTML = '';
+  document.getElementById('import-confirm').style.display = 'none';
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const b64 = e.target.result.split(',')[1];
+    const isImage = file.type.startsWith('image/');
+    try {
+      const msgContent = isImage
+        ? [{ type: 'image', source: { type: 'base64', media_type: file.type, data: b64 } },
+           { type: 'text', text: 'Estrai tutte le transazioni da questo estratto conto. Rispondi SOLO con JSON: [{"data":"2024-01-15","nome":"Supermercato","importo":45.20,"tipo":"uscita"},...]. Date in formato YYYY-MM-DD.' }]
+        : [{ type: 'text', text: 'Estrai transazioni da questo estratto (base64 PDF). Rispondi SOLO con JSON array: [{"data":"YYYY-MM-DD","nome":"...","importo":0.0,"tipo":"uscita/entrata"}]. PDF: ' + b64.substring(0,500) }];
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+          messages: [{ role: 'user', content: msgContent }]
+        })
+      });
+      const d = await res.json();
+      const txt = (d.content||[]).map(b=>b.text||'').join('');
+      const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
+      importedTxs = parsed.map(t => ({
+        id: Date.now() + Math.random(),
+        nome: t.nome || 'Transazione',
+        importo: Math.abs(parseFloat(t.importo)||0),
+        tipo: t.tipo || 'uscita',
+        data: t.data || new Date().toISOString().split('T')[0],
+        mese: new Date((t.data||new Date().toISOString().split('T')[0])+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()),
+        categoria: 'Altro', metodo: 'Bonifico', ricorrente: false
+      }));
+      title.textContent = `✅ Trovate ${importedTxs.length} transazioni`;
+      list.innerHTML = importedTxs.slice(0,10).map(t=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-bottom:.5px solid var(--border)">
+          <span>${t.nome.substring(0,25)}</span>
+          <span style="color:${t.tipo==='entrata'?'var(--green)':'var(--red)'};">${t.tipo==='entrata'?'+':'-'}€${t.importo.toFixed(2)}</span>
+        </div>`).join('') + (importedTxs.length>10?`<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px">...e altre ${importedTxs.length-10}</div>`:'');
+      document.getElementById('import-confirm').style.display = 'block';
+    } catch(err) {
+      title.textContent = '⚠️ Non riesco a leggere il file. Prova con uno screenshot dell'estratto.';
+    }
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+function confirmImport() {
+  txs = [...importedTxs, ...txs];
+  save(); updHome();
+  showAlert('✅ Importate ' + importedTxs.length + ' transazioni!', 'green');
+  haptic('heavy');
+  document.getElementById('import-status').style.display = 'none';
+  importedTxs = [];
+  goNav('p-home');
+}
+
+// ── SFIDE RISPARMIO ──
+const CHALLENGES = [
+  { id:'nosvago7', ico:'🎭', name:'Niente svago per 7 giorni', desc:'Non spendere in Svago per una settimana', days:7, cat:'Svago', reward:'🏅 Guerriero del risparmio' },
+  { id:'caffè5', ico:'☕', name:'No caffè per 5 giorni', desc:'Evita bar e caffè per 5 giorni', days:5, cat:'Cibo & Ristoranti', reward:'☕ Caffè-free' },
+  { id:'budget30', ico:'📊', name:'Budget rispettato per 30 giorni', desc:'Rimani sotto il tuo budget per un mese intero', days:30, cat:null, reward:'🎯 Budget Master' },
+  { id:'noShopping14', ico:'🛍️', name:'No shopping per 14 giorni', desc:'Niente acquisti non necessari per 2 settimane', days:14, cat:'Shopping', reward:'💪 Minimalista' },
+  { id:'risparmio20', ico:'💰', name:'Risparmia il 20% per un mese', desc:'Tieni le uscite sotto l'80% delle entrate', days:30, cat:null, reward:'🌟 Super Risparmiatore' },
+];
+let activeChallenges = [];
+try { activeChallenges = JSON.parse(localStorage.getItem('challenges')||'[]') } catch(e) {}
+function saveChallenges() { try { localStorage.setItem('challenges', JSON.stringify(activeChallenges)) } catch(e) {} }
+function renderChallenges() {
+  const list = document.getElementById('challenges-list');
+  list.innerHTML = CHALLENGES.map(ch => {
+    const active = activeChallenges.find(a => a.id === ch.id);
+    let progress = 0, progressText = '';
+    if (active) {
+      const start = new Date(active.startDate);
+      const now = new Date();
+      const daysPassed = Math.floor((now - start) / 86400000);
+      progress = Math.min(100, Math.round(daysPassed / ch.days * 100));
+      progressText = `${daysPassed}/${ch.days} giorni`;
+      if (ch.cat) {
+        const catSpent = txs.filter(t => t.tipo==='uscita' && t.categoria===ch.cat && t.data >= active.startDate).length;
+        if (catSpent > 0) { progress = 0; progressText = '❌ Sfida fallita!'; }
+      }
+    }
+    return `<div style="background:var(--bg2);border:.5px solid ${active?'rgba(74,222,128,.2)':'var(--border)'};border-radius:var(--r);padding:15px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:28px">${ch.ico}</span>
+        <div style="flex:1"><div style="font-size:15px;font-weight:500">${ch.name}</div><div style="font-size:12px;color:var(--muted)">${ch.desc}</div></div>
+      </div>
+      ${active ? `<div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden;margin-bottom:6px"><div style="width:${progress}%;height:100%;border-radius:99px;background:${progress>=100?'var(--green)':'var(--blue)'}"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--muted)">${progressText}</span><span style="color:var(--yellow)">${ch.reward}</span></div>
+      ${progress>=100?`<div style="color:var(--green);font-size:13px;font-weight:500;margin-top:6px">🎉 Sfida completata!</div>`:''}` 
+      : `<button onclick="startChallenge('${ch.id}')" style="width:100%;padding:10px;border-radius:var(--rs);border:.5px solid var(--blue);background:rgba(96,165,250,.08);color:var(--blue);font-size:14px;font-family:inherit;cursor:pointer">Accetta sfida</button>`}
+    </div>`;
+  }).join('');
+}
+function startChallenge(id) {
+  if (activeChallenges.find(a => a.id === id)) return;
+  activeChallenges.push({ id, startDate: new Date().toISOString().split('T')[0] });
+  saveChallenges();
+  renderChallenges();
+  haptic('medium');
+  showAlert('🎯 Sfida accettata! Buona fortuna!', 'green');
 }
 
 // ── NOTIFICHE PUSH ──
