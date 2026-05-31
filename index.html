@@ -421,6 +421,62 @@ select option{background:#222}
 .sub-yearly{font-size:11px;color:var(--muted)}
 .sub-del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px}
 
+/* ── AUTH (LOGIN / SIGNUP) ── */
+#auth-screen{position:fixed;inset:0;background:var(--bg);z-index:260;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px}
+#auth-screen.show{display:flex}
+.auth-logo{font-size:52px;margin-bottom:4px}
+.auth-app-name{font-size:26px;font-weight:600;letter-spacing:-.5px;margin-bottom:6px}
+.auth-tagline{font-size:14px;color:var(--muted);margin-bottom:36px;text-align:center}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:99px;padding:3px;margin-bottom:24px;width:100%}
+.auth-tab{flex:1;padding:9px;border-radius:99px;border:none;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
+.auth-tab.active{background:var(--bg3);color:#f0f0f0}
+.auth-form{display:flex;flex-direction:column;gap:12px;width:100%}
+.auth-form input{padding:14px 16px;font-size:16px;border-radius:var(--rs)}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:4px 0}
+.auth-divider-line{flex:1;height:.5px;background:var(--border)}
+.auth-divider-txt{font-size:12px;color:var(--muted)}
+.auth-submit{width:100%;padding:15px;border-radius:var(--r);border:none;font-size:16px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px;transition:opacity .2s}
+.auth-submit:active{opacity:.8}
+.auth-submit.login{background:var(--green);color:#0f0f0f}
+.auth-submit.signup{background:var(--blue);color:#fff}
+.auth-skip{font-size:13px;color:var(--muted);cursor:pointer;margin-top:16px;text-align:center}
+.auth-skip:active{opacity:.7}
+.auth-avatar-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:4px 0}
+.auth-avatar-opt{font-size:28px;width:48px;height:48px;border-radius:50%;border:2px solid transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg2);transition:border-color .15s}
+.auth-avatar-opt.sel{border-color:var(--blue)}
+
+/* ── PROFILO ── */
+#p-profile{padding-top:52px}
+.profile-hero{display:flex;flex-direction:column;align-items:center;padding:20px 0 24px;margin-bottom:14px}
+.profile-avatar{font-size:64px;width:90px;height:90px;background:var(--bg2);border:.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer;position:relative}
+.profile-avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.profile-name{font-size:22px;font-weight:600;margin-bottom:4px}
+.profile-email{font-size:13px;color:var(--muted);margin-bottom:14px}
+.profile-rank-badge{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,191,36,.05));border:.5px solid rgba(251,191,36,.25);border-radius:99px;padding:8px 18px}
+.profile-rank-ico{font-size:24px}
+.profile-rank-txt{font-size:14px;font-weight:500;color:var(--yellow)}
+.profile-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.profile-stat{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.profile-stat-val{font-size:22px;font-weight:500;font-family:'DM Mono',monospace;margin-bottom:3px}
+.profile-stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.profile-section{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.profile-section-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.profile-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid var(--border)}
+.profile-row:last-child{border-bottom:none;padding-bottom:0}
+.profile-row-lbl{font-size:14px}
+.profile-row-val{font-size:14px;color:var(--muted);font-family:'DM Mono',monospace}
+.profile-logout{width:100%;padding:13px;border-radius:var(--rs);border:.5px solid rgba(248,113,113,.2);background:rgba(248,113,113,.06);color:var(--red);font-size:15px;font-family:inherit;cursor:pointer;margin-top:4px}
+.profile-logout:active{opacity:.7}
+
+/* emoji picker */
+.emoji-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.emoji-picker-overlay.show{display:flex}
+.emoji-picker-box{background:var(--bg2);border-radius:var(--r) var(--r) 0 0;padding:20px;width:100%;max-width:480px}
+.emoji-picker-title{font-size:14px;font-weight:500;margin-bottom:14px}
+.emoji-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.emoji-opt{font-size:28px;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg3)}
+.emoji-opt:active{opacity:.7}
+
 /* LIGHT */
 body.light{background:#f5f5f5;color:#111}
 body.light .page{background:#f5f5f5}
@@ -524,6 +580,102 @@ body.light .share-box{background:#fff}
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════
+     🔐 AUTH — LOGIN / SIGNUP
+══════════════════════════════════════════ -->
+<div id="auth-screen">
+  <div class="auth-logo">💰</div>
+  <div class="auth-app-name">Budgly</div>
+  <div class="auth-tagline">Il tuo tracker finanziario personale</div>
+
+  <div class="auth-tabs" style="max-width:340px">
+    <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Accedi</button>
+    <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Registrati</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="auth-login-form" class="auth-form" style="max-width:340px">
+    <input type="email" id="login-email" placeholder="Email" autocomplete="email"/>
+    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password"/>
+    <button class="auth-submit login" onclick="doLogin()">Accedi →</button>
+  </div>
+
+  <!-- SIGNUP -->
+  <div id="auth-signup-form" class="auth-form" style="max-width:340px;display:none">
+    <input type="text" id="signup-name" placeholder="Il tuo nome" autocomplete="name"/>
+    <input type="email" id="signup-email" placeholder="Email" autocomplete="email"/>
+    <input type="password" id="signup-password" placeholder="Password (min 6 caratteri)" autocomplete="new-password"/>
+    <div style="font-size:12px;color:var(--muted);margin-top:-4px">Scegli il tuo avatar</div>
+    <div class="auth-avatar-row" id="signup-avatar-row"></div>
+    <button class="auth-submit signup" onclick="doSignup()">Crea account →</button>
+  </div>
+
+  <div class="auth-skip" onclick="skipAuth()">Continua senza account</div>
+</div>
+
+<!-- EMOJI PICKER -->
+<div class="emoji-picker-overlay" id="emoji-picker-overlay" onclick="closeEmojiPicker(event)">
+  <div class="emoji-picker-box">
+    <div class="emoji-picker-title">Scegli avatar</div>
+    <div class="emoji-grid" id="emoji-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     👤 PROFILO
+══════════════════════════════════════════ -->
+<div id="p-profile" class="page">
+  <div class="top-bar">
+    <div class="app-name">👤 Profilo</div>
+    <button class="icon-btn" onclick="openEmojiPicker()">✏️</button>
+  </div>
+
+  <div class="profile-hero">
+    <div class="profile-avatar" id="profile-avatar" onclick="openEmojiPicker()">
+      <span id="profile-avatar-emoji">🙂</span>
+      <div class="profile-avatar-edit">✏️</div>
+    </div>
+    <div class="profile-name" id="profile-name">Utente</div>
+    <div class="profile-email" id="profile-email">—</div>
+    <div class="profile-rank-badge">
+      <div class="profile-rank-ico" id="profile-rank-ico">🌱</div>
+      <div class="profile-rank-txt" id="profile-rank-txt">Principiante</div>
+    </div>
+  </div>
+
+  <div class="profile-stats-grid">
+    <div class="profile-stat">
+      <div class="profile-stat-val" id="prof-txcount">0</div>
+      <div class="profile-stat-lbl">Transazioni</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-val" id="prof-streak" style="color:var(--yellow)">0🔥</div>
+      <div class="profile-stat-lbl">Streak</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-val" id="prof-goals">0</div>
+      <div class="profile-stat-lbl">Goals</div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">📊 Riepilogo</div>
+    <div class="profile-row"><span class="profile-row-lbl">Membro dal</span><span class="profile-row-val" id="prof-since">—</span></div>
+    <div class="profile-row"><span class="profile-row-lbl">Valuta</span><span class="profile-row-val" id="prof-currency">EUR</span></div>
+    <div class="profile-row"><span class="profile-row-lbl">Budget mensile</span><span class="profile-row-val" id="prof-budget">—</span></div>
+    <div class="profile-row"><span class="profile-row-lbl">Risparmio totale</span><span class="profile-row-val" id="prof-saved">—</span></div>
+    <div class="profile-row"><span class="profile-row-lbl">Badge ottenuti</span><span class="profile-row-val" id="prof-badges">0</span></div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">✏️ Modifica profilo</div>
+    <div class="field"><label>Nome</label><input type="text" id="prof-name-input" placeholder="Il tuo nome"/></div>
+    <button onclick="saveProfile()" style="width:100%;padding:12px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:8px">Salva</button>
+  </div>
+
+  <button class="profile-logout" onclick="doLogout()">👋 Esci dall'account</button>
+</div>
+
 <!-- ONBOARDING -->
 <div id="onboarding">
   <div class="ob-steps"><div class="ob-step active" id="obs0"></div><div class="ob-step" id="obs1"></div><div class="ob-step" id="obs2"></div><div class="ob-step" id="obs3"></div></div>
@@ -565,6 +717,7 @@ body.light .share-box{background:#fff}
       <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
       <button class="icon-btn" onclick="goNav('p-settings')">⚙️</button>
       <button class="icon-btn" onclick="openDrawer()" id="hamburger-btn" style="font-size:18px;letter-spacing:-1px">≡</button>
+      <div id="home-avatar-btn" onclick="goNav('p-profile')" style="width:36px;height:36px;border-radius:50%;background:var(--bg2);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px">🙂</div>
     </div>
   </div>
   <div class="saving-mode-bar" id="saving-mode-bar"><span>🟡 Modalità risparmio attiva — stai attento alle spese!</span><button class="saving-mode-toggle" onclick="toggleSavingMode()">Disattiva</button></div>
@@ -619,6 +772,7 @@ body.light .share-box{background:#fff}
     <div class="drawer-item" onclick="closeDrawer();goNav('p-widget')"><span>📱</span><span>Widget schermata home</span></div>
     <div style="height:.5px;background:var(--border);margin:8px 12px"></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-settings')"><span>⚙️</span><span>Impostazioni</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-profile')"><span id="drawer-avatar">🙂</span><span id="drawer-profile-name">Profilo</span></div>
   </div>
 </div>
 
@@ -1282,6 +1436,7 @@ function goNav(id){
   if(id==='p-invest'){renderInvestments()}
   if(id==='p-widget'){initWidget()}
   if(id==='p-subs'){renderSubs()}
+  if(id==='p-profile'){renderProfile()}
   if(id==='p-map'){initMap()}
   if(id==='p-wrapped'){initWrapped()}
   if(id==='p-salary'){renderSalary()}
@@ -1637,7 +1792,9 @@ function obDone(){
   initApp();
 }
 function checkOnboarding(){
-  if(!localStorage.getItem('ob_done')){
+  if(!localStorage.getItem('auth_done')){
+    document.getElementById('auth-screen').classList.add('show');
+  } else if(!localStorage.getItem('ob_done')){
     document.getElementById('onboarding').classList.add('show');
   } else {
     checkPin();
@@ -2797,6 +2954,169 @@ function renderWhatIfSuggestions(){
       <span class="whatif-scenario-val">-${fmt(cut20)}/mese</span>
     </div>`;
   }).join('')||'<div style="font-size:13px;color:var(--muted)">Aggiungi qualche transazione per vedere i suggerimenti</div>';
+}
+
+// ══════════════════════════════════════════
+// 🔐 AUTH — LOGIN / SIGNUP
+// ══════════════════════════════════════════
+const AVATARS=['🙂','😎','🤑','🦊','🐻','🐼','🦁','🐯','🦄','🐉','🚀','💎','🌟','🔥','💪','🧠','👑','🎯','💰','🌈'];
+let currentAvatar='🙂';
+let authTab='login';
+
+// Carica profilo salvato
+let userProfile={name:'',email:'',avatar:'🙂',since:''};
+try{userProfile=JSON.parse(localStorage.getItem('bprofile')||'{}')}catch(e){}
+if(!userProfile.name)userProfile={name:'',email:'',avatar:'🙂',since:''};
+
+function saveUserProfile(){try{localStorage.setItem('bprofile',JSON.stringify(userProfile))}catch(e){}}
+
+function switchAuthTab(tab){
+  authTab=tab;
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
+  document.getElementById('auth-login-form').style.display=tab==='login'?'flex':'none';
+  document.getElementById('auth-signup-form').style.display=tab==='signup'?'flex':'none';
+  // Popola avatar picker al primo accesso
+  if(tab==='signup'&&!document.getElementById('signup-avatar-row').children.length){
+    document.getElementById('signup-avatar-row').innerHTML=AVATARS.slice(0,10).map((e,i)=>
+      `<div class="auth-avatar-opt${i===0?' sel':''}" onclick="selectSignupAvatar(this,'${e}')">${e}</div>`
+    ).join('');
+    currentAvatar=AVATARS[0];
+  }
+}
+
+function selectSignupAvatar(el,emoji){
+  document.querySelectorAll('.auth-avatar-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  currentAvatar=emoji;
+}
+
+function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-password').value;
+  if(!email||!pw){showAlert('⚠️ Compila email e password');return}
+  // Verifica credenziali salvate localmente
+  const saved=JSON.parse(localStorage.getItem('bprofile')||'{}');
+  if(saved.email&&saved.email!==email){showAlert('⚠️ Email non trovata');return}
+  if(saved.pw&&saved.pw!==btoa(pw)){showAlert('⚠️ Password errata');return}
+  // Login ok
+  userProfile={...saved,email};
+  saveUserProfile();
+  localStorage.setItem('auth_done','1');
+  document.getElementById('auth-screen').classList.remove('show');
+  updateAvatarUI();
+  if(!localStorage.getItem('ob_done')){
+    document.getElementById('onboarding').classList.add('show');
+  } else {
+    checkPin();if(!pinSet)initApp();
+  }
+  showAlert('👋 Bentornato, '+userProfile.name+'!','green');
+}
+
+function doSignup(){
+  const name=document.getElementById('signup-name').value.trim();
+  const email=document.getElementById('signup-email').value.trim();
+  const pw=document.getElementById('signup-password').value;
+  if(!name||!email||pw.length<6){showAlert('⚠️ Compila tutti i campi (password min 6 caratteri)');return}
+  userProfile={name,email,avatar:currentAvatar,since:new Date().toLocaleDateString('it-IT'),pw:btoa(pw)};
+  saveUserProfile();
+  localStorage.setItem('auth_done','1');
+  document.getElementById('auth-screen').classList.remove('show');
+  updateAvatarUI();
+  if(!localStorage.getItem('ob_done')){
+    document.getElementById('onboarding').classList.add('show');
+  } else {
+    checkPin();if(!pinSet)initApp();
+  }
+  launchConfetti();
+  showAlert('🎉 Account creato! Benvenuto, '+name+'!','green');
+}
+
+function skipAuth(){
+  localStorage.setItem('auth_done','1');
+  document.getElementById('auth-screen').classList.remove('show');
+  if(!localStorage.getItem('ob_done')){
+    document.getElementById('onboarding').classList.add('show');
+  } else {
+    checkPin();if(!pinSet)initApp();
+  }
+}
+
+function doLogout(){
+  if(!confirm('Vuoi uscire dall\'account? I dati restano sul dispositivo.'))return;
+  localStorage.removeItem('auth_done');
+  location.reload();
+}
+
+function updateAvatarUI(){
+  const av=userProfile.avatar||'🙂';
+  const homeBtn=document.getElementById('home-avatar-btn');
+  if(homeBtn)homeBtn.textContent=av;
+  const drawerAv=document.getElementById('drawer-avatar');
+  if(drawerAv)drawerAv.textContent=av;
+  const drawerName=document.getElementById('drawer-profile-name');
+  if(drawerName)drawerName.textContent=userProfile.name||'Profilo';
+}
+
+// ══════════════════════════════════════════
+// 👤 PROFILO
+// ══════════════════════════════════════════
+function renderProfile(){
+  const av=userProfile.avatar||'🙂';
+  document.getElementById('profile-avatar-emoji').textContent=av;
+  document.getElementById('profile-name').textContent=userProfile.name||'Utente';
+  document.getElementById('profile-email').textContent=userProfile.email||'—';
+  document.getElementById('prof-name-input').value=userProfile.name||'';
+
+  // Rank
+  const pts=Math.min(txs.length,200);
+  const lvl=LEVELS.find(l=>pts>=l.min&&pts<l.max)||LEVELS[LEVELS.length-1];
+  document.getElementById('profile-rank-ico').textContent=lvl.ico;
+  document.getElementById('profile-rank-txt').textContent=lvl.name;
+
+  // Stats
+  document.getElementById('prof-txcount').textContent=txs.length;
+  document.getElementById('prof-streak').textContent=getStreak()+'🔥';
+  document.getElementById('prof-goals').textContent=goals.length;
+
+  // Riepilogo
+  document.getElementById('prof-since').textContent=userProfile.since||'—';
+  document.getElementById('prof-currency').textContent=defaultCur;
+  document.getElementById('prof-budget').textContent=budgetMensile>0?fmt(budgetMensile):'Non impostato';
+  const totE=txs.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const totU=txs.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  document.getElementById('prof-saved').textContent=fmt(totE-totU);
+  const earned=ALL_BADGES.filter(b=>b.check()).length;
+  document.getElementById('prof-badges').textContent=earned+' / '+ALL_BADGES.length;
+}
+
+function saveProfile(){
+  const name=document.getElementById('prof-name-input').value.trim();
+  if(!name){showAlert('⚠️ Inserisci un nome');return}
+  userProfile.name=name;
+  saveUserProfile();
+  document.getElementById('profile-name').textContent=name;
+  updateAvatarUI();
+  showAlert('✅ Profilo aggiornato','green');haptic('medium');
+}
+
+// Emoji picker per avatar
+function openEmojiPicker(){
+  const grid=document.getElementById('emoji-grid');
+  grid.innerHTML=AVATARS.map(e=>`<div class="emoji-opt" onclick="selectAvatar('${e}')">${e}</div>`).join('');
+  document.getElementById('emoji-picker-overlay').classList.add('show');
+}
+function closeEmojiPicker(e){
+  if(e.target===document.getElementById('emoji-picker-overlay'))
+    document.getElementById('emoji-picker-overlay').classList.remove('show');
+}
+function selectAvatar(emoji){
+  userProfile.avatar=emoji;
+  saveUserProfile();
+  document.getElementById('profile-avatar-emoji').textContent=emoji;
+  updateAvatarUI();
+  document.getElementById('emoji-picker-overlay').classList.remove('show');
+  showAlert('✅ Avatar aggiornato','green');haptic('light');
 }
 
 checkOnboarding();
