@@ -1559,7 +1559,7 @@ async function processReceipt(input){
   reader.onload=async(e)=>{
     const b64=e.target.result.split(',')[1];
     try{
-      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:file.type,data:b64}},{type:'text',text:'Estrai dal questo scontrino importo totale e nome negozio. Rispondi SOLO con JSON: {"importo": 12.50, "nome": "Esselunga"}'}]}]})});
+      const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:file.type,data:b64}},{type:'text',text:'Estrai dal questo scontrino importo totale e nome negozio. Rispondi SOLO con JSON: {"importo": 12.50, "nome": "Esselunga"}'}]}]})});
       const d=await res.json();
       const txt=(d.content||[]).map(b=>b.text||'').join('');
       const parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
@@ -1642,7 +1642,7 @@ async function loadInsight(){
   const cats={};txM.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
   const topCat=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       model:'claude-sonnet-4-20250514',max_tokens:150,
       system:'Sei un assistente finanziario. Dai consigli brevi e pratici in italiano. Max 2 frasi. Sii diretto e utile.',
       messages:[{role:'user',content:`Questo mese ho speso ${uM.toFixed(0)}€ in totale. La categoria principale è ${topCat?topCat[0]+' ('+topCat[1].toFixed(0)+'€)':'varia'}. Dammi un insight utile e concreto.`}]
@@ -1708,7 +1708,7 @@ async function salva(){
   const tx={id:Date.now(),nome,importo,tipo,categoria:document.getElementById('cat').value,metodo:document.getElementById('met').value,data:dv,mese:new Date(dv+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()),ricorrente,tag,conto,cur};
   const btn=document.getElementById('sbtn'),msg=document.getElementById('smsg');btn.disabled=true;msg.textContent='Salvataggio...';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'Salva su Notion e rispondi solo {"ok":true}.',messages:[{role:'user',content:`Crea pagina database Notion DS="${DS}": Nome="${tx.nome}",Tipo="${tipo==='entrata'?'💰 Entrata':'💸 Uscita'}",Importo=${tx.importo},date:Data:start="${tx.data}",date:Data:is_datetime=0,Categoria="${CE[tx.categoria]||'❓ Altro'}",Metodo di Pagamento="${ME[tx.metodo]||'❓ Altro'}",Mese="${tx.mese}",Ricorrente=${ricorrente}. Rispondi {"ok":true}.`}],mcp_servers:[{type:'url',url:'https://mcp.notion.com/mcp',name:'notion'}]})});
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'Salva su Notion e rispondi solo {"ok":true}.',messages:[{role:'user',content:`Crea pagina database Notion DS="${DS}": Nome="${tx.nome}",Tipo="${tipo==='entrata'?'💰 Entrata':'💸 Uscita'}",Importo=${tx.importo},date:Data:start="${tx.data}",date:Data:is_datetime=0,Categoria="${CE[tx.categoria]||'❓ Altro'}",Metodo di Pagamento="${ME[tx.metodo]||'❓ Altro'}",Mese="${tx.mese}",Ricorrente=${ricorrente}. Rispondi {"ok":true}.`}],mcp_servers:[{type:'url',url:'https://mcp.notion.com/mcp',name:'notion'}]})});
     const d=await res.json();const txt=(d.content||[]).map(b=>b.text||'').join('');
     txs.unshift(tx);save();haptic('heavy');
     pushTxToSupabase(tx);
@@ -2209,7 +2209,7 @@ async function sendChat(){
     // Build proper history: alternate user/assistant
     const apiMsgs=[{role:'user',content:context+'\n\n'+chatHistory.map(m=>m.role==='user'?'Utente: '+m.content:'Assistente: '+m.content).join('\n')}];
 
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       model:'claude-sonnet-4-20250514',max_tokens:400,
       system:'Sei un assistente finanziario personale integrato nell\'app Budgly. Rispondi in italiano, in modo conciso e utile (max 3-4 frasi). Usa emoji con parsimonia. Analizza i dati reali forniti e rispondi in modo preciso. Se chiede somme o statistiche, calcola dai dati.',
       messages:apiMsgs
