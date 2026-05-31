@@ -2193,37 +2193,133 @@ async function sendChat(){
   if(!msg)return;
   input.value='';
   const msgs=document.getElementById('chat-msgs');
-
-  // Aggiungi messaggio utente
   msgs.innerHTML+=`<div class="chat-bubble user">${msg.replace(/</g,'&lt;')}</div>`;
   chatHistory.push({role:'user',content:msg});
-
-  // Loading bubble
   const loadId='load-'+Date.now();
-  msgs.innerHTML+=`<div class="chat-bubble ai loading" id="${loadId}">✦ Analisi in corso...</div>`;
+  msgs.innerHTML+=`<div class="chat-bubble ai loading" id="${loadId}">✦ sto pensando...</div>`;
   msgs.scrollTop=msgs.scrollHeight;haptic('light');
-
-  try{
-    const context=buildFinancialContext();
-    const messages=[{role:'user',content:context+'\n\nDomanda utente: '+chatHistory[0].content},...chatHistory.slice(1)];
-    // Build proper history: alternate user/assistant
-    const apiMsgs=[{role:'user',content:context+'\n\n'+chatHistory.map(m=>m.role==='user'?'Utente: '+m.content:'Assistente: '+m.content).join('\n')}];
-
-    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',max_tokens:400,
-      system:'Sei un assistente finanziario personale integrato nell\'app Budgly. Rispondi in italiano, in modo conciso e utile (max 3-4 frasi). Usa emoji con parsimonia. Analizza i dati reali forniti e rispondi in modo preciso. Se chiede somme o statistiche, calcola dai dati.',
-      messages:apiMsgs
-    })});
-    const d=await res.json();
-    const txt=(d.content||[]).map(b=>b.text||'').join('').trim();
-    document.getElementById(loadId).className='chat-bubble ai';
-    document.getElementById(loadId).textContent=txt||'Non ho capito, puoi riformulare?';
-    chatHistory.push({role:'assistant',content:txt});
-  }catch(e){
-    document.getElementById(loadId).className='chat-bubble ai';
-    document.getElementById(loadId).textContent='⚠️ Errore di connessione. Riprova tra poco.';
-  }
+  // Simula tempo di risposta
+  await new Promise(r=>setTimeout(r,400+Math.random()*400));
+  const reply=localChatEngine(msg);
+  document.getElementById(loadId).className='chat-bubble ai';
+  document.getElementById(loadId).textContent=reply;
+  chatHistory.push({role:'assistant',content:reply});
   msgs.scrollTop=msgs.scrollHeight;
+}
+
+function localChatEngine(msg){
+  const m=msg.toLowerCase().trim();
+  const mc=getMC(),mp=getMP();
+  const txM=txs.filter(t=>t.mese===mc);
+  const eM=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const uM=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const saldo=eM-uM;
+  const cats={};txM.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const topCat=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+  const txP=txs.filter(t=>t.mese===mp);
+  const uP=txP.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+
+  // ── SALUTI E CHIACCHIERE ──
+  if(/^(ciao|salve|hey|hei|hello|buongiorno|buonasera|buonanotte)/.test(m))
+    return `Ciao! 👋 Sono il tuo assistente finanziario su Budgly. Chiedimi delle tue spese, del budget, dei goal — ci sono per quello!`;
+  if(/come (stai|va|stai andando|ti senti)/.test(m)||/come va/.test(m))
+    return `Sto benissimo grazie! 😄 Sempre pronto ad analizzare le tue finanze. Tu come stai — e soprattutto, come sta il tuo portafoglio questo mese?`;
+  if(/grazie|thanks|perfetto|ottimo|bravo/.test(m))
+    return `Prego! 😊 Se hai altre domande sulle tue spese sono qui.`;
+  if(/(chi sei|cosa sei|cosa fai|presentati)/.test(m))
+    return `Sono l'assistente AI di Budgly! 🤖 Conosco tutte le tue transazioni e posso aiutarti ad analizzare spese, entrate, risparmi e tendenze. Chiedimi pure!`;
+  if(/(aiuto|help|cosa (posso|puoi)|cosa sai fare)/.test(m))
+    return `Posso rispondere a domande come: "quanto ho speso in cibo?", "qual è la mia categoria top?", "sono in linea col budget?", "confronta questo mese col precedente". Prova!`;
+  if(/bella|bello|figata|wow|fantastico/.test(m))
+    return `Grazie! 😄 Ci ho messo tanto impegno. Posso aiutarti con qualcosa sulle tue finanze?`;
+
+  // ── SPESE PER CATEGORIA ──
+  const catMatch=Object.keys(cats).find(c=>m.includes(c.toLowerCase()));
+  if(catMatch||(m.includes('cibo')||m.includes('mangiare')||m.includes('ristorante'))){
+    const cat=catMatch||(m.includes('cibo')||m.includes('mangiare')||m.includes('ristorante')?'Cibo & Ristoranti':null);
+    if(cat&&cats[cat])return `In ${mc} hai speso ${fmt(cats[cat])} in ${cat}. ${cats[cat]>200?'È abbastanza! 🤔':'Niente male, sotto controllo. ✅'}`;
+    if(cat)return `Non ho trovato spese in "${cat}" questo mese.`;
+  }
+  if(/(spes[oa]|uscit[ae]|spent[oa]).*(mese|questo|totale|quanto)|(quanto.*speso)/.test(m))
+    return `Questo mese (${mc}) hai speso in totale ${fmt(uM)}. ${budgetMensile>0?`Sei al ${Math.round(uM/budgetMensile*100)}% del budget di ${fmt(budgetMensile)}.`:''}`;
+  if(/(entrat[ae]|guadagn|incass).*(mese|questo|totale|quanto)|(quanto.*guadagn)/.test(m))
+    return `Questo mese hai avuto entrate per ${fmt(eM)}. ${eM>0?`Rispetto alle uscite di ${fmt(uM)}, il saldo è ${fmt(saldo)}.`:''}`;
+
+  // ── SALDO ──
+  if(/(saldo|bilancio|resto|rimane|avanzato)/.test(m))
+    return `Il tuo saldo di ${mc} è ${fmt(saldo)}. ${saldo>0?`Stai risparmiando, ottimo! 💚`:`Stai spendendo più di quanto entri. 🔴`}`;
+
+  // ── BUDGET ──
+  if(/(budget|limite|obiettivo.*(spesa|mensile))/.test(m)){
+    if(!budgetMensile)return `Non hai impostato un budget mensile. Puoi farlo nelle Impostazioni! ⚙️`;
+    const pct=Math.round(uM/budgetMensile*100);
+    return `Budget mensile: ${fmt(budgetMensile)}. Hai usato ${fmt(uM)} (${pct}%). ${pct>=100?'⚠️ Budget superato!':pct>=80?'⚡ Quasi al limite, attenzione.':'✅ Sei in linea.'}`;
+  }
+
+  // ── CATEGORIA TOP ──
+  if(/(categoria|voce).*(più|top|maggiore|più alta|costosa)|(dove.*spendo.*di più)/.test(m)){
+    if(!topCat)return `Non ci sono uscite registrate questo mese.`;
+    return `La tua categoria top di ${mc} è "${topCat[0]}" con ${fmt(topCat[1])} — il ${Math.round(topCat[1]/uM*100)}% delle uscite totali.`;
+  }
+
+  // ── RISPARMIO ──
+  if(/(risparmio|risparmiato|messo da parte)/.test(m)){
+    const totE=txs.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+    const totU=txs.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+    return `Questo mese hai risparmiato ${fmt(saldo)}. ${saldo>0?`In totale da quando usi Budgly hai accumulato ${fmt(totE-totU)}.`:'Questo mese sei in negativo, cerca di ridurre qualche spesa. 💡'}`;
+  }
+
+  // ── CONFRONTO MESI ──
+  if(/(confronta|rispetto|precedente|mese scorso|mese prima)/.test(m)){
+    if(!uP)return `Non ho dati del mese precedente (${mp}).`;
+    const diff=uM-uP;
+    return `${mc}: ${fmt(uM)} di uscite. ${mp}: ${fmt(uP)}. ${diff>0?`Hai speso ${fmt(diff)} in più rispetto al mese scorso. 📈`:`Hai speso ${fmt(Math.abs(diff))} in meno rispetto al mese scorso. 📉 Bravo!`}`;
+  }
+
+  // ── ULTIME SPESE ──
+  if(/(ultim[ei]|recenti|ultima|ultima spesa|ho speso|cosa ho comprato)/.test(m)){
+    const last=txs.filter(t=>t.tipo==='uscita').slice(0,5);
+    if(!last.length)return `Non hai ancora registrato spese.`;
+    return `Ultime spese: ${last.map(t=>`${t.nome} (${fmt(t.importo)})`).join(', ')}.`;
+  }
+
+  // ── GOALS ──
+  if(/(goal|obiettivo|sogno|target|risparmio.*(vacanza|auto|casa))/.test(m)){
+    if(!goals.length)return `Non hai ancora goal attivi. Aggiungine uno nella sezione Goals! 🎯`;
+    return `Hai ${goals.length} goal: ${goals.map(g=>`${g.nome} (${Math.round(g.saved/g.target*100)}%)`).join(', ')}.`;
+  }
+
+  // ── ABBONAMENTI ──
+  if(/(abbonament|netflix|spotify|ricorrente|subscription)/.test(m)){
+    const subs=txs.filter(t=>t.ricorrente&&t.tipo==='uscita');
+    const unique=[...new Map(subs.map(s=>[s.nome,s])).values()];
+    if(!unique.length)return `Non hai spese ricorrenti registrate. Segna un'uscita come 🔁 ricorrente per tracciarla!`;
+    const tot=unique.reduce((s,t)=>s+t.importo,0);
+    return `Hai ${unique.length} abbonamenti attivi per un totale di ${fmt(tot)}/mese (${fmt(tot*12)}/anno). I principali: ${unique.slice(0,3).map(s=>s.nome).join(', ')}.`;
+  }
+
+  // ── CONSIGLIO ──
+  if(/(consiglio|suggerimento|come risparmio|cosa faccio|aiutami)/.test(m)){
+    if(!topCat)return `Inizia a registrare le spese per ricevere consigli personalizzati! 📝`;
+    return `Il mio consiglio: la tua spesa più alta è "${topCat[0]}" con ${fmt(topCat[1])}. Prova a ridurla del 10-20% — risparmieresti ${fmt(topCat[1]*0.15)} al mese, ovvero ${fmt(topCat[1]*0.15*12)} all'anno! 💡`;
+  }
+
+  // ── STREAK / LIVELLO ──
+  if(/(streak|giorni|livello|rank|badge)/.test(m)){
+    const streak=getStreak();
+    const pts=Math.min(txs.length,200);
+    const lvl=LEVELS.find(l=>pts>=l.min&&pts<l.max)||LEVELS[LEVELS.length-1];
+    return `Sei al livello "${lvl.name}" ${lvl.ico} con ${txs.length} transazioni totali e uno streak di ${streak} giorni. ${streak>7?'Stai andando alla grande! 🔥':'Registra le spese ogni giorno per aumentare lo streak! 💪'}`;
+  }
+
+  // ── FALLBACK SIMPATICO ──
+  const fallbacks=[
+    `Non sono sicuro di aver capito, ma posso dirti che questo mese hai speso ${fmt(uM)}. Prova a chiedermi qualcosa di più specifico! 😊`,
+    `Mmh, non ho capito bene. Prova con "quanto ho speso in cibo?" o "qual è il mio saldo?" 💬`,
+    `Non so rispondere a questo, ma so tutto delle tue spese! Chiedi qualcosa come "mostrami le ultime 5 spese". 📊`,
+    `Bella domanda, ma sono specializzato in finanze personali 😄 Chiedimi del tuo budget, delle spese o dei goal!`,
+  ];
+  return fallbacks[Math.floor(Math.random()*fallbacks.length)];
 }
 
 // ══════════════════════════════════════════
