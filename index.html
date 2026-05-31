@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-512.png"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
@@ -917,7 +917,11 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="setting-group">
-    <div class="setting-group"><div class="setting-lbl">🟡 Modalità risparmio</div><button class="export-btn" onclick="toggleSavingMode()" id="saving-btn">Attiva / Disattiva</button><div class="setting-desc">Ti avvisa quando stai spendendo troppo in una categoria</div></div><div class="setting-lbl">🎨 Tema</div>
+    <div class="setting-group"><div class="setting-lbl">🟡 Modalità risparmio</div><button class="export-btn" onclick="toggleSavingMode()" id="saving-btn">Attiva / Disattiva</button><div class="setting-desc">Ti avvisa quando stai spendendo troppo in una categoria</div></div>
+    <div class="setting-lbl">🔊 Suoni</div>
+    <div class="recurr-row" style="margin-bottom:8px"><span>Feedback sonoro</span><label class="toggle"><input type="checkbox" id="sounds-toggle" onchange="toggleSounds(this)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+    <div class="setting-desc" style="margin-bottom:12px">Tick e ding discreti per ogni azione</div>
+    <div class="setting-lbl">🎨 Tema</div>
     <button class="export-btn" onclick="toggleTheme()">🌙 / ☀️ Cambia tema</button>
   </div>
 
@@ -1405,6 +1409,63 @@ function initApp(){initSavingMode();
 
 function haptic(s='light'){try{if(navigator.vibrate)navigator.vibrate(s==='light'?30:s==='medium'?60:100)}catch(e){}}
 
+// ── SUONI MINIMAL ──
+const _ac=()=>{try{return new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}};
+let _audioCtx=null;
+function getAC(){if(!_audioCtx)_audioCtx=_ac();return _audioCtx}
+
+function playSound(type){
+  try{
+    const ctx=getAC();if(!ctx)return;
+    if(localStorage.getItem('sounds_off')==='1')return;
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    const now=ctx.currentTime;
+    if(type==='save'){
+      // Ding morbido: due note veloci
+      o.type='sine';
+      o.frequency.setValueAtTime(880,now);
+      o.frequency.setValueAtTime(1100,now+0.08);
+      g.gain.setValueAtTime(0,now);
+      g.gain.linearRampToValueAtTime(0.12,now+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,now+0.25);
+      o.start(now);o.stop(now+0.25);
+    } else if(type==='click'){
+      // Tick discreto
+      o.type='sine';
+      o.frequency.setValueAtTime(600,now);
+      g.gain.setValueAtTime(0,now);
+      g.gain.linearRampToValueAtTime(0.07,now+0.005);
+      g.gain.exponentialRampToValueAtTime(0.001,now+0.08);
+      o.start(now);o.stop(now+0.08);
+    } else if(type==='error'){
+      // Basso breve
+      o.type='sine';
+      o.frequency.setValueAtTime(200,now);
+      g.gain.setValueAtTime(0,now);
+      g.gain.linearRampToValueAtTime(0.1,now+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,now+0.2);
+      o.start(now);o.stop(now+0.2);
+    } else if(type==='success'){
+      // Tre note ascendenti
+      const freqs=[660,880,1100];
+      freqs.forEach((f,i)=>{
+        const o2=ctx.createOscillator();
+        const g2=ctx.createGain();
+        o2.connect(g2);g2.connect(ctx.destination);
+        o2.type='sine';
+        o2.frequency.setValueAtTime(f,now+i*0.1);
+        g2.gain.setValueAtTime(0,now+i*0.1);
+        g2.gain.linearRampToValueAtTime(0.1,now+i*0.1+0.01);
+        g2.gain.exponentialRampToValueAtTime(0.001,now+i*0.1+0.18);
+        o2.start(now+i*0.1);o2.stop(now+i*0.1+0.18);
+      });
+      return;
+    }
+  }catch(e){}
+}
+
 // ── DRAWER ──
 function openDrawer(){
   const ov=document.getElementById('drawer-overlay');
@@ -1425,6 +1486,7 @@ function goNav(id){
   document.getElementById(id).classList.add('on');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const nm=document.getElementById('nav-'+id);if(nm)nm.classList.add('active');
+  playSound('click');
   if(id==='p-dati'){buildMonthFilter();renderDati();drawCal()}
   if(id==='p-home')updHome();
   if(id==='p-goals')renderGoals();
@@ -1441,7 +1503,7 @@ function goNav(id){
   if(id==='p-wrapped'){initWrapped()}
   if(id==='p-salary'){renderSalary()}
   if(id==='p-whatif'){initWhatIf()}
-  if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click()}
+  if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click();initSoundsToggle()}
   haptic('light');
 }
 
@@ -1639,7 +1701,7 @@ async function salva(){
     if(splits.length>0){
       const mese=new Date(dv+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
       splits.forEach(s=>{txs.unshift({id:Date.now()+Math.random(),nome:nome+' ('+s.cat+')',importo:s.imp,tipo,categoria:s.cat,metodo:document.getElementById('met').value,data:dv,mese,ricorrente,tag,conto,cur})});
-      save();haptic('heavy');showOK('Split salvato ✓','✂️');return;
+      save();haptic('heavy');showOK('Split salvato ✓','✂️');playSound('save');return;
     }
   }
 
@@ -1649,14 +1711,16 @@ async function salva(){
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'Salva su Notion e rispondi solo {"ok":true}.',messages:[{role:'user',content:`Crea pagina database Notion DS="${DS}": Nome="${tx.nome}",Tipo="${tipo==='entrata'?'💰 Entrata':'💸 Uscita'}",Importo=${tx.importo},date:Data:start="${tx.data}",date:Data:is_datetime=0,Categoria="${CE[tx.categoria]||'❓ Altro'}",Metodo di Pagamento="${ME[tx.metodo]||'❓ Altro'}",Mese="${tx.mese}",Ricorrente=${ricorrente}. Rispondi {"ok":true}.`}],mcp_servers:[{type:'url',url:'https://mcp.notion.com/mcp',name:'notion'}]})});
     const d=await res.json();const txt=(d.content||[]).map(b=>b.text||'').join('');
     txs.unshift(tx);save();haptic('heavy');
+    pushTxToSupabase(tx);
     showOK(txt.includes('"ok":true')||txt.includes('success')?'Salvato su Notion ✓':'Salvato in locale');
-  }catch(e){txs.unshift(tx);save();haptic('heavy');showOK('Salvato in locale')}
+    playSound('save');
+  }catch(e){txs.unshift(tx);save();haptic('heavy');pushTxToSupabase(tx);showOK('Salvato in locale');playSound('save')}
 }
 
 function save(){try{localStorage.setItem('btx',JSON.stringify(txs.slice(0,500)))}catch(e){}}
 function saveGoals(){try{localStorage.setItem('bgoals',JSON.stringify(goals))}catch(e){}}
 
-function elimina(id){txs=txs.filter(t=>t.id!==id);save();haptic('medium');renderDati();updHome()}
+function elimina(id){txs=txs.filter(t=>t.id!==id);save();haptic('medium');deleteTxFromSupabase(id);renderDati();updHome()}
 
 function showOK(sub,ico='✓'){
   document.getElementById('oico').textContent=ico;document.getElementById('osub').textContent=sub;
@@ -1743,7 +1807,7 @@ function addGoal(){
   renderGoals();haptic('medium');
 }
 function delGoal(i){goals.splice(i,1);saveGoals();renderGoals()}
-function addToGoal(i){const amt=parseFloat(prompt('Quanto hai risparmiato? €'));if(!amt||amt<=0)return;goals[i].saved+=amt;saveGoals();if(goals[i].saved>=goals[i].target){launchConfetti();showAlert('🎉 "'+goals[i].nome+'" raggiunto!','green')}renderGoals();haptic('heavy')}
+function addToGoal(i){const amt=parseFloat(prompt('Quanto hai risparmiato? €'));if(!amt||amt<=0)return;goals[i].saved+=amt;saveGoals();if(goals[i].saved>=goals[i].target){launchConfetti();showAlert('🎉 "'+goals[i].nome+'" raggiunto!','green');playSound('success')}else{playSound('save')}renderGoals();haptic('heavy')}
 
 // SETTINGS
 function setDefaultCur(cur){
@@ -1752,6 +1816,14 @@ function setDefaultCur(cur){
   document.getElementById('cur-'+cur).classList.add('active');
 }
 function saveBudget(){budgetMensile=parseFloat(document.getElementById('budget-input').value)||0;localStorage.setItem('budget_m',budgetMensile)}
+function toggleSounds(el){
+  localStorage.setItem('sounds_off',el.checked?'0':'1');
+  if(el.checked)playSound('save');
+}
+function initSoundsToggle(){
+  const el=document.getElementById('sounds-toggle');
+  if(el)el.checked=localStorage.getItem('sounds_off')!=='1';
+}
 function toggleTheme(){isDark=!isDark;document.body.classList.toggle('light',!isDark);document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';localStorage.setItem('theme',isDark?'dark':'light');haptic('light')}
 
 // SHARE / COPPIA
@@ -2957,8 +3029,72 @@ function renderWhatIfSuggestions(){
 }
 
 // ══════════════════════════════════════════
-// 🔐 AUTH — LOGIN / SIGNUP
+// 🔐 SUPABASE
 // ══════════════════════════════════════════
+const SUPA_URL='https://ippakrkwvaklwmumfubr.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwcGFrcmt3dmFrbHdtdW1mdWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTEyMDgsImV4cCI6MjA5NTgyNzIwOH0.gCYPUJgcL0QmSNgmWLUFzb2SbQW38qkB7-gdkQFw5tk';
+let supa=null;
+function initSupa(){
+  if(supa)return supa;
+  if(typeof supabase==='undefined')return null;
+  supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+  return supa;
+}
+let supaUser=null;
+
+async function supaInit(){
+  const s=initSupa();if(!s)return;
+  const {data:{session}}=await s.auth.getSession();
+  if(session){
+    supaUser=session.user;
+    await loadSupaProfile();
+    await syncFromSupabase();
+  }
+  s.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_IN'&&session){supaUser=session.user;await loadSupaProfile();await syncFromSupabase()}
+    if(event==='SIGNED_OUT'){supaUser=null}
+  });
+}
+
+async function loadSupaProfile(){
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  const{data}=await s.from('profiles').select('*').eq('id',supaUser.id).single();
+  if(data){
+    userProfile={name:data.name||'',email:supaUser.email||'',avatar:data.avatar||'🙂',since:data.since||new Date().toLocaleDateString('it-IT')};
+    if(data.default_cur)defaultCur=data.default_cur;
+    if(data.budget_mensile)budgetMensile=data.budget_mensile;
+    saveUserProfile();updateAvatarUI();
+  }
+}
+
+async function syncFromSupabase(){
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  const{data:txData}=await s.from('transactions').select('*').eq('user_id',supaUser.id).order('created_at',{ascending:false});
+  if(txData&&txData.length>0){
+    txs=txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR'}));
+    save();
+  }
+  const{data:gData}=await s.from('goals').select('*').eq('user_id',supaUser.id);
+  if(gData&&gData.length>0){
+    goals=gData.map(g=>({id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
+    saveGoals();
+  }
+}
+
+async function pushTxToSupabase(tx){
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  await s.from('transactions').insert({user_id:supaUser.id,nome:tx.nome,importo:tx.importo,tipo:tx.tipo,categoria:tx.categoria,metodo:tx.metodo,data:tx.data,mese:tx.mese,ricorrente:tx.ricorrente,tag:tx.tag,conto:tx.conto,cur:tx.cur});
+}
+
+async function deleteTxFromSupabase(id){
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  await s.from('transactions').delete().eq('id',id).eq('user_id',supaUser.id);
+}
+
+async function saveProfileToSupabase(){
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  await s.from('profiles').upsert({id:supaUser.id,name:userProfile.name,avatar:userProfile.avatar,default_cur:defaultCur,budget_mensile:budgetMensile});
+}
 const AVATARS=['🙂','😎','🤑','🦊','🐻','🐼','🦁','🐯','🦄','🐉','🚀','💎','🌟','🔥','💪','🧠','👑','🎯','💰','🌈'];
 let currentAvatar='🙂';
 let authTab='login';
@@ -2991,61 +3127,66 @@ function selectSignupAvatar(el,emoji){
   currentAvatar=emoji;
 }
 
-function doLogin(){
+async function doLogin(){
+  const s=initSupa();
+  if(!s){showAlert('⚠️ Libreria non caricata, riprova');return}
   const email=document.getElementById('login-email').value.trim();
   const pw=document.getElementById('login-password').value;
   if(!email||!pw){showAlert('⚠️ Compila email e password');return}
-  // Verifica credenziali salvate localmente
-  const saved=JSON.parse(localStorage.getItem('bprofile')||'{}');
-  if(saved.email&&saved.email!==email){showAlert('⚠️ Email non trovata');return}
-  if(saved.pw&&saved.pw!==btoa(pw)){showAlert('⚠️ Password errata');return}
-  // Login ok
-  userProfile={...saved,email};
-  saveUserProfile();
+  const btn=document.querySelector('#auth-login-form .auth-submit');
+  btn.textContent='Accesso...';btn.disabled=true;
+  const{data,error}=await s.auth.signInWithPassword({email,password:pw});
+  btn.textContent='Accedi →';btn.disabled=false;
+  if(error){showAlert('⚠️ '+error.message);playSound('error');return}
+  supaUser=data.user;
+  await loadSupaProfile();
+  await syncFromSupabase();
   localStorage.setItem('auth_done','1');
   document.getElementById('auth-screen').classList.remove('show');
   updateAvatarUI();
-  if(!localStorage.getItem('ob_done')){
-    document.getElementById('onboarding').classList.add('show');
-  } else {
-    checkPin();if(!pinSet)initApp();
-  }
-  showAlert('👋 Bentornato, '+userProfile.name+'!','green');
+  if(!localStorage.getItem('ob_done')){document.getElementById('onboarding').classList.add('show')}
+  else{checkPin();if(!pinSet)initApp()}
+  showAlert('👋 Bentornato, '+(userProfile.name||email)+'!','green');
+  playSound('success');
 }
 
-function doSignup(){
+async function doSignup(){
+  const s=initSupa();
+  if(!s){showAlert('⚠️ Libreria non caricata, riprova');return}
   const name=document.getElementById('signup-name').value.trim();
   const email=document.getElementById('signup-email').value.trim();
   const pw=document.getElementById('signup-password').value;
   if(!name||!email||pw.length<6){showAlert('⚠️ Compila tutti i campi (password min 6 caratteri)');return}
-  userProfile={name,email,avatar:currentAvatar,since:new Date().toLocaleDateString('it-IT'),pw:btoa(pw)};
+  const btn=document.querySelector('#auth-signup-form .auth-submit');
+  btn.textContent='Creazione...';btn.disabled=true;
+  const{data,error}=await s.auth.signUp({email,password:pw,options:{data:{name}}});
+  btn.textContent='Crea account →';btn.disabled=false;
+  if(error){showAlert('⚠️ '+error.message);playSound('error');return}
+  supaUser=data.user;
+  userProfile={name,email,avatar:currentAvatar,since:new Date().toLocaleDateString('it-IT')};
   saveUserProfile();
+  await saveProfileToSupabase();
   localStorage.setItem('auth_done','1');
   document.getElementById('auth-screen').classList.remove('show');
   updateAvatarUI();
-  if(!localStorage.getItem('ob_done')){
-    document.getElementById('onboarding').classList.add('show');
-  } else {
-    checkPin();if(!pinSet)initApp();
-  }
+  if(!localStorage.getItem('ob_done')){document.getElementById('onboarding').classList.add('show')}
+  else{checkPin();if(!pinSet)initApp()}
   launchConfetti();
-  showAlert('🎉 Account creato! Benvenuto, '+name+'!','green');
+  showAlert('🎉 Benvenuto, '+name+'!','green');
+  playSound('success');
 }
 
 function skipAuth(){
   localStorage.setItem('auth_done','1');
   document.getElementById('auth-screen').classList.remove('show');
-  if(!localStorage.getItem('ob_done')){
-    document.getElementById('onboarding').classList.add('show');
-  } else {
-    checkPin();if(!pinSet)initApp();
-  }
+  if(!localStorage.getItem('ob_done')){document.getElementById('onboarding').classList.add('show')}
+  else{checkPin();if(!pinSet)initApp()}
 }
 
-function doLogout(){
-  if(!confirm('Vuoi uscire dall\'account? I dati restano sul dispositivo.'))return;
-  localStorage.removeItem('auth_done');
-  location.reload();
+async function doLogout(){
+  if(!confirm('Vuoi uscire dall\'account?'))return;
+  const s=initSupa();if(s)await s.auth.signOut();
+  supaUser=null;localStorage.removeItem('auth_done');location.reload();
 }
 
 function updateAvatarUI(){
@@ -3095,6 +3236,7 @@ function saveProfile(){
   if(!name){showAlert('⚠️ Inserisci un nome');return}
   userProfile.name=name;
   saveUserProfile();
+  saveProfileToSupabase();
   document.getElementById('profile-name').textContent=name;
   updateAvatarUI();
   showAlert('✅ Profilo aggiornato','green');haptic('medium');
@@ -3113,6 +3255,7 @@ function closeEmojiPicker(e){
 function selectAvatar(emoji){
   userProfile.avatar=emoji;
   saveUserProfile();
+  saveProfileToSupabase();
   document.getElementById('profile-avatar-emoji').textContent=emoji;
   updateAvatarUI();
   document.getElementById('emoji-picker-overlay').classList.remove('show');
@@ -3121,6 +3264,7 @@ function selectAvatar(emoji){
 
 checkOnboarding();
 renderDailyQuote();
+supaInit();
 
 </script>
 </body>
