@@ -1397,10 +1397,51 @@ function setupPin(){settingPin=true;pinEntry='';updatePinDots();document.getElem
 function removePin(){localStorage.removeItem('app_pin');pinSet='';showAlert('PIN rimosso','green')}
 async function tryBiometric(){
   try{
-    const cred=await navigator.credentials.get({publicKey:{challenge:new Uint8Array(32),timeout:60000,userVerification:'required'}});
-    if(cred){document.getElementById('pin-screen').classList.remove('show');pinEntry='';updatePinDots()}
-  }catch(e){document.getElementById('pin-error').textContent='Biometrica non disponibile';setTimeout(()=>document.getElementById('pin-error').textContent='',2000)}
+    // Controlla se biometrica è disponibile
+    if(!window.PublicKeyCredential){
+      document.getElementById('pin-error').textContent='Biometrica non supportata';
+      setTimeout(()=>document.getElementById('pin-error').textContent='',2000);return;
+    }
+    const available=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if(!available){
+      document.getElementById('pin-error').textContent='Face ID / impronta non disponibile';
+      setTimeout(()=>document.getElementById('pin-error').textContent='',2000);return;
+    }
+    // Prova prima a usare credenziale esistente
+    const credId=localStorage.getItem('bio_cred_id');
+    if(credId){
+      try{
+        const assertion=await navigator.credentials.get({publicKey:{
+          challenge:crypto.getRandomValues(new Uint8Array(32)),
+          timeout:60000,
+          userVerification:'required',
+          allowCredentials:[{id:base64ToUint8(credId),type:'public-key'}]
+        }});
+        if(assertion){document.getElementById('pin-screen').classList.remove('show');pinEntry='';updatePinDots();haptic('heavy');return}
+      }catch(e){}
+    }
+    // Prima volta — registra la credenziale biometrica
+    const regCred=await navigator.credentials.create({publicKey:{
+      challenge:crypto.getRandomValues(new Uint8Array(32)),
+      rp:{name:'Budgly',id:location.hostname||'localhost'},
+      user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'budgly-user',displayName:'Budgly User'},
+      pubKeyCredParams:[{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
+      authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
+      timeout:60000
+    }});
+    if(regCred){
+      localStorage.setItem('bio_cred_id',uint8ToBase64(new Uint8Array(regCred.rawId)));
+      document.getElementById('pin-screen').classList.remove('show');pinEntry='';updatePinDots();haptic('heavy');
+      showAlert('✅ Face ID / impronta attivati!','green');
+    }
+  }catch(e){
+    document.getElementById('pin-error').textContent='Biometrica non disponibile';
+    setTimeout(()=>document.getElementById('pin-error').textContent='',2000);
+  }
 }
+
+function uint8ToBase64(u8){return btoa(String.fromCharCode(...u8))}
+function base64ToUint8(b64){return new Uint8Array(atob(b64).split('').map(c=>c.charCodeAt(0)))}
 
 function initApp(){initSavingMode();
   renderAccounts();updHome();
