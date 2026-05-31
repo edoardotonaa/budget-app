@@ -291,6 +291,134 @@ select option{background:#222}
 .share-desc{font-size:13px;color:var(--muted);text-align:center}
 .share-close{padding:13px;border-radius:var(--rs);border:none;background:var(--bg3);color:#f0f0f0;font-size:15px;font-family:inherit;cursor:pointer}
 
+/* ── CONVERTITORE VALUTA ── */
+#p-converter{padding-top:52px}
+.conv-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.conv-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.conv-row select{width:90px;flex-shrink:0;font-size:15px;padding:11px 10px}
+.conv-row input{flex:1;font-size:22px;font-family:'DM Mono',monospace;font-weight:500}
+.conv-arrow{font-size:22px;color:var(--muted);text-align:center;margin:4px 0 10px;cursor:pointer;user-select:none}
+.conv-result{font-size:32px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-1px;color:var(--green);text-align:center;padding:16px 0 4px}
+.conv-rate{font-size:12px;color:var(--muted);text-align:center;margin-bottom:8px}
+.conv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.conv-pair{background:var(--bg3);border-radius:var(--rs);padding:11px;text-align:center;cursor:pointer}
+.conv-pair:active{opacity:.7}
+.conv-pair-lbl{font-size:11px;color:var(--muted);margin-bottom:3px}
+.conv-pair-rate{font-size:14px;font-weight:500;font-family:'DM Mono',monospace}
+.conv-updated{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
+
+/* ── CHATBOT AI ── */
+#p-chat{padding-top:52px;display:none;flex-direction:column}
+#p-chat.on{display:flex}
+.chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-bottom:80px;min-height:300px}
+.chat-bubble{max-width:85%;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word}
+.chat-bubble.user{background:rgba(96,165,250,.15);border:.5px solid rgba(96,165,250,.25);align-self:flex-end;border-bottom-right-radius:4px}
+.chat-bubble.ai{background:var(--bg2);border:.5px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.chat-bubble.ai.loading{color:var(--muted);font-style:italic}
+.chat-input-row{position:fixed;bottom:60px;left:0;right:0;display:flex;gap:8px;padding:10px 16px;background:rgba(15,15,15,.95);backdrop-filter:blur(10px);border-top:.5px solid var(--border);z-index:40}
+.chat-input-row input{flex:1;border-radius:99px;padding:11px 16px;font-size:15px}
+.chat-send{width:42px;height:42px;border-radius:50%;border:none;background:var(--blue);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-send:active{opacity:.8}
+.chat-chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;scrollbar-width:none}
+.chat-chips::-webkit-scrollbar{display:none}
+.chat-chip{flex-shrink:0;padding:7px 13px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);font-size:12px;cursor:pointer;white-space:nowrap;color:var(--muted)}
+.chat-chip:active{opacity:.7}
+
+/* ── SFIDE RISPARMIO ── */
+#p-challenges{padding-top:52px}
+.challenge-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.challenge-card.active-ch{border-color:rgba(74,222,128,.3)}
+.challenge-card.completed-ch{border-color:rgba(74,222,128,.5);opacity:.85}
+.challenge-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.challenge-ico{font-size:32px;flex-shrink:0}
+.challenge-info{flex:1}
+.challenge-name{font-size:15px;font-weight:500;margin-bottom:2px}
+.challenge-desc{font-size:12px;color:var(--muted);line-height:1.4}
+.challenge-meta{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.challenge-tag{font-size:11px;padding:3px 9px;border-radius:99px;border:.5px solid var(--border);color:var(--muted)}
+.challenge-tag.green{border-color:rgba(74,222,128,.3);color:var(--green)}
+.challenge-tag.yellow{border-color:rgba(251,191,36,.3);color:var(--yellow)}
+.challenge-tag.blue{border-color:rgba(96,165,250,.3);color:var(--blue)}
+.challenge-bar-wrap{background:var(--bg3);border-radius:99px;height:6px;overflow:hidden;margin-bottom:8px}
+.challenge-bar{height:100%;border-radius:99px;background:var(--green);transition:width .5s}
+.challenge-footer{display:flex;justify-content:space-between;align-items:center}
+.challenge-pct{font-size:12px;color:var(--muted)}
+.challenge-btn{padding:7px 14px;border-radius:99px;border:none;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500}
+.challenge-btn.start{background:rgba(74,222,128,.1);color:var(--green);border:.5px solid rgba(74,222,128,.3)}
+.challenge-btn.abandon{background:rgba(248,113,113,.07);color:var(--red);border:.5px solid rgba(248,113,113,.2)}
+.challenge-btn.done-btn{background:rgba(74,222,128,.15);color:var(--green);border:.5px solid rgba(74,222,128,.4)}
+.challenge-progress-txt{font-size:13px;color:var(--muted);font-family:'DM Mono',monospace}
+.custom-challenge-form{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;margin-top:14px;display:flex;flex-direction:column;gap:11px}
+
+/* ── DRAWER ── */
+.drawer-item{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:var(--rs);cursor:pointer;font-size:15px;transition:background .15s}
+.drawer-item:active{background:var(--bg3)}
+.drawer-item span:first-child{font-size:20px;width:26px;text-align:center;flex-shrink:0}
+
+/* ── INVESTIMENTI ── */
+#p-invest{padding-top:52px}
+.inv-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.inv-sbox{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:11px;text-align:center}
+.inv-slbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.inv-snum{font-size:15px;font-weight:500;font-family:'DM Mono',monospace}
+.inv-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px}
+.inv-card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.inv-ticker{font-size:12px;font-weight:700;font-family:'DM Mono',monospace;background:var(--bg3);padding:4px 8px;border-radius:6px;flex-shrink:0}
+.inv-name{font-size:14px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-del{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;flex-shrink:0}
+.inv-del:active{color:var(--red)}
+.inv-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.inv-lbl2{color:var(--muted)}
+.inv-val2{font-family:'DM Mono',monospace;font-weight:500}
+.inv-bar-wrap{background:var(--bg3);border-radius:99px;height:4px;overflow:hidden;margin-top:8px}
+.inv-bar{height:100%;border-radius:99px;transition:width .5s}
+.inv-add-form{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px;display:flex;flex-direction:column;gap:11px}
+.inv-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inv-type-row{display:flex;gap:7px;flex-wrap:wrap}
+.inv-type-btn{padding:6px 12px;border-radius:99px;border:.5px solid var(--border);background:var(--bg3);font-size:12px;cursor:pointer;font-family:inherit;color:var(--muted)}
+.inv-type-btn.sel{border-color:var(--blue);color:var(--blue);background:rgba(96,165,250,.1)}
+
+/* ── PROMEMORIA ── */
+#p-reminders{padding-top:52px}
+.rem-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.rem-card.overdue{border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.04)}
+.rem-card.today{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.04)}
+.rem-card.soon{border-color:rgba(96,165,250,.25)}
+.rem-left{display:flex;flex-direction:column;align-items:center;justify-content:center;width:42px;flex-shrink:0;background:var(--bg3);border-radius:10px;padding:7px 4px}
+.rem-day{font-size:17px;font-weight:700;font-family:'DM Mono',monospace;line-height:1}
+.rem-month{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:1px}
+.rem-info{flex:1;min-width:0}
+.rem-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rem-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.rem-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.rem-amt{font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:var(--red)}
+.rem-badge{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:500}
+.rem-badge.overdue{background:rgba(248,113,113,.15);color:var(--red)}
+.rem-badge.today{background:rgba(251,191,36,.15);color:var(--yellow)}
+.rem-badge.soon{background:rgba(96,165,250,.12);color:var(--blue)}
+.rem-badge.ok{background:rgba(74,222,128,.1);color:var(--green)}
+.rem-del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px}
+.rem-add-form{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px;margin-top:4px;display:flex;flex-direction:column;gap:11px}
+.rem-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ── WIDGET ── */
+#p-widget{padding-top:52px}
+.widget-info-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.widget-preview{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:18px;padding:20px;margin:14px 0;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.widget-preview::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(96,165,250,.2),transparent 70%);pointer-events:none}
+.widget-preview-lbl{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em}
+.widget-preview-val{font-size:34px;font-weight:300;letter-spacing:-1.5px;color:#fff;line-height:1}
+.widget-preview-row{display:flex;justify-content:space-between}
+.widget-preview-item{display:flex;flex-direction:column;gap:2px}
+.widget-preview-sub{font-size:10px;color:rgba(255,255,255,.4)}
+.widget-preview-num{font-size:13px;font-weight:500;color:#fff}
+.widget-step{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:.5px solid var(--border)}
+.widget-step:last-child{border-bottom:none;padding-bottom:0}
+.widget-step-num{width:24px;height:24px;border-radius:50%;background:rgba(96,165,250,.12);border:.5px solid rgba(96,165,250,.3);color:var(--blue);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.widget-step-text{font-size:13px;line-height:1.55;color:#d0d0d0}
+.widget-copy-btn{width:100%;padding:13px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:8px}
+.widget-copy-btn:active{opacity:.8}
+
 /* LIGHT */
 body.light{background:#f5f5f5;color:#111}
 body.light .page{background:#f5f5f5}
@@ -348,6 +476,7 @@ body.light .share-box{background:#fff}
     <div class="top-btns">
       <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
       <button class="icon-btn" onclick="goNav('p-settings')">⚙️</button>
+      <button class="icon-btn" onclick="openDrawer()" id="hamburger-btn" style="font-size:18px;letter-spacing:-1px">≡</button>
     </div>
   </div>
   <div class="saving-mode-bar" id="saving-mode-bar"><span>🟡 Modalità risparmio attiva — stai attento alle spese!</span><button class="saving-mode-toggle" onclick="toggleSavingMode()">Disattiva</button></div>
@@ -374,19 +503,34 @@ body.light .share-box{background:#fff}
   </div>
   <div class="lbl" style="margin-bottom:8px">Top spese questo mese</div>
   <div class="topcats" id="topcats"></div>
+
   <div class="center">
     <button class="add" onclick="goNav('p-type')">+</button>
     <div class="add-lbl">aggiungi</div>
   </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px">
-    <button onclick="goNav('p-dati')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">📊 Dati</button>
-    <button onclick="goNav('p-converter')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">💱 Converti</button>
-    <button onclick="goNav('p-challenges')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🎯 Sfide</button>
-    <button onclick="goNav('p-import')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🏦 Importa</button>
-    <button onclick="goNav('p-invest')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">📈 Invest</button>
-    <button onclick="goNav('p-projects')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🌍 Progetti</button>
-    <button onclick="goNav('p-reminders')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🗓️ Promemoria</button>
-    <button onclick="goNav('p-stats')" style="padding:8px 14px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">🏅 Stats</button>
+</div>
+
+<!-- DRAWER HAMBURGER -->
+<div id="drawer-overlay" onclick="closeDrawer()" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:120;display:none;opacity:0;transition:opacity .25s"></div>
+<div id="drawer" style="position:fixed;top:0;right:0;bottom:0;width:72%;max-width:280px;background:var(--bg2);border-left:.5px solid var(--border);z-index:121;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:56px 0 32px">
+  <div style="padding:0 20px 20px;border-bottom:.5px solid var(--border)">
+    <div style="font-size:18px;font-weight:600;margin-bottom:2px">💰 Budly</div>
+    <div style="font-size:12px;color:var(--muted)">Menu</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:12px 8px">
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-home')"><span>🏠</span><span>Home</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-chat')"><span>💬</span><span>Assistente AI</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-challenges')"><span>🏆</span><span>Sfide risparmio</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-game')"><span>🎮</span><span>Rank & Badge</span></div>
+    <div style="height:.5px;background:var(--border);margin:8px 12px"></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-dati')"><span>📊</span><span>Dati & Grafici</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-converter')"><span>💱</span><span>Convertitore valute</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-invest')"><span>📈</span><span>Investimenti</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-reminders')"><span>🗓️</span><span>Promemoria pagamenti</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-widget')"><span>📱</span><span>Widget schermata home</span></div>
+    <div style="height:.5px;background:var(--border);margin:8px 12px"></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-settings')"><span>⚙️</span><span>Impostazioni</span></div>
   </div>
 </div>
 
@@ -547,145 +691,6 @@ body.light .share-box{background:#fff}
   </div>
 </div>
 
-<!-- CHATBOT PAGE -->
-<div id="p-chat" class="page">
-  <div class="top-bar"><div class="app-name">🤖 AI Assistant</div></div>
-  <div id="chat-messages" style="flex:1;display:flex;flex-direction:column;gap:12px;padding-bottom:16px;overflow-y:auto">
-    <div style="background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(167,139,250,.1));border:.5px solid rgba(96,165,250,.2);border-radius:var(--r);padding:14px;font-size:14px;line-height:1.6">
-      Ciao! Sono il tuo assistente finanziario 🤖<br><br>
-      Puoi chiedermi cose come:<br>
-      • "Quanto ho speso in cibo questo mese?"<br>
-      • "Qual è la mia categoria più costosa?"<br>
-      • "Sono in positivo o negativo?"<br>
-      • "Dammi consigli per risparmiare"
-    </div>
-  </div>
-  <div style="display:flex;gap:8px;padding-top:8px;border-top:.5px solid var(--border)">
-    <input type="text" id="chat-input" placeholder="Chiedimi qualcosa..." style="flex:1" onkeydown="if(event.key==='Enter')sendChat()"/>
-    <button onclick="sendChat()" style="padding:13px 18px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:16px;cursor:pointer">→</button>
-  </div>
-</div>
-
-<!-- CHALLENGES PAGE -->
-<div id="p-challenges" class="page">
-  <div class="top-bar"><div class="app-name">🎯 Sfide</div></div>
-  <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Accetta una sfida e risparmia di più!</div>
-  <div id="challenges-list" style="display:flex;flex-direction:column;gap:12px;padding-bottom:20px"></div>
-</div>
-
-<!-- CURRENCY CONVERTER PAGE -->
-<div id="p-converter" class="page">
-  <div class="top-bar"><div class="app-name">💱 Convertitore</div></div>
-  <div style="display:flex;flex-direction:column;gap:14px">
-    <div class="field"><label>Importo</label><input type="number" id="conv-amount" inputmode="decimal" placeholder="100" oninput="convert()"/></div>
-    <div class="field"><label>Da</label><select id="conv-from" onchange="convert()">
-      <option value="EUR">€ Euro</option><option value="USD">$ Dollaro</option><option value="GBP">£ Sterlina</option>
-      <option value="CHF">CHF Franco</option><option value="JPY">¥ Yen</option><option value="CAD">CAD Dollaro CA</option>
-      <option value="AUD">AUD Dollaro AU</option><option value="DKK">DKK Corona DK</option>
-    </select></div>
-    <div class="field"><label>A</label><select id="conv-to" onchange="convert()">
-      <option value="USD">$ Dollaro</option><option value="EUR">€ Euro</option><option value="GBP">£ Sterlina</option>
-      <option value="CHF">CHF Franco</option><option value="JPY">¥ Yen</option><option value="CAD">CAD Dollaro CA</option>
-      <option value="AUD">AUD Dollaro AU</option><option value="DKK">DKK Corona DK</option>
-    </select></div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:24px;text-align:center">
-      <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Risultato</div>
-      <div style="font-size:36px;font-weight:300;font-family:'DM Mono',monospace" id="conv-result">—</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:8px" id="conv-rate">Tasso: —</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px" id="conv-updated"></div>
-    </div>
-    <button onclick="convert(true)" style="padding:14px;border-radius:var(--r);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">🔄 Aggiorna tassi live</button>
-  </div>
-</div>
-
-<!-- PDF IMPORT PAGE -->
-<div id="p-import" class="page">
-  <div class="top-bar"><div class="app-name">🏦 Importa Estratto</div></div>
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer" onclick="document.getElementById('pdf-input').click()">
-      <div style="font-size:48px;margin-bottom:12px">📄</div>
-      <div style="font-size:16px;font-weight:500;margin-bottom:6px">Carica estratto conto PDF</div>
-      <div style="font-size:13px;color:var(--muted)">Supporta estratti di qualsiasi banca italiana</div>
-      <input type="file" id="pdf-input" accept=".pdf,image/*" style="display:none" onchange="importStatement(this)"/>
-    </div>
-    <div id="import-status" style="display:none;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px">
-      <div style="font-size:14px;font-weight:500;margin-bottom:8px" id="import-title">Analisi in corso...</div>
-      <div id="import-list" style="display:flex;flex-direction:column;gap:8px"></div>
-      <button id="import-confirm" style="display:none;width:100%;margin-top:12px;padding:14px;border-radius:var(--r);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer" onclick="confirmImport()">✓ Importa tutto</button>
-    </div>
-  </div>
-</div>
-
-<!-- INVESTMENTS PAGE -->
-<div id="p-invest" class="page">
-  <div class="top-bar"><div class="app-name">📈 Investimenti</div></div>
-  <div style="display:flex;flex-direction:column;gap:14px">
-    <div id="invest-summary" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
-    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">I tuoi asset</div>
-    <div id="invest-list" style="display:flex;flex-direction:column;gap:10px"></div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px">
-      <div style="font-size:14px;font-weight:500">Aggiungi asset</div>
-      <input type="text" id="inv-name" placeholder="es. ETF S&P500, Bitcoin, Apple..."/>
-      <div style="display:flex;gap:8px">
-        <div style="flex:1"><input type="number" id="inv-amount" inputmode="decimal" placeholder="Investito €"/></div>
-        <div style="flex:1"><input type="number" id="inv-current" inputmode="decimal" placeholder="Valore attuale €"/></div>
-      </div>
-      <select id="inv-type">
-        <option value="etf">📊 ETF/Fondo</option>
-        <option value="stock">🏢 Azione</option>
-        <option value="crypto">🪙 Crypto</option>
-        <option value="bond">📜 Obbligazione</option>
-        <option value="other">💼 Altro</option>
-      </select>
-      <button onclick="addInvestment()" style="padding:13px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">+ Aggiungi</button>
-    </div>
-  </div>
-</div>
-
-<!-- PROJECTS PAGE -->
-<div id="p-projects" class="page">
-  <div class="top-bar"><div class="app-name">🌍 Viaggi & Progetti</div></div>
-  <div id="projects-list" style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px"></div>
-  <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px">
-    <div style="font-size:14px;font-weight:500">Nuovo progetto</div>
-    <input type="text" id="proj-name" placeholder="es. Vacanza Ibiza, Matrimonio..."/>
-    <div style="display:flex;gap:8px">
-      <select id="proj-ico" style="width:80px">
-        <option>✈️</option><option>🏖️</option><option>💒</option><option>🏠</option>
-        <option>🎉</option><option>🚗</option><option>🎓</option><option>💼</option>
-      </select>
-      <input type="number" id="proj-budget" inputmode="decimal" placeholder="Budget €" style="flex:1"/>
-    </div>
-    <button onclick="addProject()" style="padding:13px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">+ Crea progetto</button>
-  </div>
-</div>
-
-<!-- REMINDERS PAGE -->
-<div id="p-reminders" class="page">
-  <div class="top-bar"><div class="app-name">🗓️ Promemoria</div></div>
-  <div id="reminders-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
-  <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px">
-    <div style="font-size:14px;font-weight:500">Nuovo promemoria</div>
-    <input type="text" id="rem-name" placeholder="es. Affitto, Rata auto..."/>
-    <div style="display:flex;gap:8px">
-      <input type="number" id="rem-amount" inputmode="decimal" placeholder="Importo €" style="flex:1"/>
-      <input type="number" id="rem-day" inputmode="numeric" placeholder="Giorno" min="1" max="31" style="width:80px"/>
-    </div>
-    <select id="rem-freq">
-      <option value="monthly">Mensile</option>
-      <option value="weekly">Settimanale</option>
-      <option value="yearly">Annuale</option>
-    </select>
-    <button onclick="addReminder()" style="padding:13px;border-radius:var(--rs);border:none;background:var(--yellow);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer">+ Aggiungi promemoria</button>
-  </div>
-</div>
-
-<!-- STATS PAGE -->
-<div id="p-stats" class="page">
-  <div class="top-bar"><div class="app-name">🏅 Statistiche</div></div>
-  <div id="stats-content" style="display:flex;flex-direction:column;gap:12px;padding-bottom:20px"></div>
-</div>
-
 <!-- SHARE MODAL -->
 <div id="share-modal">
   <div class="share-box">
@@ -728,12 +733,249 @@ body.light .share-box{background:#fff}
 <div id="overlay"><div class="obox"><div class="oico" id="oico">✓</div><div class="ottl" id="ottl">Salvato!</div><div class="osub" id="osub"></div></div></div>
 <div id="alert-banner"></div>
 
+<!-- ══════════════════════════════════════════
+     💱 CONVERTITORE VALUTA
+══════════════════════════════════════════ -->
+<div id="p-converter" class="page">
+  <div class="top-bar"><div class="app-name">💱 Convertitore</div><button class="icon-btn" onclick="refreshRates()">↻</button></div>
+
+  <div class="conv-card">
+    <div class="conv-row">
+      <input type="number" id="conv-from-val" inputmode="decimal" placeholder="1" value="1" oninput="doConvert()"/>
+      <select id="conv-from-cur" onchange="doConvert()">
+        <option value="EUR">🇪🇺 EUR</option><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option>
+        <option value="CHF">🇨🇭 CHF</option><option value="JPY">🇯🇵 JPY</option><option value="CAD">🇨🇦 CAD</option>
+        <option value="AUD">🇦🇺 AUD</option><option value="CNY">🇨🇳 CNY</option><option value="HKD">🇭🇰 HKD</option>
+        <option value="NOK">🇳🇴 NOK</option><option value="SEK">🇸🇪 SEK</option><option value="DKK">🇩🇰 DKK</option>
+        <option value="PLN">🇵🇱 PLN</option><option value="MXN">🇲🇽 MXN</option><option value="BRL">🇧🇷 BRL</option>
+        <option value="INR">🇮🇳 INR</option><option value="TRY">🇹🇷 TRY</option><option value="SGD">🇸🇬 SGD</option>
+        <option value="THB">🇹🇭 THB</option><option value="AED">🇦🇪 AED</option>
+      </select>
+    </div>
+    <div class="conv-arrow" onclick="swapCurrencies()">⇅</div>
+    <div class="conv-row">
+      <input type="number" id="conv-to-val" inputmode="decimal" placeholder="—" readonly style="background:var(--bg3);color:var(--green)"/>
+      <select id="conv-to-cur" onchange="doConvert()">
+        <option value="USD">🇺🇸 USD</option><option value="EUR">🇪🇺 EUR</option><option value="GBP">🇬🇧 GBP</option>
+        <option value="CHF">🇨🇭 CHF</option><option value="JPY">🇯🇵 JPY</option><option value="CAD">🇨🇦 CAD</option>
+        <option value="AUD">🇦🇺 AUD</option><option value="CNY">🇨🇳 CNY</option><option value="HKD">🇭🇰 HKD</option>
+        <option value="NOK">🇳🇴 NOK</option><option value="SEK">🇸🇪 SEK</option><option value="DKK">🇩🇰 DKK</option>
+        <option value="PLN">🇵🇱 PLN</option><option value="MXN">🇲🇽 MXN</option><option value="BRL">🇧🇷 BRL</option>
+        <option value="INR">🇮🇳 INR</option><option value="TRY">🇹🇷 TRY</option><option value="SGD">🇸🇬 SGD</option>
+        <option value="THB">🇹🇭 THB</option><option value="AED">🇦🇪 AED</option>
+      </select>
+    </div>
+    <div class="conv-rate" id="conv-rate">Caricamento tassi...</div>
+    <div class="conv-updated" id="conv-updated"></div>
+  </div>
+
+  <div class="lbl" style="margin-bottom:10px">Tassi principali su EUR</div>
+  <div class="conv-grid" id="conv-grid"></div>
+
+  <div class="lbl" style="margin-top:18px;margin-bottom:8px">Converti da scontrino</div>
+  <div style="font-size:13px;color:var(--muted);background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px">
+    Quando aggiungi una spesa in valuta estera, Budly la salva nella valuta originale. Usa questo convertitore per verificare l'equivalente in €.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     💬 CHATBOT AI
+══════════════════════════════════════════ -->
+<div id="p-chat" class="page">
+  <div class="top-bar"><div class="app-name">💬 Assistente</div><button class="icon-btn" onclick="clearChat()">🗑️</button></div>
+  <div class="chat-chips" id="chat-chips">
+    <div class="chat-chip" onclick="sendChip(this)">Quanto ho speso in cibo?</div>
+    <div class="chat-chip" onclick="sendChip(this)">Qual è la mia categoria più costosa?</div>
+    <div class="chat-chip" onclick="sendChip(this)">Sono in linea col budget?</div>
+    <div class="chat-chip" onclick="sendChip(this)">Quanto ho risparmiato questo mese?</div>
+    <div class="chat-chip" onclick="sendChip(this)">Mostra le ultime 5 spese</div>
+    <div class="chat-chip" onclick="sendChip(this)">Confronta questo mese col precedente</div>
+    <div class="chat-chip" onclick="sendChip(this)">Dammi un consiglio per risparmiare</div>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="chat-bubble ai">👋 Ciao! Sono il tuo assistente finanziario. Chiedimi qualsiasi cosa sulle tue spese — analisi, consigli, confronti tra mesi e altro ancora.</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Chiedi qualcosa..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send" onclick="sendChat()">↑</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🎯 SFIDE RISPARMIO
+══════════════════════════════════════════ -->
+<div id="p-challenges" class="page">
+  <div class="top-bar"><div class="app-name">🎯 Sfide</div></div>
+
+  <div id="active-challenges-section" style="display:none">
+    <div class="lbl" style="margin-bottom:10px">Le tue sfide attive</div>
+    <div id="active-challenges-list"></div>
+  </div>
+
+  <div class="lbl" style="margin-bottom:10px">Sfide disponibili</div>
+  <div id="challenges-list"></div>
+
+  <div class="custom-challenge-form">
+    <div style="font-size:14px;font-weight:500">✏️ Crea sfida personalizzata</div>
+    <div class="field"><label>Nome sfida</label><input type="text" id="ch-nome" placeholder="es. Niente Amazon per 30 giorni"/></div>
+    <div style="display:flex;gap:10px">
+      <div class="field" style="flex:1"><label>Budget max €</label><div class="aw"><span class="esign">€</span><input type="number" id="ch-budget" inputmode="decimal" placeholder="100" style="padding-left:42px"/></div></div>
+      <div class="field" style="flex:1"><label>Giorni</label><input type="number" id="ch-days" inputmode="numeric" placeholder="30"/></div>
+    </div>
+    <button class="goal-add-btn" onclick="createCustomChallenge()" style="background:var(--purple)">Crea sfida</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     📈 INVESTIMENTI TRACKER
+══════════════════════════════════════════ -->
+<div id="p-invest" class="page">
+  <div class="top-bar"><div class="app-name">📈 Investimenti</div><button class="icon-btn" onclick="refreshInvest()">↻</button></div>
+
+  <div class="inv-summary" id="inv-summary">
+    <div class="inv-sbox"><div class="inv-slbl">Investito</div><div class="inv-snum" id="inv-tot-in">€0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Valore att.</div><div class="inv-snum" id="inv-tot-now">€0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Guadagno</div><div class="inv-snum" id="inv-tot-gain">€0</div></div>
+  </div>
+
+  <div id="inv-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+
+  <div class="inv-add-form">
+    <div style="font-size:14px;font-weight:500">+ Aggiungi asset</div>
+    <div class="inv-type-row" id="inv-type-row">
+      <button class="inv-type-btn sel" onclick="selInvType(this,'azioni')">📊 Azioni</button>
+      <button class="inv-type-btn" onclick="selInvType(this,'etf')">🗂 ETF</button>
+      <button class="inv-type-btn" onclick="selInvType(this,'crypto')">₿ Crypto</button>
+      <button class="inv-type-btn" onclick="selInvType(this,'obbligazioni')">🏦 Obbligaz.</button>
+      <button class="inv-type-btn" onclick="selInvType(this,'altro')">📦 Altro</button>
+    </div>
+    <div class="inv-form-grid">
+      <div class="field"><label>Ticker / Nome</label><input type="text" id="inv-ticker" placeholder="es. AAPL, BTC"/></div>
+      <div class="field"><label>Nome esteso</label><input type="text" id="inv-name" placeholder="es. Apple Inc."/></div>
+    </div>
+    <div class="inv-form-grid">
+      <div class="field"><label>Quantità</label><input type="number" id="inv-qty" inputmode="decimal" placeholder="10"/></div>
+      <div class="field"><label>Prezzo acquisto</label><div class="aw"><span class="esign">€</span><input type="number" id="inv-price-buy" inputmode="decimal" placeholder="150.00" style="padding-left:42px"/></div></div>
+    </div>
+    <div class="inv-form-grid">
+      <div class="field"><label>Prezzo attuale</label><div class="aw"><span class="esign">€</span><input type="number" id="inv-price-now" inputmode="decimal" placeholder="165.00" style="padding-left:42px"/></div></div>
+      <div class="field"><label>Data acquisto</label><input type="date" id="inv-date"/></div>
+    </div>
+    <button class="goal-add-btn" onclick="addInvestment()" style="background:var(--blue)">Aggiungi</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🗓️ PROMEMORIA PAGAMENTI
+══════════════════════════════════════════ -->
+<div id="p-reminders" class="page">
+  <div class="top-bar"><div class="app-name">🗓️ Promemoria</div></div>
+
+  <div id="rem-summary" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+    <div class="inv-sbox"><div class="inv-slbl">In scadenza</div><div class="inv-snum" id="rem-cnt-soon" style="color:var(--yellow)">0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Scaduti</div><div class="inv-snum" id="rem-cnt-over" style="color:var(--red)">0</div></div>
+    <div class="inv-sbox"><div class="inv-slbl">Tot. mese</div><div class="inv-snum" id="rem-cnt-amt">€0</div></div>
+  </div>
+
+  <div id="rem-list" style="display:flex;flex-direction:column;gap:0;margin-bottom:16px"></div>
+
+  <div class="rem-add-form">
+    <div style="font-size:14px;font-weight:500">+ Nuovo promemoria</div>
+    <div class="field"><label>Nome</label><input type="text" id="rem-nome" placeholder="es. Affitto, Assicurazione auto"/></div>
+    <div class="rem-form-grid">
+      <div class="field"><label>Importo €</label><div class="aw"><span class="esign">€</span><input type="number" id="rem-amt-input" inputmode="decimal" placeholder="500" style="padding-left:42px"/></div></div>
+      <div class="field"><label>Giorno del mese</label><input type="number" id="rem-day" inputmode="numeric" placeholder="1-31" min="1" max="31"/></div>
+    </div>
+    <div class="field"><label>Categoria</label>
+      <select id="rem-cat">
+        <option>Affitto</option><option>Bollette</option><option>Abbonamenti</option><option>Assicurazione</option>
+        <option>Rata</option><option>Mutuo</option><option>Tasse</option><option>Altro</option>
+      </select>
+    </div>
+    <div class="recurr-row">
+      <span>🔁 Ripeti ogni mese</span>
+      <label class="toggle"><input type="checkbox" id="rem-monthly" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+    </div>
+    <button class="goal-add-btn" onclick="addReminder()" style="background:var(--yellow);color:#0f0f0f">Aggiungi promemoria</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     📱 WIDGET SCHERMATA HOME
+══════════════════════════════════════════ -->
+<div id="p-widget" class="page">
+  <div class="top-bar"><div class="app-name">📱 Widget</div></div>
+
+  <div class="widget-info-card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:4px">Anteprima widget</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Come apparirà sulla tua schermata home</div>
+    <div class="widget-preview" id="widget-preview">
+      <div class="widget-preview-lbl">SALDO DEL MESE</div>
+      <div class="widget-preview-val" id="wp-saldo">€ 0,00</div>
+      <div class="widget-preview-row">
+        <div class="widget-preview-item">
+          <div class="widget-preview-sub">↑ ENTRATE</div>
+          <div class="widget-preview-num" id="wp-e" style="color:#4ade80">€ 0,00</div>
+        </div>
+        <div class="widget-preview-item" style="text-align:right">
+          <div class="widget-preview-sub">↓ USCITE</div>
+          <div class="widget-preview-num" id="wp-u" style="color:#f87171">€ 0,00</div>
+        </div>
+      </div>
+      <div style="height:.5px;background:rgba(255,255,255,.1)"></div>
+      <div class="widget-preview-row">
+        <div class="widget-preview-item">
+          <div class="widget-preview-sub">BUDGET</div>
+          <div class="widget-preview-num" id="wp-budget" style="color:#fbbf24">—</div>
+        </div>
+        <div class="widget-preview-item" style="text-align:right">
+          <div class="widget-preview-sub">AGGIORNATO</div>
+          <div class="widget-preview-num" id="wp-time" style="font-size:12px;color:rgba(255,255,255,.4)">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget-info-card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:14px">Come aggiungere il widget</div>
+    <div class="widget-step">
+      <div class="widget-step-num">1</div>
+      <div class="widget-step-text"><strong>Installa Budly come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.</div>
+    </div>
+    <div class="widget-step">
+      <div class="widget-step-num">2</div>
+      <div class="widget-step-text"><strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Budly"</em> nella lista app o usa Scriptable con il codice qui sotto.</div>
+    </div>
+    <div class="widget-step">
+      <div class="widget-step-num">3</div>
+      <div class="widget-step-text"><strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l'app Budly installata come PWA. In alternativa usa KWGT con il codice JSON.</div>
+    </div>
+    <div class="widget-step">
+      <div class="widget-step-num">4</div>
+      <div class="widget-step-text"><strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Budly.</div>
+    </div>
+  </div>
+
+  <div class="widget-info-card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Codice Scriptable (iOS)</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Installa <strong>Scriptable</strong> dall'App Store, crea un nuovo script e incolla questo codice.</div>
+    <div style="background:var(--bg3);border-radius:var(--rs);padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:#a0c4ff;line-height:1.6;overflow-x:auto;white-space:pre" id="scriptable-code"></div>
+    <button class="widget-copy-btn" onclick="copyWidgetCode()">📋 Copia codice Scriptable</button>
+  </div>
+
+  <div class="widget-info-card" style="margin-bottom:20px">
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Dati widget (JSON)</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Questi dati vengono letti dal widget. Si aggiornano ad ogni apertura dell'app.</div>
+    <div style="background:var(--bg3);border-radius:var(--rs);padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:#a0c4ff;line-height:1.6;overflow-x:auto;white-space:pre;max-height:120px;overflow-y:auto" id="widget-json-preview"></div>
+    <button class="widget-copy-btn" onclick="copyWidgetJSON()" style="background:var(--bg3);color:var(--blue);border:.5px solid rgba(96,165,250,.3);margin-top:8px">📋 Copia JSON</button>
+  </div>
+</div>
+
 <nav class="nav">
   <div class="nav-item active" id="nav-p-home" onclick="goNav('p-home')"><span>🏠</span><span>Home</span></div>
-  <div class="nav-item" id="nav-p-dati" onclick="goNav('p-dati')"><span>📊</span><span>Dati</span></div>
-  <div class="nav-item" id="nav-p-goals" onclick="goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
+  <div class="nav-item" id="nav-p-chat" onclick="goNav('p-chat')"><span>💬</span><span>AI</span></div>
+  <div class="nav-item" id="nav-p-challenges" onclick="goNav('p-challenges')"><span>🏆</span><span>Sfide</span></div>
   <div class="nav-item" id="nav-p-game" onclick="goNav('p-game')"><span>🎮</span><span>Rank</span></div>
-  <div class="nav-item" id="nav-p-chat" onclick="goNav('p-chat')"><span>🤖</span><span>AI</span></div>
 </nav>
 
 <script>
@@ -809,12 +1051,27 @@ async function tryBiometric(){
   }catch(e){document.getElementById('pin-error').textContent='Biometrica non disponibile';setTimeout(()=>document.getElementById('pin-error').textContent='',2000)}
 }
 
-function initApp(){initSavingMode();checkRemindersOnLoad();
+function initApp(){initSavingMode();
   renderAccounts();updHome();
   setTimeout(()=>loadInsight(),1500);
 }
 
 function haptic(s='light'){try{if(navigator.vibrate)navigator.vibrate(s==='light'?30:s==='medium'?60:100)}catch(e){}}
+
+// ── DRAWER ──
+function openDrawer(){
+  const ov=document.getElementById('drawer-overlay');
+  const dr=document.getElementById('drawer');
+  ov.style.display='block';
+  requestAnimationFrame(()=>{ov.style.opacity='1';dr.style.transform='translateX(0)'});
+  haptic('light');
+}
+function closeDrawer(){
+  const ov=document.getElementById('drawer-overlay');
+  const dr=document.getElementById('drawer');
+  ov.style.opacity='0';dr.style.transform='translateX(100%)';
+  setTimeout(()=>{ov.style.display='none'},280);
+}
 
 function goNav(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
@@ -826,11 +1083,12 @@ function goNav(id){
   if(id==='p-goals')renderGoals();
   if(id==='p-game')renderGame();
   if(id==='p-annual')renderAnnual();
-  if(id==='p-challenges')renderChallenges();
-  if(id==='p-invest')renderInvestments();
-  if(id==='p-projects')renderProjects();
-  if(id==='p-reminders')renderReminders();
-  if(id==='p-stats')renderStats();
+  if(id==='p-converter'){initConverter()}
+  if(id==='p-chat'){initChat()}
+  if(id==='p-challenges'){renderChallenges()}
+  if(id==='p-invest'){renderInvestments()}
+  if(id==='p-reminders'){renderReminders()}
+  if(id==='p-widget'){initWidget()}
   if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click()}
   haptic('light');
 }
@@ -1247,484 +1505,6 @@ function checkSavingModeAlert(cat,importo){
   else if(importo>100){showAlert('⚠️ Risparmio: spesa di '+fmt(importo)+' — sei sicuro?','yellow')}
 }
 
-
-// ── CHATBOT AI ──
-let chatHistory = [];
-async function sendChat() {
-  const input = document.getElementById('chat-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  const msgs = document.getElementById('chat-messages');
-
-  // User bubble
-  msgs.innerHTML += `<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px 14px;font-size:14px;align-self:flex-end;max-width:85%;margin-left:auto">${msg}</div>`;
-  msgs.scrollTop = msgs.scrollHeight;
-
-  // Typing indicator
-  const typingId = 'typing-' + Date.now();
-  msgs.innerHTML += `<div id="${typingId}" style="color:var(--muted);font-size:13px;padding:4px 0">🤖 Sto pensando...</div>`;
-  msgs.scrollTop = msgs.scrollHeight;
-
-  // Build context
-  const mc = getMC();
-  const txM = txs.filter(t => t.mese === mc);
-  const eM = txM.filter(t => t.tipo === 'entrata').reduce((s,t) => s+t.importo, 0);
-  const uM = txM.filter(t => t.tipo === 'uscita').reduce((s,t) => s+t.importo, 0);
-  const cats = {};
-  txM.filter(t => t.tipo === 'uscita').forEach(t => { cats[t.categoria] = (cats[t.categoria]||0) + t.importo });
-  const catStr = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`${c}: €${v.toFixed(0)}`).join(', ');
-
-  const context = `Dati finanziari dell'utente per ${mc}: Entrate €${eM.toFixed(0)}, Uscite €${uM.toFixed(0)}, Saldo €${(eM-uM).toFixed(0)}. Spese per categoria: ${catStr||'nessuna'}. Totale transazioni: ${txs.length}. Budget mensile: ${budgetMensile>0?'€'+budgetMensile:'non impostato'}.`;
-
-  chatHistory.push({ role: 'user', content: msg });
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        system: `Sei un assistente finanziario personale dentro l'app Budly. Rispondi in italiano, in modo breve e diretto (max 3 frasi). Usa emoji. ${context}`,
-        messages: chatHistory
-      })
-    });
-    const data = await res.json();
-    const reply = (data.content||[]).map(b=>b.text||'').join('').trim();
-    chatHistory.push({ role: 'assistant', content: reply });
-    document.getElementById(typingId).remove();
-    msgs.innerHTML += `<div style="background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(167,139,250,.1));border:.5px solid rgba(96,165,250,.2);border-radius:var(--r);padding:12px 14px;font-size:14px;line-height:1.6">${reply}</div>`;
-  } catch(e) {
-    document.getElementById(typingId).remove();
-    msgs.innerHTML += `<div style="color:var(--muted);font-size:13px;padding:4px 0">⚠️ Errore di connessione</div>`;
-  }
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-// ── CONVERTITORE VALUTA ──
-let exchangeRates = { EUR:1, USD:1.08, GBP:0.86, CHF:0.97, JPY:161, CAD:1.47, AUD:1.65, DKK:7.46 };
-let ratesUpdated = '';
-async function convert(forceUpdate=false) {
-  const amount = parseFloat(document.getElementById('conv-amount').value) || 0;
-  const from = document.getElementById('conv-from').value;
-  const to = document.getElementById('conv-to').value;
-  if (forceUpdate) {
-    try {
-      const res = await fetch(`https://api.anthropic.com/v1/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 200,
-          system: 'Rispondi SOLO con JSON dei tassi di cambio aggiornati rispetto a EUR.',
-          messages: [{ role: 'user', content: 'Dammi i tassi di cambio attuali per EUR,USD,GBP,CHF,JPY,CAD,AUD,DKK come {"EUR":1,"USD":X,...}' }],
-          tools: [{ type: 'web_search_20250305', name: 'web_search' }]
-        })
-      });
-      const d = await res.json();
-      const txt = (d.content||[]).map(b=>b.text||'').join('');
-      const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
-      if (parsed.EUR) { exchangeRates = parsed; ratesUpdated = new Date().toLocaleTimeString('it-IT'); showAlert('✅ Tassi aggiornati!','green'); }
-    } catch(e) { showAlert('⚠️ Uso tassi salvati'); }
-  }
-  if (!amount) { document.getElementById('conv-result').textContent = '—'; return; }
-  const inEur = amount / (exchangeRates[from]||1);
-  const result = inEur * (exchangeRates[to]||1);
-  const rate = (exchangeRates[to]||1) / (exchangeRates[from]||1);
-  document.getElementById('conv-result').textContent = result.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' ' + to;
-  document.getElementById('conv-rate').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
-  document.getElementById('conv-updated').textContent = ratesUpdated ? 'Aggiornato: ' + ratesUpdated : 'Tassi indicativi';
-}
-
-// ── IMPORTA ESTRATTO PDF ──
-let importedTxs = [];
-async function importStatement(input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  const status = document.getElementById('import-status');
-  const title = document.getElementById('import-title');
-  const list = document.getElementById('import-list');
-  status.style.display = 'block';
-  title.textContent = '🔍 Analisi in corso...';
-  list.innerHTML = '';
-  document.getElementById('import-confirm').style.display = 'none';
-
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const b64 = e.target.result.split(',')[1];
-    const isImage = file.type.startsWith('image/');
-    try {
-      const msgContent = isImage
-        ? [{ type: 'image', source: { type: 'base64', media_type: file.type, data: b64 } },
-           { type: 'text', text: 'Estrai tutte le transazioni da questo estratto conto. Rispondi SOLO con JSON: [{"data":"2024-01-15","nome":"Supermercato","importo":45.20,"tipo":"uscita"},...]. Date in formato YYYY-MM-DD.' }]
-        : [{ type: 'text', text: 'Estrai transazioni da questo estratto (base64 PDF). Rispondi SOLO con JSON array: [{"data":"YYYY-MM-DD","nome":"...","importo":0.0,"tipo":"uscita/entrata"}]. PDF: ' + b64.substring(0,500) }];
-
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
-          messages: [{ role: 'user', content: msgContent }]
-        })
-      });
-      const d = await res.json();
-      const txt = (d.content||[]).map(b=>b.text||'').join('');
-      const parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
-      importedTxs = parsed.map(t => ({
-        id: Date.now() + Math.random(),
-        nome: t.nome || 'Transazione',
-        importo: Math.abs(parseFloat(t.importo)||0),
-        tipo: t.tipo || 'uscita',
-        data: t.data || new Date().toISOString().split('T')[0],
-        mese: new Date((t.data||new Date().toISOString().split('T')[0])+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()),
-        categoria: 'Altro', metodo: 'Bonifico', ricorrente: false
-      }));
-      title.textContent = `✅ Trovate ${importedTxs.length} transazioni`;
-      list.innerHTML = importedTxs.slice(0,10).map(t=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-bottom:.5px solid var(--border)">
-          <span>${t.nome.substring(0,25)}</span>
-          <span style="color:${t.tipo==='entrata'?'var(--green)':'var(--red)'};">${t.tipo==='entrata'?'+':'-'}€${t.importo.toFixed(2)}</span>
-        </div>`).join('') + (importedTxs.length>10?`<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px">...e altre ${importedTxs.length-10}</div>`:'');
-      document.getElementById('import-confirm').style.display = 'block';
-    } catch(err) {
-      title.textContent = '⚠️ Non riesco a leggere il file. Prova con uno screenshot dell'estratto.';
-    }
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
-}
-function confirmImport() {
-  txs = [...importedTxs, ...txs];
-  save(); updHome();
-  showAlert('✅ Importate ' + importedTxs.length + ' transazioni!', 'green');
-  haptic('heavy');
-  document.getElementById('import-status').style.display = 'none';
-  importedTxs = [];
-  goNav('p-home');
-}
-
-// ── SFIDE RISPARMIO ──
-const CHALLENGES = [
-  { id:'nosvago7', ico:'🎭', name:'Niente svago per 7 giorni', desc:'Non spendere in Svago per una settimana', days:7, cat:'Svago', reward:'🏅 Guerriero del risparmio' },
-  { id:'caffè5', ico:'☕', name:'No caffè per 5 giorni', desc:'Evita bar e caffè per 5 giorni', days:5, cat:'Cibo & Ristoranti', reward:'☕ Caffè-free' },
-  { id:'budget30', ico:'📊', name:'Budget rispettato per 30 giorni', desc:'Rimani sotto il tuo budget per un mese intero', days:30, cat:null, reward:'🎯 Budget Master' },
-  { id:'noShopping14', ico:'🛍️', name:'No shopping per 14 giorni', desc:'Niente acquisti non necessari per 2 settimane', days:14, cat:'Shopping', reward:'💪 Minimalista' },
-  { id:'risparmio20', ico:'💰', name:'Risparmia il 20% per un mese', desc:'Tieni le uscite sotto l'80% delle entrate', days:30, cat:null, reward:'🌟 Super Risparmiatore' },
-];
-let activeChallenges = [];
-try { activeChallenges = JSON.parse(localStorage.getItem('challenges')||'[]') } catch(e) {}
-function saveChallenges() { try { localStorage.setItem('challenges', JSON.stringify(activeChallenges)) } catch(e) {} }
-function renderChallenges() {
-  const list = document.getElementById('challenges-list');
-  list.innerHTML = CHALLENGES.map(ch => {
-    const active = activeChallenges.find(a => a.id === ch.id);
-    let progress = 0, progressText = '';
-    if (active) {
-      const start = new Date(active.startDate);
-      const now = new Date();
-      const daysPassed = Math.floor((now - start) / 86400000);
-      progress = Math.min(100, Math.round(daysPassed / ch.days * 100));
-      progressText = `${daysPassed}/${ch.days} giorni`;
-      if (ch.cat) {
-        const catSpent = txs.filter(t => t.tipo==='uscita' && t.categoria===ch.cat && t.data >= active.startDate).length;
-        if (catSpent > 0) { progress = 0; progressText = '❌ Sfida fallita!'; }
-      }
-    }
-    return `<div style="background:var(--bg2);border:.5px solid ${active?'rgba(74,222,128,.2)':'var(--border)'};border-radius:var(--r);padding:15px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <span style="font-size:28px">${ch.ico}</span>
-        <div style="flex:1"><div style="font-size:15px;font-weight:500">${ch.name}</div><div style="font-size:12px;color:var(--muted)">${ch.desc}</div></div>
-      </div>
-      ${active ? `<div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden;margin-bottom:6px"><div style="width:${progress}%;height:100%;border-radius:99px;background:${progress>=100?'var(--green)':'var(--blue)'}"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--muted)">${progressText}</span><span style="color:var(--yellow)">${ch.reward}</span></div>
-      ${progress>=100?`<div style="color:var(--green);font-size:13px;font-weight:500;margin-top:6px">🎉 Sfida completata!</div>`:''}` 
-      : `<button onclick="startChallenge('${ch.id}')" style="width:100%;padding:10px;border-radius:var(--rs);border:.5px solid var(--blue);background:rgba(96,165,250,.08);color:var(--blue);font-size:14px;font-family:inherit;cursor:pointer">Accetta sfida</button>`}
-    </div>`;
-  }).join('');
-}
-function startChallenge(id) {
-  if (activeChallenges.find(a => a.id === id)) return;
-  activeChallenges.push({ id, startDate: new Date().toISOString().split('T')[0] });
-  saveChallenges();
-  renderChallenges();
-  haptic('medium');
-  showAlert('🎯 Sfida accettata! Buona fortuna!', 'green');
-}
-
-
-// ── INVESTIMENTI ──
-let investments = [];
-try { investments = JSON.parse(localStorage.getItem('binvest')||'[]') } catch(e) {}
-function saveInvestments() { try { localStorage.setItem('binvest', JSON.stringify(investments)) } catch(e) {} }
-const invIco = { etf:'📊', stock:'🏢', crypto:'🪙', bond:'📜', other:'💼' };
-function addInvestment() {
-  const name = document.getElementById('inv-name').value.trim();
-  const amount = parseFloat(document.getElementById('inv-amount').value)||0;
-  const current = parseFloat(document.getElementById('inv-current').value)||0;
-  if (!name || !amount) { alert('Inserisci nome e importo'); return }
-  investments.push({ id:Date.now(), name, amount, current: current||amount, type: document.getElementById('inv-type').value });
-  saveInvestments();
-  document.getElementById('inv-name').value = '';
-  document.getElementById('inv-amount').value = '';
-  document.getElementById('inv-current').value = '';
-  renderInvestments(); haptic('medium');
-}
-function delInvestment(id) { investments = investments.filter(i=>i.id!==id); saveInvestments(); renderInvestments(); }
-function renderInvestments() {
-  const totInv = investments.reduce((s,i)=>s+i.amount,0);
-  const totCur = investments.reduce((s,i)=>s+i.current,0);
-  const gain = totCur - totInv;
-  document.getElementById('invest-summary').innerHTML = `
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Investito</div><div style="font-size:20px;font-weight:500">${fmt(totInv)}</div></div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Valore attuale</div><div style="font-size:20px;font-weight:500;color:${gain>=0?'var(--green)':'var(--red)'}">${fmt(totCur)}</div></div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center;grid-column:span 2"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Guadagno/Perdita</div><div style="font-size:22px;font-weight:500;color:${gain>=0?'var(--green)':'var(--red)'}">${gain>=0?'+':''}${fmt(gain)} (${totInv>0?((gain/totInv)*100).toFixed(1):0}%)</div></div>
-  `;
-  if (!investments.length) { document.getElementById('invest-list').innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Nessun asset ancora</div>'; return; }
-  document.getElementById('invest-list').innerHTML = investments.map(inv => {
-    const g = inv.current - inv.amount;
-    const pct = inv.amount > 0 ? ((g/inv.amount)*100).toFixed(1) : 0;
-    return `<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px 15px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:24px">${invIco[inv.type]||'💼'}</span>
-        <div style="flex:1"><div style="font-size:15px;font-weight:500">${inv.name}</div><div style="font-size:12px;color:var(--muted)">Investito: ${fmt(inv.amount)}</div></div>
-        <div style="text-align:right">
-          <div style="font-size:15px;font-weight:500">${fmt(inv.current)}</div>
-          <div style="font-size:12px;color:${g>=0?'var(--green)':'var(--red)'};">${g>=0?'+':''}${fmt(g)} (${pct}%)</div>
-        </div>
-        <button onclick="delInvestment(${inv.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer">×</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── PROGETTI/VIAGGI ──
-let projects = [];
-try { projects = JSON.parse(localStorage.getItem('bprojects')||'[]') } catch(e) {}
-function saveProjects() { try { localStorage.setItem('bprojects', JSON.stringify(projects)) } catch(e) {} }
-function addProject() {
-  const name = document.getElementById('proj-name').value.trim();
-  const budget = parseFloat(document.getElementById('proj-budget').value)||0;
-  if (!name) { alert('Inserisci un nome'); return }
-  projects.push({ id:Date.now(), name, budget, ico: document.getElementById('proj-ico').value, txIds:[] });
-  saveProjects();
-  document.getElementById('proj-name').value = '';
-  document.getElementById('proj-budget').value = '';
-  renderProjects(); haptic('medium');
-}
-function delProject(id) { projects = projects.filter(p=>p.id!==id); saveProjects(); renderProjects(); }
-function renderProjects() {
-  const list = document.getElementById('projects-list');
-  if (!projects.length) { list.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Nessun progetto ancora</div>'; return; }
-  list.innerHTML = projects.map(p => {
-    const spent = p.budget > 0 ? Math.min(100, Math.round(Math.random() * 60)) : 0;
-    const pct = p.budget > 0 ? spent : 0;
-    return `<div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <span style="font-size:28px">${p.ico}</span>
-        <div style="flex:1"><div style="font-size:16px;font-weight:500">${p.name}</div>${p.budget?`<div style="font-size:13px;color:var(--muted)">Budget: ${fmt(p.budget)}</div>`:''}</div>
-        <button onclick="delProject(${p.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer">×</button>
-      </div>
-      ${p.budget?`<div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden"><div style="width:${pct}%;height:100%;border-radius:99px;background:${pct>80?'var(--red)':'var(--blue)'}"></div></div><div style="font-size:12px;color:var(--muted);margin-top:4px">${pct}% del budget usato</div>`:''}
-    </div>`;
-  }).join('');
-}
-
-// ── PROMEMORIA ──
-let reminders = [];
-try { reminders = JSON.parse(localStorage.getItem('breminders')||'[]') } catch(e) {}
-function saveReminders() { try { localStorage.setItem('breminders', JSON.stringify(reminders)) } catch(e) {} }
-function addReminder() {
-  const name = document.getElementById('rem-name').value.trim();
-  const amount = parseFloat(document.getElementById('rem-amount').value)||0;
-  const day = parseInt(document.getElementById('rem-day').value)||1;
-  if (!name) { alert('Inserisci un nome'); return }
-  reminders.push({ id:Date.now(), name, amount, day, freq: document.getElementById('rem-freq').value });
-  saveReminders();
-  document.getElementById('rem-name').value = '';
-  document.getElementById('rem-amount').value = '';
-  document.getElementById('rem-day').value = '';
-  renderReminders(); haptic('medium');
-  if (Notification.permission === 'granted') scheduleReminder(reminders[reminders.length-1]);
-}
-function delReminder(id) { reminders = reminders.filter(r=>r.id!==id); saveReminders(); renderReminders(); }
-function scheduleReminder(r) {
-  const now = new Date();
-  const target = new Date(now.getFullYear(), now.getMonth(), r.day, 9, 0, 0);
-  if (now > target) target.setMonth(target.getMonth()+1);
-  const ms = target - now;
-  if (ms > 0 && ms < 30*24*60*60*1000) {
-    setTimeout(() => {
-      new Notification('🗓️ Budly — Promemoria', { body: `${r.name}${r.amount?' — '+fmt(r.amount):''}` });
-    }, ms);
-  }
-}
-function renderReminders() {
-  const list = document.getElementById('reminders-list');
-  const today = new Date().getDate();
-  if (!reminders.length) { list.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Nessun promemoria ancora</div>'; return; }
-  const freqLabel = { monthly:'Mensile', weekly:'Settimanale', yearly:'Annuale' };
-  list.innerHTML = reminders.map(r => {
-    const daysLeft = r.day >= today ? r.day - today : 30 - today + r.day;
-    const urgent = daysLeft <= 3;
-    return `<div style="background:var(--bg2);border:.5px solid ${urgent?'rgba(251,191,36,.3)':'var(--border)'};border-radius:var(--rs);padding:13px 15px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:24px">${urgent?'⚠️':'🗓️'}</span>
-      <div style="flex:1">
-        <div style="font-size:15px;font-weight:500">${r.name}</div>
-        <div style="font-size:12px;color:var(--muted)">${freqLabel[r.freq]} · giorno ${r.day}${r.amount?' · '+fmt(r.amount):''}</div>
-        <div style="font-size:12px;color:${urgent?'var(--yellow)':'var(--muted)'}">tra ${daysLeft} giorni</div>
-      </div>
-      <button onclick="delReminder(${r.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer">×</button>
-    </div>`;
-  }).join('');
-}
-function checkRemindersOnLoad() {
-  const today = new Date().getDate();
-  const urgent = reminders.filter(r => {
-    const days = r.day >= today ? r.day - today : 30 - today + r.day;
-    return days <= 2;
-  });
-  if (urgent.length) showAlert('🗓️ '+urgent.length+' pagament'+( urgent.length===1?'o':'i')+' in scadenza!', 'yellow');
-}
-
-// ── STATISTICHE AVANZATE ──
-function renderStats() {
-  const el = document.getElementById('stats-content');
-  if (!txs.length) { el.innerHTML = '<div style="color:var(--muted);font-size:14px;text-align:center;padding:40px 0">Inserisci alcune transazioni per vedere le statistiche</div>'; return; }
-  const mc = getMC();
-  const txAll = txs.filter(t=>t.tipo==='uscita');
-  const txM = txAll.filter(t=>t.mese===mc);
-
-  // Media giornaliera
-  const days = [...new Set(txAll.map(t=>t.data))].length || 1;
-  const totAll = txAll.reduce((s,t)=>s+t.importo,0);
-  const dailyAvg = totAll / days;
-
-  // Giorno settimana più costoso
-  const byDay = Array(7).fill(0), byDayCount = Array(7).fill(0);
-  txAll.forEach(t => { const d = new Date(t.data+'T12:00:00').getDay(); byDay[d]+=t.importo; byDayCount[d]++ });
-  const dayNames = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
-  const avgByDay = byDay.map((v,i)=>byDayCount[i]>0?v/byDayCount[i]:0);
-  const worstDayIdx = avgByDay.indexOf(Math.max(...avgByDay));
-  const bestDayIdx = avgByDay.map((v,i)=>({v,i})).filter(x=>x.v>0).sort((a,b)=>a.v-b.v)[0]?.i ?? 1;
-
-  // Ora del giorno (se disponibile)
-  const txCount = txs.length;
-  const avgTxValue = txAll.reduce((s,t)=>s+t.importo,0) / (txAll.length||1);
-
-  // Top categoria assoluta
-  const cats = {};
-  txAll.forEach(t => { cats[t.categoria]=(cats[t.categoria]||0)+t.importo });
-  const topCat = Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
-
-  // Mese più costoso
-  const byMonth = {};
-  txAll.forEach(t => { byMonth[t.mese]=(byMonth[t.mese]||0)+t.importo });
-  const worstMonth = Object.entries(byMonth).sort((a,b)=>b[1]-a[1])[0];
-
-  // Streak
-  const streak = getStreak();
-
-  el.innerHTML = `
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
-      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">📊 Generali</div>
-      ${statRow('Media spesa giornaliera', fmt(dailyAvg))}
-      ${statRow('Valore medio transazione', fmt(avgTxValue))}
-      ${statRow('Totale transazioni', txCount)}
-      ${statRow('Streak attuale', streak + ' giorni 🔥')}
-    </div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
-      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">📅 Abitudini</div>
-      ${statRow('Giorno più costoso', dayNames[worstDayIdx] + ' (media '+fmt(avgByDay[worstDayIdx])+')')}
-      ${statRow('Giorno migliore', dayNames[bestDayIdx] + ' (media '+fmt(avgByDay[bestDayIdx])+')')}
-      ${worstMonth?statRow('Mese più costoso', worstMonth[0] + ' — ' + fmt(worstMonth[1])):''}
-    </div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:15px">
-      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">🏆 Record</div>
-      ${topCat?statRow('Categoria principale', topCat[0]+' — '+fmt(topCat[1])):''}
-      ${statRow('Transazione max', fmt(Math.max(...txAll.map(t=>t.importo))))}
-      ${statRow('Transazione min', fmt(Math.min(...txAll.map(t=>t.importo))))}
-    </div>
-  `;
-}
-function statRow(label, value) {
-  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--border)"><span style="font-size:14px;color:var(--muted)">${label}</span><span style="font-size:14px;font-weight:500">${value}</span></div>`;
-}
-
-
-
-// ── LINGUA ──
-const TRANSLATIONS = {
-  it: { home:'Home', data:'Dati', goals:'Goals', rank:'Rank', ai:'AI',
-        add:'aggiungi', totalBalance:'saldo del mese', income:'Entrate', expenses:'Uscite',
-        topExpenses:'Top spese questo mese', convert:'Converti', challenges:'Sfide',
-        importBank:'Importa', invest:'Invest', projects:'Progetti', reminders:'Promemoria', stats:'Stats',
-        entrata:'Entrata', spesa:'Spesa', save:'Salva', settings:'Impostazioni' },
-  en: { home:'Home', data:'Data', goals:'Goals', rank:'Rank', ai:'AI',
-        add:'add', totalBalance:'monthly balance', income:'Income', expenses:'Expenses',
-        topExpenses:'Top expenses this month', convert:'Convert', challenges:'Challenges',
-        importBank:'Import', invest:'Invest', projects:'Projects', reminders:'Reminders', stats:'Stats',
-        entrata:'Income', spesa:'Expense', save:'Save', settings:'Settings' },
-  es: { home:'Inicio', data:'Datos', goals:'Metas', rank:'Rango', ai:'IA',
-        add:'agregar', totalBalance:'saldo mensual', income:'Ingresos', expenses:'Gastos',
-        topExpenses:'Top gastos este mes', convert:'Convertir', challenges:'Retos',
-        importBank:'Importar', invest:'Invertir', projects:'Proyectos', reminders:'Recordatorios', stats:'Stats',
-        entrata:'Ingreso', spesa:'Gasto', save:'Guardar', settings:'Ajustes' },
-  fr: { home:'Accueil', data:'Données', goals:'Objectifs', rank:'Rang', ai:'IA',
-        add:'ajouter', totalBalance:'solde mensuel', income:'Revenus', expenses:'Dépenses',
-        topExpenses:'Top dépenses ce mois', convert:'Convertir', challenges:'Défis',
-        importBank:'Importer', invest:'Investir', projects:'Projets', reminders:'Rappels', stats:'Stats',
-        entrata:'Revenu', spesa:'Dépense', save:'Enregistrer', settings:'Réglages' },
-  de: { home:'Startseite', data:'Daten', goals:'Ziele', rank:'Rang', ai:'KI',
-        add:'hinzufügen', totalBalance:'Monatssaldo', income:'Einnahmen', expenses:'Ausgaben',
-        topExpenses:'Top Ausgaben diesen Monat', convert:'Umrechnen', challenges:'Herausforderungen',
-        importBank:'Importieren', invest:'Investieren', projects:'Projekte', reminders:'Erinnerungen', stats:'Stats',
-        entrata:'Einnahme', spesa:'Ausgabe', save:'Speichern', settings:'Einstellungen' },
-};
-let currentLang = 'it';
-try { currentLang = localStorage.getItem('app_lang') || 'it'; } catch(e) {}
-
-function t(key) { return (TRANSLATIONS[currentLang] || TRANSLATIONS.it)[key] || key; }
-
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('app_lang', lang);
-  document.querySelectorAll('[id^="lang-"]').forEach(el => el.classList.remove('active'));
-  const el = document.getElementById('lang-' + lang);
-  if (el) el.classList.add('active');
-  applyTranslations();
-  showAlert('🌐 ' + (TRANSLATIONS[lang]?.settings || lang), 'green');
-}
-
-function applyTranslations() {
-  // Nav labels
-  const navMap = { 'nav-p-home':'home', 'nav-p-dati':'data', 'nav-p-goals':'goals', 'nav-p-game':'rank', 'nav-p-chat':'ai' };
-  Object.entries(navMap).forEach(([id, key]) => {
-    const el = document.getElementById(id);
-    if (el) { const spans = el.querySelectorAll('span'); if (spans[1]) spans[1].textContent = t(key); }
-  });
-  // Home labels
-  const lblEl = document.querySelector('.add-lbl');
-  if (lblEl) lblEl.textContent = t('add');
-  const balEl = document.querySelector('.lbl');
-  if (balEl) balEl.textContent = t('totalBalance');
-  // Cards
-  const cards = document.querySelectorAll('.card-lbl');
-  if (cards[0]) cards[0].textContent = t('income');
-  if (cards[1]) cards[1].textContent = t('expenses');
-  // Settings title
-  const sttl = document.querySelector('.sttl');
-  if (sttl) sttl.textContent = t('settings');
-}
-
-// Apply on load
-applyTranslations();
-// Set active chip
-setTimeout(() => {
-  document.querySelectorAll('[id^="lang-"]').forEach(el => el.classList.remove('active'));
-  const el = document.getElementById('lang-' + currentLang);
-  if (el) el.classList.add('active');
-}, 100);
-
 // ── NOTIFICHE PUSH ──
 let notifScheduled=false;
 async function requestNotifications(){
@@ -1865,7 +1645,581 @@ function renderSubscriptions(){
 
 
 
+
+// ══════════════════════════════════════════
+// 💱 CONVERTITORE VALUTA REAL-TIME
+// ══════════════════════════════════════════
+let fxRates={},fxLastUpdate=null;
+const FX_API='https://open.er-api.com/v6/latest/EUR';
+const CONV_PAIRS=[['USD','🇺🇸'],['GBP','🇬🇧'],['CHF','🇨🇭'],['JPY','🇯🇵'],['CAD','🇨🇦'],['AUD','🇦🇺'],['CNY','🇨🇳'],['PLN','🇵🇱'],['TRY','🇹🇷'],['NOK','🇳🇴'],['SEK','🇸🇪'],['INR','🇮🇳']];
+
+async function fetchRates(){
+  // Try cached first (max 1h)
+  try{
+    const cached=JSON.parse(localStorage.getItem('fx_rates')||'{}');
+    if(cached.ts&&Date.now()-cached.ts<3600000){fxRates=cached.rates;fxLastUpdate=new Date(cached.ts);return true}
+  }catch(e){}
+  try{
+    const r=await fetch(FX_API);const d=await r.json();
+    if(d.rates){fxRates=d.rates;fxLastUpdate=new Date();localStorage.setItem('fx_rates',JSON.stringify({rates:fxRates,ts:Date.now()}));return true}
+  }catch(e){}
+  // Fallback hardcoded rates
+  fxRates={USD:1.085,GBP:0.857,CHF:0.962,JPY:163.5,CAD:1.473,AUD:1.655,CNY:7.86,HKD:8.47,NOK:11.5,SEK:11.3,DKK:7.46,PLN:4.26,MXN:20.8,BRL:5.5,INR:90.5,TRY:35.2,SGD:1.46,THB:38.2,AED:3.98};
+  fxLastUpdate=null;return false;
+}
+
+function getRateToEUR(cur){if(cur==='EUR')return 1;return 1/(fxRates[cur]||1)}
+function getRate(from,to){if(from===to)return 1;const fromEUR=getRateToEUR(from);const eurTo=fxRates[to]||1;return fromEUR*eurTo}
+
+function doConvert(){
+  const from=document.getElementById('conv-from-cur').value;
+  const to=document.getElementById('conv-to-cur').value;
+  const val=parseFloat(document.getElementById('conv-from-val').value)||0;
+  if(!Object.keys(fxRates).length){document.getElementById('conv-to-val').value='—';return}
+  const rate=getRate(from,to);
+  const result=val*rate;
+  document.getElementById('conv-to-val').value=result.toFixed(to==='JPY'?0:4);
+  const r1=getRate(from,to);
+  document.getElementById('conv-rate').textContent=`1 ${from} = ${r1.toFixed(to==='JPY'?2:4)} ${to}`;
+  if(fxLastUpdate)document.getElementById('conv-updated').textContent='Aggiornato: '+fxLastUpdate.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  else document.getElementById('conv-updated').textContent='⚠️ Tassi offline (approssimativi)';
+}
+
+function swapCurrencies(){
+  const f=document.getElementById('conv-from-cur'),t=document.getElementById('conv-to-cur');
+  const tmp=f.value;f.value=t.value;t.value=tmp;doConvert();haptic('light');
+}
+
+function renderConvGrid(){
+  const base=document.getElementById('conv-from-cur').value;
+  document.getElementById('conv-grid').innerHTML=CONV_PAIRS.filter(([c])=>c!==base).slice(0,12).map(([c,fl])=>{
+    const rate=getRate('EUR',c);
+    return`<div class="conv-pair" onclick="document.getElementById('conv-to-cur').value='${c}';doConvert()"><div class="conv-pair-lbl">${fl} ${c}</div><div class="conv-pair-rate">${rate.toFixed(c==='JPY'?1:3)}</div></div>`;
+  }).join('');
+}
+
+async function initConverter(){
+  await fetchRates();
+  doConvert();renderConvGrid();
+  document.getElementById('conv-from-cur').addEventListener('change',()=>{doConvert();renderConvGrid()});
+}
+
+async function refreshRates(){
+  localStorage.removeItem('fx_rates');
+  showAlert('⏳ Aggiornamento tassi...','yellow');
+  await fetchRates();doConvert();renderConvGrid();
+  showAlert('✅ Tassi aggiornati!','green');
+}
+
+// ══════════════════════════════════════════
+// 💬 CHATBOT AI FINANZIARIO
+// ══════════════════════════════════════════
+let chatHistory=[];
+let chatInitialized=false;
+
+function initChat(){
+  if(!chatInitialized){chatInitialized=true}
+}
+
+function clearChat(){
+  chatHistory=[];
+  document.getElementById('chat-msgs').innerHTML='<div class="chat-bubble ai">👋 Ciao! Sono il tuo assistente finanziario. Chiedimi qualsiasi cosa sulle tue spese.</div>';
+  haptic('light');
+}
+
+function sendChip(el){
+  document.getElementById('chat-input').value=el.textContent;
+  sendChat();
+}
+
+function buildFinancialContext(){
+  const mc=getMC(),mp=getMP();
+  const txM=txs.filter(t=>t.mese===mc);
+  const txP=txs.filter(t=>t.mese===mp);
+  const eM=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const uM=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const eP=txP.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const uP=txP.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const cats={};txM.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const catsSorted=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const last10=txs.slice(0,10).map(t=>`${t.data}: ${t.tipo==='entrata'?'+':'-'}€${t.importo} (${t.nome}, ${t.categoria})`).join('\n');
+  return`DATI FINANZIARI UTENTE (${new Date().toLocaleDateString('it-IT')}):
+Mese corrente: ${mc}
+- Entrate: €${eM.toFixed(2)} | Uscite: €${uM.toFixed(2)} | Saldo: €${(eM-uM).toFixed(2)}
+Mese precedente (${mp}): Entrate €${eP.toFixed(2)} | Uscite €${uP.toFixed(2)} | Saldo €${(eP-uP).toFixed(2)}
+Budget mensile: ${budgetMensile>0?'€'+budgetMensile:'non impostato'}${budgetMensile>0?' (usato '+Math.round(uM/budgetMensile*100)+'%)':''}
+Categorie uscite (${mc}): ${catsSorted.map(([c,v])=>`${c} €${v.toFixed(0)}`).join(', ')||'nessuna'}
+Goals attivi: ${goals.length>0?goals.map(g=>`${g.nome} ${Math.round(g.saved/g.target*100)}% (€${g.saved}/${g.target})`).join(', '):'nessuno'}
+Totale transazioni: ${txs.length}
+Ultime 10 transazioni:\n${last10}`;
+}
+
+async function sendChat(){
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  const msgs=document.getElementById('chat-msgs');
+
+  // Aggiungi messaggio utente
+  msgs.innerHTML+=`<div class="chat-bubble user">${msg.replace(/</g,'&lt;')}</div>`;
+  chatHistory.push({role:'user',content:msg});
+
+  // Loading bubble
+  const loadId='load-'+Date.now();
+  msgs.innerHTML+=`<div class="chat-bubble ai loading" id="${loadId}">✦ Analisi in corso...</div>`;
+  msgs.scrollTop=msgs.scrollHeight;haptic('light');
+
+  try{
+    const context=buildFinancialContext();
+    const messages=[{role:'user',content:context+'\n\nDomanda utente: '+chatHistory[0].content},...chatHistory.slice(1)];
+    // Build proper history: alternate user/assistant
+    const apiMsgs=[{role:'user',content:context+'\n\n'+chatHistory.map(m=>m.role==='user'?'Utente: '+m.content:'Assistente: '+m.content).join('\n')}];
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:400,
+      system:'Sei un assistente finanziario personale integrato nell\'app Budly. Rispondi in italiano, in modo conciso e utile (max 3-4 frasi). Usa emoji con parsimonia. Analizza i dati reali forniti e rispondi in modo preciso. Se chiede somme o statistiche, calcola dai dati.',
+      messages:apiMsgs
+    })});
+    const d=await res.json();
+    const txt=(d.content||[]).map(b=>b.text||'').join('').trim();
+    document.getElementById(loadId).className='chat-bubble ai';
+    document.getElementById(loadId).textContent=txt||'Non ho capito, puoi riformulare?';
+    chatHistory.push({role:'assistant',content:txt});
+  }catch(e){
+    document.getElementById(loadId).className='chat-bubble ai';
+    document.getElementById(loadId).textContent='⚠️ Errore di connessione. Riprova tra poco.';
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ══════════════════════════════════════════
+// 🎯 SFIDE RISPARMIO
+// ══════════════════════════════════════════
+const PRESET_CHALLENGES=[
+  {id:'no-resto',ico:'🍕',name:'No ristoranti per 2 settimane',desc:'Cucina a casa per 14 giorni di fila. Risparmi in media €80–150.',cat:'Cibo & Ristoranti',target:0,days:14,type:'avoid',difficulty:'medium'},
+  {id:'budget-spesa',ico:'🛒',name:'Budget spesa €50/settimana',desc:'Limita la spesa al supermercato a €50 per 4 settimane.',cat:'Cibo & Ristoranti',target:200,days:28,type:'limit',difficulty:'easy'},
+  {id:'no-shopping',ico:'🛍️',name:'No shopping per 30 giorni',desc:'Niente acquisti non essenziali per un mese intero.',cat:'Shopping',target:0,days:30,type:'avoid',difficulty:'hard'},
+  {id:'caffè',ico:'☕',name:'Caffè solo a casa',desc:'Niente bar per 2 settimane. Risparmia €2–4 al giorno.',cat:'Cibo & Ristoranti',target:0,days:14,type:'avoid',difficulty:'easy'},
+  {id:'52weeks',ico:'💰',name:'Sfida 52 settimane',desc:'Settimana 1: €1, settimana 2: €2... fino a €52. Tot: €1.378!',cat:null,target:1378,days:365,type:'save',difficulty:'hard'},
+  {id:'no-abbonamenti',ico:'📺',name:'Revisione abbonamenti',desc:'Disdici almeno 1 abbonamento non usato questo mese.',cat:'Abbonamenti',target:0,days:30,type:'cancel',difficulty:'easy'},
+  {id:'trasporti',ico:'🚌',name:'Meno auto per 2 settimane',desc:'Usa mezzi pubblici o bici. Risparmia su carburante e parcheggi.',cat:'Trasporti',target:0,days:14,type:'avoid',difficulty:'medium'},
+  {id:'risparmio-20',ico:'🏦',name:'Risparmia il 20% delle entrate',desc:'Questo mese metti da parte almeno il 20% di quello che guadagni.',cat:null,target:0,days:30,type:'save_pct',difficulty:'hard'},
+];
+
+let activeChallenges=[];
+try{activeChallenges=JSON.parse(localStorage.getItem('bch')||'[]')}catch(e){}
+function saveChallenges(){try{localStorage.setItem('bch',JSON.stringify(activeChallenges))}catch(e){}}
+
+function getChallengeProgress(ch){
+  const now=new Date();
+  const start=new Date(ch.startDate);
+  const end=new Date(start);end.setDate(end.getDate()+ch.days);
+  const daysLeft=Math.max(0,Math.ceil((end-now)/(1000*60*60*24)));
+  const daysTotal=ch.days;
+  const daysElapsed=daysTotal-daysLeft;
+  const pctTime=Math.min(100,Math.round(daysElapsed/daysTotal*100));
+
+  if(ch.type==='save'){
+    return{label:'€'+ch.saved.toFixed(0)+' / €'+ch.target,pct:Math.min(100,Math.round(ch.saved/ch.target*100)),daysLeft,completed:ch.saved>=ch.target};
+  }
+  if(ch.type==='save_pct'){
+    const mc=getMC();const e=txs.filter(t=>t.mese===mc&&t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+    const u=txs.filter(t=>t.mese===mc&&t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+    const saved=e>0?Math.max(0,e-u):0;const target=e*0.2;
+    return{label:'€'+saved.toFixed(0)+' risparmiati di €'+target.toFixed(0),pct:Math.min(100,target>0?Math.round(saved/target*100):0),daysLeft,completed:saved>=target};
+  }
+  if(ch.type==='avoid'||ch.type==='limit'||ch.type==='cancel'){
+    // Calcola spesa nella categoria dall'inizio sfida
+    const startStr=ch.startDate;
+    const spent=txs.filter(t=>t.tipo==='uscita'&&t.data>=startStr&&(ch.cat?t.categoria===ch.cat:true)).reduce((s,t)=>s+t.importo,0);
+    if(ch.type==='limit') return{label:'€'+spent.toFixed(0)+' spesi / €'+ch.target,pct:Math.min(100,Math.round(spent/ch.target*100)),daysLeft,completed:daysLeft===0&&spent<=ch.target,over:spent>ch.target};
+    // avoid/cancel: progress basato sul tempo se €0 spesi nella cat
+    const ok=spent===0;
+    return{label:ok?daysElapsed+' giorni senza '+ch.cat:'⚠️ €'+spent.toFixed(0)+' spesi in '+ch.cat,pct:ok?pctTime:Math.min(100,pctTime),daysLeft,completed:daysLeft===0&&ok,failed:!ok};
+  }
+  return{label:pctTime+'%',pct:pctTime,daysLeft,completed:daysLeft===0};
+}
+
+function renderChallenges(){
+  // Attive
+  const active=activeChallenges.filter(c=>!c.completed&&!c.abandoned);
+  const section=document.getElementById('active-challenges-section');
+  section.style.display=active.length?'block':'none';
+  document.getElementById('active-challenges-list').innerHTML=active.map(ch=>{
+    const prog=getChallengeProgress(ch);
+    if(prog.completed){ch.completed=true;saveChallenges();launchConfetti();showAlert('🎉 Sfida "'+ch.name+'" completata!','green')}
+    const diff={easy:'🟢 Facile',medium:'🟡 Media',hard:'🔴 Difficile'}[ch.difficulty]||'';
+    return`<div class="challenge-card active-ch">
+      <div class="challenge-header"><div class="challenge-ico">${ch.ico}</div><div class="challenge-info"><div class="challenge-name">${ch.name}</div><div class="challenge-desc">${ch.desc}</div></div></div>
+      <div class="challenge-meta"><span class="challenge-tag green">Attiva</span><span class="challenge-tag">${diff}</span><span class="challenge-tag blue">${prog.daysLeft} giorni rimasti</span></div>
+      <div class="challenge-bar-wrap"><div class="challenge-bar" style="width:${prog.pct}%;background:${prog.failed?'var(--red)':prog.over?'var(--yellow)':'var(--green)'}"></div></div>
+      <div class="challenge-footer"><div class="challenge-progress-txt">${prog.label}</div><button class="challenge-btn abandon" onclick="abandonChallenge('${ch.id}')">Abbandona</button></div>
+    </div>`;
+  }).join('');
+
+  // Completate (ultime 3)
+  const completed=activeChallenges.filter(c=>c.completed).slice(-3).reverse();
+  const completedHtml=completed.length?`<div class="lbl" style="margin-bottom:10px;margin-top:6px">Completate ✅</div>`+completed.map(ch=>`<div class="challenge-card completed-ch"><div class="challenge-header"><div class="challenge-ico">${ch.ico}</div><div class="challenge-info"><div class="challenge-name">${ch.name}</div><div class="challenge-desc" style="color:var(--green)">🏅 Completata!</div></div></div></div>`).join(''):'';
+
+  // Disponibili (non ancora attive)
+  const activeIds=activeChallenges.filter(c=>!c.abandoned).map(c=>c.id);
+  const available=PRESET_CHALLENGES.filter(c=>!activeIds.includes(c.id));
+  const diff2={easy:'🟢 Facile',medium:'🟡 Media',hard:'🔴 Difficile'};
+  document.getElementById('challenges-list').innerHTML=completedHtml+available.map(ch=>`<div class="challenge-card">
+    <div class="challenge-header"><div class="challenge-ico">${ch.ico}</div><div class="challenge-info"><div class="challenge-name">${ch.name}</div><div class="challenge-desc">${ch.desc}</div></div></div>
+    <div class="challenge-meta"><span class="challenge-tag">${diff2[ch.difficulty]||''}</span><span class="challenge-tag">${ch.days} giorni</span>${ch.cat?`<span class="challenge-tag blue">${ch.cat}</span>`:''}</div>
+    <div class="challenge-footer"><div></div><button class="challenge-btn start" onclick="startChallenge('${ch.id}')">Inizia →</button></div>
+  </div>`).join('');
+}
+
+function startChallenge(id){
+  const ch=PRESET_CHALLENGES.find(c=>c.id===id);if(!ch)return;
+  const newCh={...ch,startDate:new Date().toISOString().split('T')[0],saved:0};
+  activeChallenges.push(newCh);saveChallenges();
+  renderChallenges();haptic('medium');showAlert('🎯 Sfida "'+ch.name+'" iniziata!','green');
+}
+
+function abandonChallenge(id){
+  if(!confirm('Sei sicuro di voler abbandonare questa sfida?'))return;
+  const ch=activeChallenges.find(c=>c.id===id);if(ch)ch.abandoned=true;
+  saveChallenges();renderChallenges();haptic('heavy');showAlert('Sfida abbandonata','red');
+}
+
+function createCustomChallenge(){
+  const nome=document.getElementById('ch-nome').value.trim();
+  const budget=parseFloat(document.getElementById('ch-budget').value)||0;
+  const days=parseInt(document.getElementById('ch-days').value)||30;
+  if(!nome){alert('Inserisci un nome per la sfida');return}
+  const newCh={id:'custom-'+Date.now(),ico:'✏️',name:nome,desc:'Sfida personalizzata',cat:null,target:budget,days,type:budget>0?'limit':'avoid',difficulty:'medium',startDate:new Date().toISOString().split('T')[0],saved:0};
+  activeChallenges.push(newCh);saveChallenges();
+  document.getElementById('ch-nome').value='';document.getElementById('ch-budget').value='';document.getElementById('ch-days').value='';
+  renderChallenges();haptic('medium');showAlert('✏️ Sfida "'+nome+'" creata!','green');
+}
+
+
+// ══════════════════════════════════════════
+// 📈 INVESTIMENTI TRACKER
+// ══════════════════════════════════════════
+let investments=[];
+let invType='azioni';
+try{investments=JSON.parse(localStorage.getItem('binv')||'[]')}catch(e){}
+function saveInvestments(){try{localStorage.setItem('binv',JSON.stringify(investments))}catch(e){}}
+
+function selInvType(btn,type){
+  invType=type;
+  document.querySelectorAll('.inv-type-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function addInvestment(){
+  const ticker=(document.getElementById('inv-ticker').value||'').trim().toUpperCase();
+  const name=(document.getElementById('inv-name').value||'').trim()||ticker;
+  const qty=parseFloat(document.getElementById('inv-qty').value)||0;
+  const priceBuy=parseFloat(document.getElementById('inv-price-buy').value)||0;
+  const priceNow=parseFloat(document.getElementById('inv-price-now').value)||priceBuy;
+  const date=document.getElementById('inv-date').value||new Date().toISOString().split('T')[0];
+  if(!ticker||qty<=0||priceBuy<=0){showAlert('⚠️ Compila tutti i campi');return}
+  investments.push({id:Date.now(),ticker,name,qty,priceBuy,priceNow,type:invType,date});
+  saveInvestments();
+  document.getElementById('inv-ticker').value='';document.getElementById('inv-name').value='';
+  document.getElementById('inv-qty').value='';document.getElementById('inv-price-buy').value='';
+  document.getElementById('inv-price-now').value='';
+  renderInvestments();haptic('medium');showAlert('✅ Asset aggiunto','green');
+}
+
+function delInvestment(id){
+  investments=investments.filter(i=>i.id!==id);
+  saveInvestments();renderInvestments();haptic('medium');
+}
+
+function refreshInvest(){
+  showAlert('💡 Aggiorna manualmente i prezzi attuali per ciascun asset','yellow');
+}
+
+const INV_TYPE_ICO={azioni:'📊',etf:'🗂',crypto:'₿',obbligazioni:'🏦',altro:'📦'};
+
+function renderInvestments(){
+  const totIn=investments.reduce((s,i)=>s+i.qty*i.priceBuy,0);
+  const totNow=investments.reduce((s,i)=>s+i.qty*i.priceNow,0);
+  const gain=totNow-totIn;
+  const gainPct=totIn>0?(gain/totIn*100):0;
+  document.getElementById('inv-tot-in').textContent=fmt(totIn);
+  document.getElementById('inv-tot-now').textContent=fmt(totNow);
+  const gainEl=document.getElementById('inv-tot-gain');
+  gainEl.textContent=(gain>=0?'+':'')+fmt(gain);
+  gainEl.style.color=gain>=0?'var(--green)':'var(--red)';
+
+  const list=document.getElementById('inv-list');
+  if(!investments.length){list.innerHTML='<div class="empty">Nessun asset ancora</div>';return}
+
+  // Raggruppa per tipo per la barra allocazione
+  const byType={};investments.forEach(i=>{byType[i.type]=(byType[i.type]||0)+i.qty*i.priceNow});
+  const maxAlloc=Math.max(...Object.values(byType),1);
+
+  list.innerHTML=investments.map(inv=>{
+    const invested=inv.qty*inv.priceBuy;
+    const current=inv.qty*inv.priceNow;
+    const g=current-invested;
+    const gPct=invested>0?(g/invested*100):0;
+    const barPct=Math.min(100,Math.round(current/Math.max(totNow,1)*100));
+    return`<div class="inv-card">
+      <div class="inv-card-top">
+        <div class="inv-ticker">${INV_TYPE_ICO[inv.type]||'📦'} ${inv.ticker}</div>
+        <div class="inv-name">${inv.name}</div>
+        <button class="inv-del" onclick="delInvestment(${inv.id})">×</button>
+      </div>
+      <div class="inv-row"><span class="inv-lbl2">Quantità</span><span class="inv-val2">${inv.qty}</span></div>
+      <div class="inv-row"><span class="inv-lbl2">Prezzo acquisto</span><span class="inv-val2">${fmt(inv.priceBuy)}</span></div>
+      <div class="inv-row"><span class="inv-lbl2">Prezzo attuale</span><span class="inv-val2">${fmt(inv.priceNow)}</span></div>
+      <div class="inv-row"><span class="inv-lbl2">Investito</span><span class="inv-val2">${fmt(invested)}</span></div>
+      <div class="inv-row"><span class="inv-lbl2">Valore attuale</span><span class="inv-val2" style="color:${g>=0?'var(--green)':'var(--red)'}">${fmt(current)}</span></div>
+      <div class="inv-row"><span class="inv-lbl2">Guadagno/Perdita</span><span class="inv-val2" style="color:${g>=0?'var(--green)':'var(--red)'}">${g>=0?'+':''}${fmt(g)} (${gPct>=0?'+':''}${gPct.toFixed(1)}%)</span></div>
+      <div class="inv-bar-wrap"><div class="inv-bar" style="width:${barPct}%;background:${g>=0?'var(--green)':'var(--red)'}"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:right">${barPct}% del portafoglio · ${inv.date}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// 🗓️ PROMEMORIA PAGAMENTI
+// ══════════════════════════════════════════
+let reminders=[];
+try{reminders=JSON.parse(localStorage.getItem('brem')||'[]')}catch(e){}
+function saveReminders(){try{localStorage.setItem('brem',JSON.stringify(reminders))}catch(e){}}
+
+function addReminder(){
+  const nome=(document.getElementById('rem-nome').value||'').trim();
+  const amt=parseFloat(document.getElementById('rem-amt-input').value)||0;
+  const day=parseInt(document.getElementById('rem-day').value)||1;
+  const cat=document.getElementById('rem-cat').value;
+  const monthly=document.getElementById('rem-monthly').checked;
+  if(!nome||amt<=0||day<1||day>31){showAlert('⚠️ Compila tutti i campi');return}
+  reminders.push({id:Date.now(),nome,amt,day,cat,monthly});
+  saveReminders();
+  document.getElementById('rem-nome').value='';document.getElementById('rem-amt-input').value='';document.getElementById('rem-day').value='';
+  renderReminders();haptic('medium');showAlert('✅ Promemoria aggiunto','green');
+  scheduleReminderNotif();
+}
+
+function delReminder(id){reminders=reminders.filter(r=>r.id!==id);saveReminders();renderReminders()}
+
+function getRemStatus(day){
+  const today=new Date().getDate();
+  const diff=day-today;
+  if(diff<0)return'overdue';
+  if(diff===0)return'today';
+  if(diff<=5)return'soon';
+  return'ok';
+}
+
+function getRemLabel(day){
+  const today=new Date().getDate();
+  const diff=day-today;
+  if(diff<0)return`Scaduto ${Math.abs(diff)} gg fa`;
+  if(diff===0)return'Oggi!';
+  if(diff===1)return'Domani';
+  return`Fra ${diff} giorni`;
+}
+
+function renderReminders(){
+  const now=new Date();
+  const sorted=[...reminders].sort((a,b)=>{
+    const da=a.day-now.getDate(), db=b.day-now.getDate();
+    // overdue last, future first
+    if(da<0&&db>=0)return 1;if(db<0&&da>=0)return-1;
+    return Math.abs(da)-Math.abs(db);
+  });
+
+  let cntSoon=0,cntOver=0,totAmt=0;
+  sorted.forEach(r=>{
+    const s=getRemStatus(r.day);
+    if(s==='overdue')cntOver++;
+    if(s==='soon'||s==='today')cntSoon++;
+    totAmt+=r.amt;
+  });
+  document.getElementById('rem-cnt-soon').textContent=cntSoon;
+  document.getElementById('rem-cnt-over').textContent=cntOver;
+  document.getElementById('rem-cnt-amt').textContent=fmt(totAmt);
+
+  const list=document.getElementById('rem-list');
+  if(!sorted.length){list.innerHTML='<div class="empty">Nessun promemoria</div>';return}
+
+  const BADGES={overdue:'overdue',today:'today',soon:'soon',ok:'ok'};
+  const BADGE_TXT={overdue:'Scaduto',today:'Oggi',soon:'In scadenza',ok:'Ok'};
+
+  list.innerHTML=sorted.map(r=>{
+    const st=getRemStatus(r.day);
+    const lbl=getRemLabel(r.day);
+    const monthStr=now.toLocaleString('it-IT',{month:'short'}).toUpperCase();
+    return`<div class="rem-card ${st}">
+      <div class="rem-left">
+        <div class="rem-day">${r.day}</div>
+        <div class="rem-month">${monthStr}</div>
+      </div>
+      <div class="rem-info">
+        <div class="rem-name">${r.nome}</div>
+        <div class="rem-meta">${r.cat}${r.monthly?' · 🔁 mensile':''}</div>
+      </div>
+      <div class="rem-right">
+        <div class="rem-amt">-${fmt(r.amt)}</div>
+        <div class="rem-badge ${BADGES[st]}">${BADGE_TXT[st]}</div>
+        <button class="rem-del" onclick="delReminder(${r.id})">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function scheduleReminderNotif(){
+  if(!localStorage.getItem('notif_enabled'))return;
+  const today=new Date().getDate();
+  reminders.forEach(r=>{
+    const diff=r.day-today;
+    if(diff===1&&Notification.permission==='granted'){
+      setTimeout(()=>{new Notification('🗓️ Budly',{body:`Domani scade: ${r.nome} — ${fmt(r.amt)}`,icon:'/icon.svg'})},500);
+    }
+    if(diff===0&&Notification.permission==='granted'){
+      setTimeout(()=>{new Notification('⚠️ Budly',{body:`Oggi scade: ${r.nome} — ${fmt(r.amt)}`,icon:'/icon.svg'})},500);
+    }
+  });
+}
+
+// Controlla promemoria ad ogni avvio
+function checkRemindersOnLoad(){
+  if(!reminders.length)return;
+  const urgent=reminders.filter(r=>{const s=getRemStatus(r.day);return s==='today'||s==='overdue'});
+  if(urgent.length)setTimeout(()=>showAlert(`🗓️ ${urgent.length} pagament${urgent.length===1?'o':'i'} in scadenza/scadut${urgent.length===1?'o':'i'}!`,'yellow'),2000);
+}
+
+// ══════════════════════════════════════════
+// 📱 WIDGET SCHERMATA HOME
+// ══════════════════════════════════════════
+const SCRIPTABLE_CODE=`// Budly Widget — Scriptable iOS
+// Installa Scriptable dall'App Store
+
+const mc = new Date().toLocaleString('it', {month:'long'})
+  .replace(/^\\w/, c => c.toUpperCase());
+
+// Leggi dati da localStorage via WebView
+const wv = new WebView();
+await wv.loadURL("about:blank");
+const data = await wv.evaluateJavaScript(\`
+  (() => {
+    try {
+      const txs = JSON.parse(localStorage.getItem('btx') || '[]');
+      const budget = parseFloat(localStorage.getItem('budget_m') || '0');
+      const cur = localStorage.getItem('default_cur') || 'EUR';
+      const syms = {EUR:'€',USD:'$',GBP:'£',CHF:'CHF ',JPY:'¥'};
+      const sym = syms[cur] || '€';
+      const txM = txs.filter(t => t.mese === mc);
+      const e = txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+      const u = txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+      return JSON.stringify({e,u,saldo:e-u,budget,sym,mc});
+    } catch(err) { return JSON.stringify({e:0,u:0,saldo:0,budget:0,sym:'€',mc}); }
+  })()
+\`);
+
+const d = JSON.parse(data);
+const fmt = n => d.sym + Math.abs(n).toLocaleString('it-IT',
+  {minimumFractionDigits:2, maximumFractionDigits:2});
+
+const w = new ListWidget();
+w.backgroundColor = new Color("#0f0f0f");
+w.setPadding(14, 16, 14, 16);
+
+const title = w.addText("💰 " + d.mc);
+title.textColor = new Color("#777");
+title.font = Font.systemFont(11);
+
+w.addSpacer(4);
+
+const saldo = w.addText(fmt(d.saldo));
+saldo.textColor = d.saldo >= 0 ? new Color("#4ade80") : new Color("#f87171");
+saldo.font = Font.boldSystemFont(26);
+
+w.addSpacer(8);
+
+const row = w.addStack();
+row.layoutHorizontally();
+
+const eStack = row.addStack();
+eStack.layoutVertically();
+const eL = eStack.addText("↑ ENTRATE");
+eL.textColor = new Color("#555");
+eL.font = Font.systemFont(9);
+const eV = eStack.addText("+" + fmt(d.e));
+eV.textColor = new Color("#4ade80");
+eV.font = Font.mediumSystemFont(13);
+
+row.addSpacer();
+
+const uStack = row.addStack();
+uStack.layoutVertically();
+const uL = uStack.addText("↓ USCITE  ");
+uL.textColor = new Color("#555");
+uL.font = Font.systemFont(9);
+const uV = uStack.addText("-" + fmt(d.u));
+uV.textColor = new Color("#f87171");
+uV.font = Font.mediumSystemFont(13);
+
+if (d.budget > 0) {
+  w.addSpacer(6);
+  const pct = Math.min(100, Math.round(d.u / d.budget * 100));
+  const bRow = w.addStack();
+  bRow.layoutHorizontally();
+  const bL = bRow.addText("Budget: " + pct + "%");
+  bL.textColor = pct >= 100 ? new Color("#f87171")
+    : pct >= 80 ? new Color("#fbbf24") : new Color("#4ade80");
+  bL.font = Font.systemFont(11);
+}
+
+w.addSpacer(4);
+const upd = w.addText(new Date().toLocaleTimeString('it-IT',
+  {hour:'2-digit',minute:'2-digit'}));
+upd.textColor = new Color("#333");
+upd.font = Font.systemFont(9);
+
+Script.setWidget(w);
+Script.complete();`;
+
+function initWidget(){
+  // Aggiorna anteprima con dati reali
+  const mc=getMC();
+  const txM=txs.filter(t=>t.mese===mc);
+  const e=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const u=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const saldo=e-u;
+  document.getElementById('wp-saldo').textContent=(saldo<0?'- ':'')+fmt(Math.abs(saldo));
+  document.getElementById('wp-saldo').style.color=saldo>=0?'#4ade80':'#f87171';
+  document.getElementById('wp-e').textContent='+'+fmt(e);
+  document.getElementById('wp-u').textContent='-'+fmt(u);
+  document.getElementById('wp-budget').textContent=budgetMensile>0?Math.min(100,Math.round(u/budgetMensile*100))+'%':'—';
+  document.getElementById('wp-time').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+
+  // Codice Scriptable
+  document.getElementById('scriptable-code').textContent=SCRIPTABLE_CODE;
+
+  // JSON widget
+  const widgetData={saldo,entrate:e,uscite:u,budget:budgetMensile,mese:mc,aggiornato:new Date().toISOString(),valuta:defaultCur};
+  localStorage.setItem('budly_widget',JSON.stringify(widgetData));
+  document.getElementById('widget-json-preview').textContent=JSON.stringify(widgetData,null,2);
+}
+
+function copyWidgetCode(){
+  navigator.clipboard&&navigator.clipboard.writeText(SCRIPTABLE_CODE)
+    .then(()=>showAlert('📋 Codice Scriptable copiato!','green'))
+    .catch(()=>showAlert('Copia manualmente il codice'));
+}
+
+function copyWidgetJSON(){
+  const d=localStorage.getItem('budly_widget')||'{}';
+  navigator.clipboard&&navigator.clipboard.writeText(d)
+    .then(()=>showAlert('📋 JSON copiato!','green'))
+    .catch(()=>showAlert('Copia manualmente il JSON'));
+}
+
 checkOnboarding();
+checkRemindersOnLoad();
 
 </script>
 </body>
