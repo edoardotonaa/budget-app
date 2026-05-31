@@ -673,6 +673,8 @@ function goNav(id){
   if(id==='p-dati'){buildMonthFilter();renderDati();drawCal()}
   if(id==='p-home')updHome();
   if(id==='p-goals')renderGoals();
+  if(id==='p-game')renderGame();
+  if(id==='p-annual')renderAnnual();
   if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click()}
   haptic('light');
 }
@@ -1227,13 +1229,7 @@ function renderSubscriptions(){
 }
 
 
-// patch goNav for new pages
-const _goNavOrig=goNav;
-function goNav(id){
-  _goNavOrig(id);
-  if(id==="p-game")renderGame();
-  if(id==="p-annual")renderAnnual();
-}
+
 
 checkOnboarding();
 
