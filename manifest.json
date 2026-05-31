@@ -1,6 +1,6 @@
 {
-  "name": "Budget",
-  "short_name": "Budget",
+  "name": "Budly",
+  "short_name": "Budly",
   "description": "Tracker entrate e uscite",
   "start_url": "/",
   "display": "standalone",
