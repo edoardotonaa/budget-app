@@ -874,7 +874,15 @@ body.light .share-box{background:#fff}
 
 <!-- SETTINGS -->
 <div id="p-settings" class="page">
-  <div class="shdr"><button class="back" onclick="goNav('p-home')">←</button><div class="sttl">Impostazioni</div></div>
+  <div class="shdr"><button class="back" onclick="goNav('p-home')">←</button><div class="sttl" data-i18n="settings">Impostazioni</div></div>
+
+  <div class="setting-group">
+    <div class="setting-lbl" data-i18n="language">🌐 Lingua</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="setLang('it')" id="lang-it" class="export-btn" style="flex:1;text-align:center;border-color:rgba(74,222,128,.3);color:var(--green)">🇮🇹 Italiano</button>
+      <button onclick="setLang('en')" id="lang-en" class="export-btn" style="flex:1;text-align:center">🇬🇧 English</button>
+    </div>
+  </div>
 
   <div class="setting-group">
     <div class="setting-lbl">💳 Conti</div>
@@ -3513,6 +3521,9 @@ function renderDailyChallenge(){
   const key=getDailyChallengeKey();
   const state=JSON.parse(localStorage.getItem(key)||'{}');
 
+  // Pulisci stati di giorni precedenti
+  Object.keys(localStorage).filter(k=>k.startsWith('dc_')&&k!==key).forEach(k=>localStorage.removeItem(k));
+
   document.getElementById('dc-ico').textContent=ch.ico;
   document.getElementById('dc-title').textContent=ch.title;
   document.getElementById('dc-desc').textContent=ch.desc;
@@ -3617,10 +3628,287 @@ function scheduleDailyChallengeNotif(){
   },target-now);
 }
 
+// ══════════════════════════════════════════
+// 🌐 TRADUZIONI
+// ══════════════════════════════════════════
+let currentLang='it';
+try{currentLang=localStorage.getItem('lang')||'it'}catch(e){}
+
+const I18N={
+  it:{
+    // Nav
+    home:'Home',ai:'AI',challenges:'Sfide',rank:'Rank',
+    // Top bar
+    budgly_home:'💰 Budgly',budgly_game:'🎮 Budgly',
+    // Home
+    monthly_balance:'saldo del mese',add:'aggiungi',
+    top_expenses:'Top spese questo mese',explore:'Esplora',
+    first_month:'Primo mese',same_as:'Uguale a',
+    // Cards
+    income:'Entrate',expenses:'Uscite',
+    monthly_budget:'Budget mensile',end_of_month:'📈 Previsione fine mese',
+    // Insight
+    loading_insight:'Caricamento insight...',refresh:'↻ Aggiorna',
+    // Type page
+    what_add:'Cosa aggiungi?',entry:'Entrata',expense:'Spesa',
+    // Form
+    add_income:'Aggiungi entrata',add_expense:'Aggiungi spesa',
+    amount:'Importo',description:'Descrizione',category:'Categoria',
+    tag:'Tag (opzionale)',account:'Conto',currency:'Valuta',
+    method:'Metodo',date:'Data',recurring:'🔁 Ricorrente (mensile)',
+    split:'✂️ Dividi in più categorie',save:'Salva',saving_msg:'Salvataggio...',
+    voice:'🎙️ Voce',receipt:'📷 Scontrino',
+    // Data page
+    transactions:'Transazioni',all:'Tutti',search_placeholder:'Cerca per nome, categoria, tag...',
+    annual_view:'📅 Vista annuale',last_6_months:'Ultimi 6 mesi',
+    no_transactions:'Nessuna transazione',
+    // Goals
+    goals_title:'🎯 Obiettivi',no_goals:'Nessun obiettivo ancora',
+    new_goal:'Nuovo obiettivo',goal_name:'Nome',goal_target:'Obiettivo €',
+    goal_monthly:'Risparmio mensile €',add_goal:'Aggiungi obiettivo',
+    add_savings:'+ Aggiungi risparmio',months:'mesi',months1:'mese',achieved:'🎉 Raggiunto!',
+    // Settings
+    settings:'Impostazioni',language:'🌐 Lingua',
+    accounts:'💳 Conti',monthly_expenses_budget:'💰 Budgly mensile uscite',
+    budget_warning:'Avviso all\'80% e al 100%',default_currency:'🌍 Valuta predefinita',
+    pin_access:'🔐 PIN di accesso',set_pin:'Imposta / Cambia PIN',remove_pin:'Rimuovi PIN',
+    pin_desc:'Blocca l\'app con un codice a 4 cifre',
+    couple_mode:'👥 Modalità coppia',share_partner:'🔗 Condividi con partner',
+    join_shared:'📥 Unisciti a un account condiviso',couple_desc:'Sincronizza le spese con un\'altra persona',
+    saving_mode:'🟡 Modalità risparmio',toggle:'Attiva / Disattiva',
+    saving_mode_desc:'Ti avvisa quando stai spendendo troppo in una categoria',
+    sounds:'🔊 Suoni',sounds_desc:'Tick e ding discreti per ogni azione',
+    theme:'🎨 Tema',change_theme:'🌙 / ☀️ Cambia tema',
+    export:'📤 Esporta',export_csv:'📥 Esporta CSV',export_json:'📋 Esporta JSON (backup)',
+    danger:'⚠️ Pericoloso',delete_all:'🗑️ Cancella tutti i dati',
+    notifications:'🔔 Notifiche',enable_notifications:'Attiva notifiche push',
+    // PIN screen
+    insert_pin:'Inserisci PIN',choose_pin:'Scegli PIN',pin_error:'PIN errato',
+    // Onboarding
+    ob0_title:'Benvenuto su Budgly',ob0_desc:'Il modo più semplice per tenere traccia delle tue spese. In pochi secondi sei pronto.',
+    ob1_title:'Aggiungi in un tap',ob1_desc:'Premi il tasto + al centro. Voce, scontrino o manuale.',
+    ob2_title:'Imposta i tuoi Goals',ob2_desc:'Vacanza, auto, risparmio. Tieni traccia di quanto manca ogni mese.',
+    ob3_title:'Scegli valuta',
+    start:'Iniziamo →',next:'Avanti →',skip:'Salta',launch:'Inizia 🚀',
+    // Auth
+    auth_tagline:'Il tuo tracker finanziario personale',
+    login:'Accedi',signup:'Registrati',
+    email:'Email',password:'Password',your_name:'Il tuo nome',
+    password_hint:'Password (min 6 caratteri)',choose_avatar:'Scegli il tuo avatar',
+    login_btn:'Accedi →',signup_btn:'Crea account →',
+    continue_no_account:'Continua senza account',
+    // Profile
+    profile:'👤 Profilo',edit_profile:'✏️ Modifica profilo',
+    member_since:'Membro dal',total_savings:'Risparmio totale',badges_earned:'Badge ottenuti',
+    save_profile:'Salva',logout:'👋 Esci dall\'account',
+    // Challenges
+    challenges_title:'🎯 Sfide',active_challenges:'Le tue sfide attive',
+    available_challenges:'Sfide disponibili',custom_challenge:'✏️ Crea sfida personalizzata',
+    challenge_name:'Nome sfida',max_budget:'Budget max €',days:'Giorni',
+    create_challenge:'Crea sfida',daily_challenge:'Sfida del giorno',
+    accept:'Accetta sfida →',skip_challenge:'Salta',completed_today:'✅ Sfida completata oggi!',
+    skipped_today:'⏭️ Sfida saltata oggi',
+    // Game
+    streak_label:'🔥 giorni di streak',your_level:'Il tuo livello',badges:'Badge',
+    // Converter
+    converter:'💱 Convertitore',main_rates:'Tassi principali su EUR',
+    convert_receipt:'Converti da scontrino',offline_rates:'⚠️ Tassi offline (approssimativi)',
+    // Annual
+    annual:'📅 Vista Annuale',month_by_month:'Mese per mese',savings:'Risparmio',
+    // Subscriptions
+    subscriptions:'🧾 Abbonamenti',monthly:'Mensile',yearly:'Annuale',active:'Attivi',
+    detected_from_tx:'💡 Rilevati dalle transazioni',no_subs:'Nessun abbonamento rilevato.',
+    no_subs_hint:'Segna una transazione come 🔁 Ricorrente per vederla qui.',
+    no_hidden_subs:'Nessun abbonamento nascosto rilevato 👍',
+    // Map
+    map_title:'🌍 Mappa spese',visited_countries:'Paesi visitati',spent_abroad:'Speso all\'estero',
+    by_country:'Per paese',assign_country:'📍 Assegna paese a una spesa',assign:'Assegna paese',
+    // Investments
+    invest_title:'📈 Investimenti',invested:'Investito',current_value:'Valore att.',gain:'Guadagno',
+    add_asset:'+ Aggiungi asset',ticker:'Ticker / Nome',full_name:'Nome esteso',
+    quantity:'Quantità',buy_price:'Prezzo acquisto',current_price:'Prezzo attuale',buy_date:'Data acquisto',
+    add_asset_btn:'Aggiungi',
+    // Salary
+    salary_title:'📆 Stipendio',next_salary:'prossimo stipendio tra',days_label:'giorni allo stipendio',
+    today_salary:'Oggi arriva lo stipendio!',tomorrow_salary:'Domani arriva lo stipendio!',
+    spent:'Speso',left:'Rimasto',per_day:'Al giorno',salary_settings:'⚙️ Impostazioni stipendio',
+    net_amount:'Importo netto €',payday:'Giorno accredito',
+    // What if
+    whatif_title:'🔮 What if…',if_i_saved:'Se risparmiassi…',category_to_cut:'Categoria da ridurre',
+    all_expenses:'Tutte le uscite',monthly_savings:'Risparmio mensile',how_long:'In quanto tempo?',
+    calculate:'Calcola →',you_would_save:'Avresti risparmiato',scenarios:'📊 Confronto scenari',
+    suggestions:'💡 Idee rapide basate sulle tue spese',
+    // Widget
+    widget_title:'📱 Widget',widget_preview:'Anteprima widget',
+    how_to_add:'Come aggiungere il widget',scriptable_code:'Codice Scriptable (iOS)',
+    copy_scriptable:'📋 Copia codice Scriptable',widget_json:'Dati widget (JSON)',copy_json:'📋 Copia JSON',
+    // Share modal
+    share_title:'👥 Condividi con partner',share_desc:'Dai questo codice al tuo partner. Le spese verranno sincronizzate su Notion.',
+    copy_code:'📋 Copia codice',close:'Chiudi',
+    // Alerts
+    saved_notion:'Salvato su Notion ✓',saved_local:'Salvato in locale',split_saved:'Split salvato ✓',
+    budget_exceeded:'⚠️ Budget superato di ',budget_warning_pct:'% del budget usato',
+  },
+  en:{
+    home:'Home',ai:'AI',challenges:'Challenges',rank:'Rank',
+    budgly_home:'💰 Budgly',budgly_game:'🎮 Budgly',
+    monthly_balance:'monthly balance',add:'add',
+    top_expenses:'Top expenses this month',explore:'Explore',
+    first_month:'First month',same_as:'Same as',
+    income:'Income',expenses:'Expenses',
+    monthly_budget:'Monthly budget',end_of_month:'📈 End of month forecast',
+    loading_insight:'Loading insight...',refresh:'↻ Refresh',
+    what_add:'What are you adding?',entry:'Income',expense:'Expense',
+    add_income:'Add income',add_expense:'Add expense',
+    amount:'Amount',description:'Description',category:'Category',
+    tag:'Tag (optional)',account:'Account',currency:'Currency',
+    method:'Method',date:'Date',recurring:'🔁 Recurring (monthly)',
+    split:'✂️ Split into categories',save:'Save',saving_msg:'Saving...',
+    voice:'🎙️ Voice',receipt:'📷 Receipt',
+    transactions:'Transactions',all:'All',search_placeholder:'Search by name, category, tag...',
+    annual_view:'📅 Annual view',last_6_months:'Last 6 months',
+    no_transactions:'No transactions',
+    goals_title:'🎯 Goals',no_goals:'No goals yet',
+    new_goal:'New goal',goal_name:'Name',goal_target:'Target €',
+    goal_monthly:'Monthly savings €',add_goal:'Add goal',
+    add_savings:'+ Add savings',months:'months',months1:'month',achieved:'🎉 Achieved!',
+    settings:'Settings',language:'🌐 Language',
+    accounts:'💳 Accounts',monthly_expenses_budget:'💰 Monthly expenses budget',
+    budget_warning:'Alert at 80% and 100%',default_currency:'🌍 Default currency',
+    pin_access:'🔐 PIN access',set_pin:'Set / Change PIN',remove_pin:'Remove PIN',
+    pin_desc:'Lock the app with a 4-digit code',
+    couple_mode:'👥 Couple mode',share_partner:'🔗 Share with partner',
+    join_shared:'📥 Join a shared account',couple_desc:'Sync expenses with another person',
+    saving_mode:'🟡 Saving mode',toggle:'Enable / Disable',
+    saving_mode_desc:'Alerts you when spending too much in a category',
+    sounds:'🔊 Sounds',sounds_desc:'Subtle tick and ding for each action',
+    theme:'🎨 Theme',change_theme:'🌙 / ☀️ Change theme',
+    export:'📤 Export',export_csv:'📥 Export CSV',export_json:'📋 Export JSON (backup)',
+    danger:'⚠️ Danger zone',delete_all:'🗑️ Delete all data',
+    notifications:'🔔 Notifications',enable_notifications:'Enable push notifications',
+    insert_pin:'Enter PIN',choose_pin:'Choose PIN',pin_error:'Wrong PIN',
+    ob0_title:'Welcome to Budgly',ob0_desc:'The simplest way to track your expenses. Ready in seconds.',
+    ob1_title:'Add in one tap',ob1_desc:'Press the + button in the center. Voice, receipt or manual.',
+    ob2_title:'Set your Goals',ob2_desc:'Vacation, car, savings. Track how much is left each month.',
+    ob3_title:'Choose currency',
+    start:'Let\'s go →',next:'Next →',skip:'Skip',launch:'Start 🚀',
+    auth_tagline:'Your personal finance tracker',
+    login:'Sign in',signup:'Sign up',
+    email:'Email',password:'Password',your_name:'Your name',
+    password_hint:'Password (min 6 characters)',choose_avatar:'Choose your avatar',
+    login_btn:'Sign in →',signup_btn:'Create account →',
+    continue_no_account:'Continue without account',
+    profile:'👤 Profile',edit_profile:'✏️ Edit profile',
+    member_since:'Member since',total_savings:'Total savings',badges_earned:'Badges earned',
+    save_profile:'Save',logout:'👋 Sign out',
+    challenges_title:'🎯 Challenges',active_challenges:'Your active challenges',
+    available_challenges:'Available challenges',custom_challenge:'✏️ Create custom challenge',
+    challenge_name:'Challenge name',max_budget:'Max budget €',days:'Days',
+    create_challenge:'Create challenge',daily_challenge:'Challenge of the day',
+    accept:'Accept challenge →',skip_challenge:'Skip',completed_today:'✅ Challenge completed today!',
+    skipped_today:'⏭️ Challenge skipped today',
+    streak_label:'🔥 day streak',your_level:'Your level',badges:'Badges',
+    converter:'💱 Converter',main_rates:'Main rates on EUR',
+    convert_receipt:'Convert from receipt',offline_rates:'⚠️ Offline rates (approximate)',
+    annual:'📅 Annual View',month_by_month:'Month by month',savings:'Savings',
+    subscriptions:'🧾 Subscriptions',monthly:'Monthly',yearly:'Yearly',active:'Active',
+    detected_from_tx:'💡 Detected from transactions',no_subs:'No subscriptions found.',
+    no_subs_hint:'Mark a transaction as 🔁 Recurring to see it here.',
+    no_hidden_subs:'No hidden subscriptions detected 👍',
+    map_title:'🌍 Expense map',visited_countries:'Countries visited',spent_abroad:'Spent abroad',
+    by_country:'By country',assign_country:'📍 Assign country to a transaction',assign:'Assign country',
+    invest_title:'📈 Investments',invested:'Invested',current_value:'Current value',gain:'Gain/Loss',
+    add_asset:'+ Add asset',ticker:'Ticker / Name',full_name:'Full name',
+    quantity:'Quantity',buy_price:'Buy price',current_price:'Current price',buy_date:'Buy date',
+    add_asset_btn:'Add',
+    salary_title:'📆 Salary',next_salary:'next salary in',days_label:'days to salary',
+    today_salary:'Salary arrives today!',tomorrow_salary:'Salary arrives tomorrow!',
+    spent:'Spent',left:'Left',per_day:'Per day',salary_settings:'⚙️ Salary settings',
+    net_amount:'Net amount €',payday:'Payday',
+    whatif_title:'🔮 What if…',if_i_saved:'If I saved…',category_to_cut:'Category to reduce',
+    all_expenses:'All expenses',monthly_savings:'Monthly savings',how_long:'For how long?',
+    calculate:'Calculate →',you_would_save:'You would have saved',scenarios:'📊 Scenario comparison',
+    suggestions:'💡 Quick ideas based on your expenses',
+    widget_title:'📱 Widget',widget_preview:'Widget preview',
+    how_to_add:'How to add the widget',scriptable_code:'Scriptable code (iOS)',
+    copy_scriptable:'📋 Copy Scriptable code',widget_json:'Widget data (JSON)',copy_json:'📋 Copy JSON',
+    share_title:'👥 Share with partner',share_desc:'Give this code to your partner. Expenses will be synced on Notion.',
+    copy_code:'📋 Copy code',close:'Close',
+    saved_notion:'Saved to Notion ✓',saved_local:'Saved locally',split_saved:'Split saved ✓',
+    budget_exceeded:'⚠️ Budget exceeded by ',budget_warning_pct:'% of budget used',
+  }
+};
+
+function t(key){return (I18N[currentLang]&&I18N[currentLang][key])||I18N['it'][key]||key}
+
+function setLang(lang){
+  currentLang=lang;
+  localStorage.setItem('lang',lang);
+  applyTranslations();
+  // Update lang buttons
+  document.getElementById('lang-it').style.borderColor=lang==='it'?'rgba(74,222,128,.3)':'var(--border)';
+  document.getElementById('lang-it').style.color=lang==='it'?'var(--green)':'#f0f0f0';
+  document.getElementById('lang-en').style.borderColor=lang==='en'?'rgba(96,165,250,.3)':'var(--border)';
+  document.getElementById('lang-en').style.color=lang==='en'?'var(--blue)':'#f0f0f0';
+  showAlert(lang==='it'?'🇮🇹 Italiano selezionato':'🇬🇧 English selected','green');
+  haptic('light');
+}
+
+function applyTranslations(){
+  // Nav items
+  const navLabels={home:t('home'),ai:t('ai'),challenges:t('challenges'),rank:t('rank')};
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    const spans=el.querySelectorAll('span');
+    if(spans.length===2){
+      const key=Object.keys(navLabels).find(k=>spans[1].textContent.toLowerCase()===k||spans[1].textContent.toLowerCase()===I18N['it'][k]?.toLowerCase());
+      if(key)spans[1].textContent=t(key);
+    }
+  });
+  // data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(key)el.textContent=t(key);
+  });
+  // Placeholders
+  const ph={search:t('search_placeholder'),nome:t('description')+'...',imp:'0,00'};
+  const searchEl=document.getElementById('search');
+  if(searchEl)searchEl.placeholder=t('search_placeholder');
+  // Page titles
+  const pageTitles={
+    'p-home':t('budgly_home'),'p-dati':t('transactions'),'p-goals':t('goals_title'),
+    'p-settings':t('settings'),'p-game':t('budgly_game'),'p-challenges':t('challenges_title'),
+    'p-converter':t('converter'),'p-invest':t('invest_title'),'p-salary':t('salary_title'),
+    'p-whatif':t('whatif_title'),'p-widget':t('widget_title'),'p-subs':t('subscriptions'),
+    'p-map':t('map_title'),'p-wrapped':'🎵 Wrapped','p-profile':t('profile'),'p-annual':t('annual'),
+    'p-chat':'💬 '+t('ai')
+  };
+  Object.entries(pageTitles).forEach(([pageId,title])=>{
+    const page=document.getElementById(pageId);
+    if(page){const appName=page.querySelector('.app-name');if(appName)appName.textContent=title;}
+  });
+  // Buttons and labels with data-i18n
+  const lbl=document.querySelector('.lbl');
+  // Re-render dynamic content
+  updHome();
+}
+
+// Init language on load
+function initLang(){
+  if(currentLang==='en'){
+    setLang('en');
+  } else {
+    const itBtn=document.getElementById('lang-it');
+    const enBtn=document.getElementById('lang-en');
+    if(itBtn){itBtn.style.borderColor='rgba(74,222,128,.3)';itBtn.style.color='var(--green)'}
+    if(enBtn){enBtn.style.borderColor='var(--border)';enBtn.style.color='#f0f0f0'}
+  }
+}
+
 checkOnboarding();
 renderDailyQuote();
 supaInit();
 scheduleDailyChallengeNotif();
+initLang();
 
 </script>
 </body>
