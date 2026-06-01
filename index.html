@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-512.png"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
@@ -3760,9 +3760,13 @@ let supaUser=null;
 let supaReady=false;
 
 function initSupa(){
-  if(supa)return supa;
   if(typeof supabase==='undefined')return null;
-  supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+  // Ricrea sempre un client fresco per evitare problemi di inizializzazione
+  if(!supa){
+    supa=supabase.createClient(SUPA_URL,SUPA_KEY,{
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
+    });
+  }
   return supa;
 }
 
@@ -4629,10 +4633,12 @@ function deleteFromEdit(){
 // Close modal on overlay click
 document.getElementById('edit-modal').addEventListener('click',function(e){if(e.target===this)closeEditModal()});
 
-// Inizializza lingua e Supabase subito
+// Inizializza lingua subito
 initLang();
 scheduleDailyChallengeNotif();
-supaInit(); // chiamato subito, non dopo lo splash
+
+// Aspetta che tutto sia caricato prima di inizializzare Supabase
+window.addEventListener('load', ()=>{ supaInit(); });
 
 // ── SPLASH SCREEN ──
 setTimeout(()=>{
