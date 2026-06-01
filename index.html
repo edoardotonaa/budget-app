@@ -2428,7 +2428,9 @@ function showAlert(msg,color='red'){
 // ACCOUNTS
 function renderAccounts(){
   const sc=document.getElementById('accounts-scroll');
-  sc.innerHTML=['Tutti',...accounts].map((a,i)=>`<div class="acc-chip${i===0?' active':''}" onclick="filterByAcc('${a}',this)">${a}</div>`).join('')+`<button class="acc-add" onclick="goNav('p-settings')">+ Conto</button>`;
+  const allLabel=currentLang==='en'?'All':'Tutti';
+  const addLabel=currentLang==='en'?'+ Account':'+ Conto';
+  sc.innerHTML=[allLabel,...accounts].map((a,i)=>`<div class="acc-chip${i===0?' active':''}" onclick="filterByAcc('${a}',this)">${a}</div>`).join('')+`<button class="acc-add" onclick="goNav('p-settings')">${addLabel}</button>`;
 }
 function filterByAcc(a,el){document.querySelectorAll('.acc-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active')}
 function addAccount(){
