@@ -2629,9 +2629,7 @@ async function resetAll(){
   const L=currentLang;
   const msg=L==='en'?'Are you sure? ALL data will be deleted on ALL devices.':'Sei sicuro? TUTTI i dati verranno cancellati su TUTTI i dispositivi.';
   if(!confirm(msg))return;
-  // Cancella locale
-  txs=[];goals=[];save();saveGoals();updHome();
-  // Cancella su Supabase
+  // Prima cancella su Supabase
   if(supaUser){
     const s=initSupa();
     if(s){
@@ -2639,8 +2637,15 @@ async function resetAll(){
       await s.from('goals').delete().eq('user_id',supaUser.id);
     }
   }
-  showAlert(L==='en'?'🗑️ All data deleted on all devices':'🗑️ Dati cancellati su tutti i dispositivi','green');
+  // Poi cancella locale
+  txs=[];goals=[];
+  localStorage.removeItem('btx');
+  localStorage.removeItem('bgoals');
+  save();saveGoals();
+  showAlert(L==='en'?'🗑️ All data deleted':'🗑️ Dati cancellati','green');
   haptic('heavy');
+  // Ricarica dopo 1 secondo per confermare
+  setTimeout(()=>location.reload(),1000);
 }
 
 
