@@ -691,6 +691,16 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="profile-section">
+    <div class="profile-section-title" id="work-hours-title">⏱️ Ore di lavoro</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px" id="work-hours-desc">Inserisci il tuo compenso orario netto per vedere quanto "lavoro" costa ogni spesa.</div>
+    <div class="field">
+      <label id="hourly-rate-lbl">Compenso orario netto €/h</label>
+      <div class="aw"><span class="esign">€</span><input type="number" id="hourly-rate-input" inputmode="decimal" placeholder="es. 15" style="padding-left:42px" oninput="saveHourlyRate()"/></div>
+    </div>
+    <div id="hourly-preview" style="display:none;background:var(--bg3);border-radius:var(--rs);padding:12px;margin-top:8px;font-size:13px;color:var(--muted);text-align:center"></div>
+  </div>
+
+  <div class="profile-section">
     <div class="profile-section-title">✏️ Modifica profilo</div>
     <div class="field"><label>Nome</label><input type="text" id="prof-name-input" placeholder="Il tuo nome"/></div>
     <button onclick="saveProfile()" style="width:100%;padding:12px;border-radius:var(--rs);border:none;background:var(--blue);color:#fff;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:8px">Salva</button>
@@ -2282,7 +2292,7 @@ function renderDati(){
   drawDonut(cats,u);drawBarChart();
   const list=document.getElementById('txlist');
   if(!filtered.length){list.innerHTML=`<div class="empty">${t('no_transactions')}</div>`;return}
-  list.innerHTML=filtered.map(t=>`<div class="txi" data-id="${t.id}" onclick="openEditModal(${t.id})"><div class="dot ${t.tipo==='entrata'?'e':'u'}"></div><div class="txi-info"><div class="txi-name">${t.nome}${t.ricorrente?'<span class="recurr-badge">🔁</span>':''}${t.tag?`<span class="txi-tag">${t.tag}</span>`:''}</div><div class="txi-meta">${t.categoria}${t.conto&&t.conto!=='Principale'?' · '+t.conto:''} · ${t.data}${t.cur&&t.cur!=='EUR'?' · '+t.cur:''}</div></div><div class="txi-right"><div class="txi-amt ${t.tipo==='entrata'?'e':'u'}">${t.tipo==='entrata'?'+':'-'}${fmt(t.importo,t.cur)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">✏️</div></div></div>`).join('');
+  list.innerHTML=filtered.map(tx=>`<div class="txi" data-id="${tx.id}" onclick="openEditModal(${tx.id})"><div class="dot ${tx.tipo==='entrata'?'e':'u'}"></div><div class="txi-info"><div class="txi-name">${tx.nome}${tx.ricorrente?'<span class="recurr-badge">🔁</span>':''}${tx.tag?`<span class="txi-tag">${tx.tag}</span>`:''}</div><div class="txi-meta">${tx.categoria}${tx.conto&&tx.conto!=='Principale'?' · '+tx.conto:''} · ${tx.data}${tx.cur&&tx.cur!=='EUR'?' · '+tx.cur:''}${tx.tipo==='uscita'?getWorkHours(tx.importo):''}</div></div><div class="txi-right"><div class="txi-amt ${tx.tipo==='entrata'?'e':'u'}">${tx.tipo==='entrata'?'+':'-'}${fmt(tx.importo,tx.cur)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">✏️</div></div></div>`).join('');
   list.querySelectorAll('.txi').forEach(el=>{const id=parseInt(el.dataset.id);if(id)initSwipe(el,id)});
 }
 
@@ -4022,6 +4032,7 @@ function renderProfile(){
   document.getElementById('profile-email').textContent=userProfile.email||'—';
   document.getElementById('prof-name-input').value=userProfile.name||'';
   renderAccentPicker();
+  initHourlyRate();
 
   // Rank
   const pts=Math.min(txs.length,200);
@@ -4583,7 +4594,41 @@ function renderAccentPicker(){
 applyAccentColor(currentAccent);
 
 // ══════════════════════════════════════════
-// 📊 RILEVAMENTO ANOMALIE
+// ⏱️ ORE DI LAVORO PER SPESA
+// ══════════════════════════════════════════
+let hourlyRate=parseFloat(localStorage.getItem('hourly_rate')||'0');
+
+function saveHourlyRate(){
+  hourlyRate=parseFloat(document.getElementById('hourly-rate-input').value)||0;
+  localStorage.setItem('hourly_rate',hourlyRate);
+  updateHourlyPreview();
+}
+
+function updateHourlyPreview(){
+  const el=document.getElementById('hourly-preview');if(!el)return;
+  if(!hourlyRate){el.style.display='none';return}
+  const L=currentLang;
+  const ex1=fmt(50),h1=(50/hourlyRate).toFixed(1);
+  const ex2=fmt(100),h2=(100/hourlyRate).toFixed(1);
+  el.style.display='block';
+  el.innerHTML=L==='en'
+    ?`${ex1} = ${h1}h of work · ${ex2} = ${h2}h of work`
+    :`${ex1} = ${h1}h di lavoro · ${ex2} = ${h2}h di lavoro`;
+}
+
+function getWorkHours(amount){
+  if(!hourlyRate||hourlyRate<=0)return '';
+  const h=(amount/hourlyRate);
+  const L=currentLang;
+  if(h<1)return ` · ${Math.round(h*60)}${L==='en'?'min work':'min lav.'}`;
+  return ` · ${h.toFixed(1)}h ${L==='en'?'work':'lav.'}`;
+}
+
+function initHourlyRate(){
+  const input=document.getElementById('hourly-rate-input');
+  if(input&&hourlyRate)input.value=hourlyRate;
+  updateHourlyPreview();
+}
 // ══════════════════════════════════════════
 function detectAnomalies(){
   if(txs.length<10)return;
