@@ -4096,28 +4096,13 @@ async function syncFromSupabase(){
   if(!supaUser)return;const s=initSupa();if(!s)return;
   const{data:txData,error:txErr}=await s.from('transactions').select('*').eq('user_id',supaUser.id).order('created_at',{ascending:false});
   if(txErr){console.warn('sync tx error:',txErr);return}
-
-  if(txData&&txData.length>0){
-    // Cloud ha dati → usa quelli
-    txs=txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR',nota:t.nota||''}));
-    save();
-  } else if(txs.length>0){
-    // Cloud vuoto ma locale ha dati → carica su cloud
-    for(const tx of txs){
-      await s.from('transactions').upsert({user_id:supaUser.id,nome:tx.nome,importo:tx.importo,tipo:tx.tipo,categoria:tx.categoria,metodo:tx.metodo||'',data:tx.data,mese:tx.mese,ricorrente:tx.ricorrente||false,tag:tx.tag||'',conto:tx.conto||'Principale',cur:tx.cur||'EUR'});
-    }
-  }
-
+  // Cloud è sempre la fonte di verità — sovrascrive sempre il locale
+  txs=(txData||[]).map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR',nota:t.nota||''}));
+  save();
   const{data:gData,error:gErr}=await s.from('goals').select('*').eq('user_id',supaUser.id);
   if(!gErr){
-    if(gData&&gData.length>0){
-      goals=gData.map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
-      saveGoals();
-    } else if(goals.length>0){
-      for(const g of goals){
-        await s.from('goals').upsert({user_id:supaUser.id,nome:g.nome,target:g.target,saved:g.saved,monthly:g.monthly||0});
-      }
-    }
+    goals=(gData||[]).map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
+    saveGoals();
   }
 }
 
@@ -4178,15 +4163,18 @@ async function doLogin(){
   const{data,error}=await s.auth.signInWithPassword({email,password:pw});
   btn.textContent='Accedi →';btn.disabled=false;
   if(error){showAlert('⚠️ '+error.message);playSound('error');return}
-  // Pulisci dati del vecchio account
+  // Pulisci TUTTO il localStorage dell'app per il vecchio account
   clearLocalData();
   supaUser=data.user;
   supaReady=true;
+  // Carica dati dal cloud
   await loadSupaProfile();
   await syncFromSupabase();
+  // Aggiorna UI
+  updateAvatarUI();
+  updHome();
   localStorage.setItem('auth_done','1');
   document.getElementById('auth-screen').classList.remove('show');
-  updateAvatarUI();
   if(!localStorage.getItem('ob_done')){document.getElementById('onboarding').classList.add('show')}
   else{checkPin();if(!pinSet)initApp()}
   showAlert('👋 Bentornato, '+(userProfile.name||email)+'!','green');
