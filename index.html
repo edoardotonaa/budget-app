@@ -1088,6 +1088,8 @@ body.light .share-box{background:#fff}
     <div class="setting-lbl">📤 Esporta</div>
     <button class="export-btn" onclick="exportCSV()">📥 Esporta CSV</button>
     <button class="export-btn" onclick="exportJSON()">📋 Esporta JSON (backup)</button>
+    <button class="export-btn" onclick="doBackupDownload()" style="color:var(--blue);border-color:rgba(96,165,250,.25)">💾 Scarica backup completo</button>
+    <div class="setting-desc" id="backup-last-desc">Backup automatico ogni lunedì</div>
   </div>
 
   <div class="setting-group">
@@ -4741,6 +4743,16 @@ function applyTranslations(){
   // ── Salary countdown desc ──
   const salDesc=document.querySelector('#p-salary .salary-setup > div:last-child');if(salDesc&&salDesc.style&&salDesc.style.fontSize==='12px')salDesc.textContent=t('salary_countdown_desc');
 
+  // Backup description
+  const backupDesc=document.getElementById('backup-last-desc');
+  if(backupDesc){
+    const last=localStorage.getItem('last_backup');
+    const L=currentLang;
+    backupDesc.textContent=last
+      ?(L==='en'?`Auto backup every Monday · Last: ${last}`:`Backup automatico ogni lunedì · Ultimo: ${last}`)
+      :(L==='en'?'Auto backup every Monday':'Backup automatico ogni lunedì');
+  }
+
   // Re-render dynamic pages
   updHome();
 }
@@ -5027,7 +5039,43 @@ function showDashTooltip(e,text){
 function hideDashTooltip(){document.getElementById('dash-tooltip').style.display='none'}
 
 // ══════════════════════════════════════════
-// 🏆 CLASSIFICA GLOBALE
+// 💾 BACKUP AUTOMATICO SETTIMANALE
+// ══════════════════════════════════════════
+function checkAutoBackup(){
+  if(!txs.length)return;
+  const now=new Date();
+  const isMonday=now.getDay()===1;
+  const lastBackup=localStorage.getItem('last_backup');
+  const today=now.toISOString().split('T')[0];
+  if(!isMonday||lastBackup===today)return;
+  // È lunedì e non abbiamo ancora fatto il backup oggi
+  localStorage.setItem('last_backup',today);
+  setTimeout(()=>{
+    const L=currentLang;
+    showAlert(L==='en'?'💾 Weekly backup downloaded!':'💾 Backup settimanale scaricato!','green');
+    doBackupDownload();
+  },3000); // aspetta 3 secondi dopo l'avvio
+}
+
+function doBackupDownload(){
+  const backup={
+    app:'Cyrwall',
+    version:'1.0',
+    date:new Date().toISOString(),
+    user:userProfile.name||'',
+    transactions:txs,
+    goals,
+    profile:userProfile
+  };
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const date=new Date().toISOString().split('T')[0];
+  a.href=url;
+  a.download=`cyrwall-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 // ══════════════════════════════════════════
 let lbTab='save';
 function setLbTab(tab){
@@ -5592,6 +5640,8 @@ document.getElementById('edit-modal').addEventListener('click',function(e){if(e.
 
 // Inizializza lingua subito
 initLang();
+// Backup automatico il lunedì
+setTimeout(checkAutoBackup, 5000);
 scheduleDailyChallengeNotif();
 
 // Aspetta che tutto sia caricato prima di inizializzare Supabase
