@@ -22,8 +22,26 @@
       safari_web_id: "web.onesignal.auto.216fe708-f2a2-45f1-b85d-8c5449ce3db3",
       notifyButton: { enable: false },
       allowLocalhostAsSecureOrigin: true,
+      promptOptions: {
+        slidedown: {
+          prompts: [{
+            type: "push",
+            autoPrompt: true,
+            text: {
+              actionMessage: "Ricevi notifiche su sfide e promemoria spese",
+              acceptButton: "Consenti",
+              cancelButton: "No grazie"
+            },
+            delay: { pageViews: 1, timeDelay: 3 }
+          }]
+        }
+      }
     });
     window._OS = OneSignal;
+    // Richiedi permesso se non ancora dato
+    if(!OneSignal.Notifications.permission){
+      setTimeout(()=>OneSignal.Notifications.requestPermission(), 3000);
+    }
   });
 </script>
 <style>
@@ -895,13 +913,11 @@ body.light .share-box{background:#fff}
   </div>
   <div style="flex:1;overflow-y:auto;padding:12px 8px">
     <div class="drawer-item" onclick="closeDrawer();goNav('p-dati')"><span>📊</span><span>Dati & Grafici</span></div>
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-dashboard')"><span>📈</span><span>Dashboard avanzata</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-converter')"><span>💱</span><span>Convertitore valute</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-invest')"><span>📈</span><span>Investimenti</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-subs')"><span>🧾</span><span>Analisi abbonamenti</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-map')"><span>🌍</span><span>Mappa spese</span></div>
-    <div class="drawer-item" onclick="closeDrawer();goNav('p-wrapped')"><span>🎵</span><span>Wrapped finanziario</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-salary')"><span>📆</span><span>Stipendio countdown</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-whatif')"><span>🔮</span><span>Simulatore What if</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-widget')"><span>📱</span><span>Widget schermata home</span></div>
