@@ -2429,6 +2429,7 @@ async function requestNotifications(){
       if(permission){
         localStorage.setItem('notif_enabled','1');
         await OneSignal.User.addTag('app','cyrwall');
+        await OneSignal.User.addTag('lang',currentLang);
         scheduleEvening();
         showAlert('🔔 Notifiche attivate!','green');
       }else{
@@ -4120,7 +4121,12 @@ function scheduleDailyChallengeNotif(){
 function setLang(lang){
   currentLang=lang;
   localStorage.setItem('lang',lang);
-  chatInitialized=false; // reset so chips re-render in new lang
+  chatInitialized=false;
+  // Update OneSignal language tag
+  window.OneSignalDeferred=window.OneSignalDeferred||[];
+  window.OneSignalDeferred.push(async function(OneSignal){
+    try{await OneSignal.User.addTag('lang',lang)}catch(e){}
+  });
   applyTranslations();
   document.getElementById('lang-it').style.borderColor=lang==='it'?'rgba(74,222,128,.3)':'var(--border)';
   document.getElementById('lang-it').style.color=lang==='it'?'var(--green)':'#f0f0f0';
