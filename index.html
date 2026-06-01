@@ -22,6 +22,7 @@
       notifyButton: { enable: false },
       allowLocalhostAsSecureOrigin: true,
     });
+    window._OS = OneSignal; // salva riferimento globale
   });
 </script>
 <style>
@@ -2746,7 +2747,7 @@ async function requestNotificationsFromSettings(){
   btn.textContent='⏳...';btn.disabled=true;
   try{
     // Prova prima direttamente, poi via deferred
-    const OS=window.OneSignal;
+    const OS=window._OS||window.OneSignal;
     if(OS&&OS.Notifications){
       const permission=await OS.Notifications.requestPermission();
       if(permission){
