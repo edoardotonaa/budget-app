@@ -495,6 +495,31 @@ select option{background:#222}
 .accent-swatch:active{transform:scale(.9)}
 .accent-swatch.active{border-color:#fff}
 
+/* ── REPORT MENSILE ── */
+#report-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+#report-modal.show{display:flex}
+#report-card{background:linear-gradient(135deg,#0f0f0f,#1a1a2e);border-radius:24px;padding:28px 24px;width:100%;max-width:360px;position:relative;border:.5px solid rgba(255,255,255,.08)}
+.report-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.report-app{font-size:13px;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.05em}
+.report-month{font-size:13px;color:rgba(255,255,255,.4)}
+.report-balance{font-size:42px;font-weight:300;letter-spacing:-2px;margin-bottom:4px;font-family:'DM Mono',monospace}
+.report-balance-lbl{font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px}
+.report-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.06)}
+.report-row:last-of-type{border-bottom:none}
+.report-row-lbl{font-size:13px;color:rgba(255,255,255,.5)}
+.report-row-val{font-size:13px;font-weight:500;font-family:'DM Mono',monospace}
+.report-cats{margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.report-cat-item{display:flex;align-items:center;gap:10px}
+.report-cat-bar-wrap{flex:1;background:rgba(255,255,255,.06);border-radius:99px;height:4px;overflow:hidden}
+.report-cat-bar{height:100%;border-radius:99px}
+.report-cat-name{font-size:12px;color:rgba(255,255,255,.5);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.report-cat-val{font-size:12px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.6);width:60px;text-align:right;flex-shrink:0}
+.report-quote{font-size:12px;color:rgba(255,255,255,.25);font-style:italic;text-align:center;margin-top:16px;line-height:1.5;padding-top:16px;border-top:.5px solid rgba(255,255,255,.06)}
+.report-actions{display:flex;gap:10px;margin-top:16px}
+.report-btn{flex:1;padding:12px;border-radius:var(--rs);border:none;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer}
+.report-btn.share{background:var(--accent);color:#0f0f0f}
+.report-btn.close{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
+
 /* LIGHT */
 body.light{background:#f5f5f5;color:#111}
 body.light .page{background:#f5f5f5}
@@ -880,7 +905,12 @@ body.light .share-box{background:#fff}
 
 <!-- DATI -->
 <div id="p-dati" class="page">
-  <div class="dhdr"><div class="dttl">Transazioni</div><button onclick="goNav('p-annual')" style="background:none;border:.5px solid var(--border);border-radius:99px;color:var(--muted);font-size:12px;padding:6px 12px;cursor:pointer;font-family:inherit">📅 Vista annuale</button></div>
+  <div class="dhdr"><div class="dttl">Transazioni</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="generateMonthReport()" style="background:none;border:.5px solid rgba(96,165,250,.3);border-radius:99px;color:var(--blue);font-size:12px;padding:6px 12px;cursor:pointer;font-family:inherit">📤 Report</button>
+      <button onclick="goNav('p-annual')" style="background:none;border:.5px solid var(--border);border-radius:99px;color:var(--muted);font-size:12px;padding:6px 12px;cursor:pointer;font-family:inherit">📅 Vista annuale</button>
+    </div>
+  </div>
   <div class="month-scroll" id="month-scroll"></div>
   <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" id="search" placeholder="Cerca per nome, categoria, tag..." oninput="renderDati()"/></div>
   <div class="sgrid">
@@ -1435,6 +1465,39 @@ body.light .share-box{background:#fff}
         <button onclick="saveEdit()" style="flex:1;padding:13px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer" id="edit-save-btn">Salva</button>
         <button onclick="deleteFromEdit()" style="padding:13px 16px;border-radius:var(--rs);border:.5px solid rgba(248,113,113,.2);background:rgba(248,113,113,.06);color:var(--red);font-size:15px;font-family:inherit;cursor:pointer" id="edit-delete-btn">🗑️</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL REPORT MENSILE ══ -->
+<div id="report-modal" onclick="if(event.target===this)closeReport()">
+  <div>
+    <div id="report-card">
+      <div class="report-header">
+        <div class="report-app">💰 CYRWALL</div>
+        <div class="report-month" id="report-month-lbl"></div>
+      </div>
+      <div class="report-balance" id="report-balance">€0</div>
+      <div class="report-balance-lbl" id="report-balance-lbl">saldo del mese</div>
+      <div class="report-row">
+        <span class="report-row-lbl" id="report-income-lbl">↑ Entrate</span>
+        <span class="report-row-val" style="color:#4ade80" id="report-income">€0</span>
+      </div>
+      <div class="report-row">
+        <span class="report-row-lbl" id="report-expenses-lbl">↓ Uscite</span>
+        <span class="report-row-val" style="color:#f87171" id="report-expenses">€0</span>
+      </div>
+      <div class="report-row" id="report-vs-row">
+        <span class="report-row-lbl" id="report-vs-lbl">vs mese scorso</span>
+        <span class="report-row-val" id="report-vs">—</span>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 8px" id="report-top-lbl">Top categorie</div>
+      <div class="report-cats" id="report-cats"></div>
+      <div class="report-quote" id="report-quote"></div>
+    </div>
+    <div class="report-actions">
+      <button class="report-btn share" onclick="shareReport()">📤 Condividi</button>
+      <button class="report-btn close" onclick="closeReport()">Chiudi</button>
     </div>
   </div>
 </div>
@@ -4597,7 +4660,88 @@ function renderAccentPicker(){
 applyAccentColor(currentAccent);
 
 // ══════════════════════════════════════════
-// ⏱️ ORE DI LAVORO PER SPESA
+// 📤 REPORT MENSILE
+// ══════════════════════════════════════════
+function generateMonthReport(){
+  const mc=getMC(),mp=getMP();
+  const L=currentLang;
+  const txM=txs.filter(t=>t.mese===mc);
+  const txP=txs.filter(t=>t.mese===mp);
+  const eM=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const uM=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const uP=txP.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const saldo=eM-uM;
+  const cats={};txM.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const topCats=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const maxCat=topCats[0]?topCats[0][1]:1;
+  const COLORS=['#4ade80','#60a5fa','#a78bfa'];
+  const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
+  const quote=currentLang==='en'?QUOTES_EN[dayOfYear%QUOTES_EN.length]:QUOTES[dayOfYear%QUOTES.length];
+
+  document.getElementById('report-month-lbl').textContent=mc.toUpperCase();
+  document.getElementById('report-balance').textContent=(saldo<0?'-':'')+fmt(Math.abs(saldo));
+  document.getElementById('report-balance').style.color=saldo>=0?'#4ade80':'#f87171';
+  document.getElementById('report-balance-lbl').textContent=L==='en'?'monthly balance':'saldo del mese';
+  document.getElementById('report-income-lbl').textContent=L==='en'?'↑ Income':'↑ Entrate';
+  document.getElementById('report-income').textContent='+'+fmt(eM);
+  document.getElementById('report-expenses-lbl').textContent=L==='en'?'↓ Expenses':'↓ Uscite';
+  document.getElementById('report-expenses').textContent='-'+fmt(uM);
+  document.getElementById('report-top-lbl').textContent=L==='en'?'Top categories':'Top categorie';
+
+  // vs mese scorso
+  const vsEl=document.getElementById('report-vs');
+  const vsLbl=document.getElementById('report-vs-lbl');
+  vsLbl.textContent=L==='en'?'vs last month':'vs mese scorso';
+  if(uP>0){
+    const diff=uM-uP;const pct=Math.round(Math.abs(diff)/uP*100);
+    vsEl.textContent=(diff>=0?'+':'-')+fmt(Math.abs(diff))+' ('+pct+'%)';
+    vsEl.style.color=diff>0?'#f87171':'#4ade80';
+  }else{vsEl.textContent='—';vsEl.style.color='rgba(255,255,255,.4)'}
+
+  // Top categorie
+  document.getElementById('report-cats').innerHTML=topCats.map(([c,v],i)=>`
+    <div class="report-cat-item">
+      <div class="report-cat-name">${c}</div>
+      <div class="report-cat-bar-wrap"><div class="report-cat-bar" style="width:${Math.round(v/maxCat*100)}%;background:${COLORS[i]}"></div></div>
+      <div class="report-cat-val">${fmt(v)}</div>
+    </div>`).join('');
+
+  document.getElementById('report-quote').textContent=quote||'';
+  document.getElementById('report-modal').classList.add('show');
+  haptic('light');playSound('click');
+}
+
+function closeReport(){
+  document.getElementById('report-modal').classList.remove('show');
+}
+
+async function shareReport(){
+  const card=document.getElementById('report-card');
+  try{
+    // Usa html2canvas se disponibile, altrimenti Web Share API
+    if(typeof html2canvas!=='undefined'){
+      const canvas=await html2canvas(card,{backgroundColor:'#0f0f0f',scale:2});
+      canvas.toBlob(async blob=>{
+        const file=new File([blob],'cyrwall-report.png',{type:'image/png'});
+        if(navigator.share&&navigator.canShare({files:[file]})){
+          await navigator.share({files:[file],title:'Cyrwall Report'});
+        }else{
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement('a');a.href=url;a.download='cyrwall-report.png';a.click();
+        }
+      });
+    }else{
+      // Fallback: Web Share API con testo
+      const mc=getMC();
+      const txM=txs.filter(t=>t.mese===mc);
+      const eM=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+      const uM=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+      const text=`💰 Cyrwall — ${mc}\n\n↑ Entrate: ${fmt(eM)}\n↓ Uscite: ${fmt(uM)}\n💚 Saldo: ${fmt(eM-uM)}\n\ncyrwall.com`;
+      if(navigator.share){await navigator.share({text,title:'Cyrwall Report'})}
+      else{await navigator.clipboard.writeText(text);showAlert('📋 Copiato!','green')}
+    }
+  }catch(e){showAlert('⚠️ Impossibile condividere')}
+}
 // ══════════════════════════════════════════
 let hourlyRate=parseFloat(localStorage.getItem('hourly_rate')||'0');
 
