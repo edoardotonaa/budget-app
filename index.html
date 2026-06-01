@@ -1023,11 +1023,11 @@ body.light .share-box{background:#fff}
     <div class="conv-updated" id="conv-updated"></div>
   </div>
 
-  <div class="lbl" style="margin-bottom:10px">Tassi principali su EUR</div>
+  <div class="lbl" id="conv-main-rates-lbl" style="margin-bottom:10px">Tassi principali su EUR</div>
   <div class="conv-grid" id="conv-grid"></div>
 
-  <div class="lbl" style="margin-top:18px;margin-bottom:8px">Converti da scontrino</div>
-  <div style="font-size:13px;color:var(--muted);background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px">
+  <div class="lbl" id="conv-receipt-lbl" style="margin-top:18px;margin-bottom:8px">Converti da scontrino</div>
+  <div id="conv-receipt-desc" style="font-size:13px;color:var(--muted);background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px">
     Quando aggiungi una spesa in valuta estera, Budgly la salva nella valuta originale. Usa questo convertitore per verificare l'equivalente in €.
   </div>
 </div>
@@ -1086,17 +1086,17 @@ body.light .share-box{background:#fff}
     <div id="active-challenges-list"></div>
   </div>
 
-  <div class="lbl" style="margin-bottom:10px">Sfide disponibili</div>
+  <div class="lbl" id="ch-available-lbl" style="margin-bottom:10px">Sfide disponibili</div>
   <div id="challenges-list"></div>
 
   <div class="custom-challenge-form">
-    <div style="font-size:14px;font-weight:500">✏️ Crea sfida personalizzata</div>
-    <div class="field"><label>Nome sfida</label><input type="text" id="ch-nome" placeholder="es. Niente Amazon per 30 giorni"/></div>
+    <div id="ch-custom-title" style="font-size:14px;font-weight:500">✏️ Crea sfida personalizzata</div>
+    <div class="field"><label id="ch-nome-lbl">Nome sfida</label><input type="text" id="ch-nome" placeholder="es. Niente Amazon per 30 giorni"/></div>
     <div style="display:flex;gap:10px">
-      <div class="field" style="flex:1"><label>Budget max €</label><div class="aw"><span class="esign">€</span><input type="number" id="ch-budget" inputmode="decimal" placeholder="100" style="padding-left:42px"/></div></div>
-      <div class="field" style="flex:1"><label>Giorni</label><input type="number" id="ch-days" inputmode="numeric" placeholder="30"/></div>
+      <div class="field" style="flex:1"><label id="ch-budget-lbl">Budget max €</label><div class="aw"><span class="esign">€</span><input type="number" id="ch-budget" inputmode="decimal" placeholder="100" style="padding-left:42px"/></div></div>
+      <div class="field" style="flex:1"><label id="ch-days-lbl">Giorni</label><input type="number" id="ch-days" inputmode="numeric" placeholder="30"/></div>
     </div>
-    <button class="goal-add-btn" onclick="createCustomChallenge()" style="background:var(--purple)">Crea sfida</button>
+    <button id="ch-create-btn" class="goal-add-btn" onclick="createCustomChallenge()" style="background:var(--purple)">Crea sfida</button>
   </div>
 </div>
 
@@ -1146,18 +1146,18 @@ body.light .share-box{background:#fff}
   <div class="top-bar"><div class="app-name">📱 Widget</div></div>
 
   <div class="widget-info-card">
-    <div style="font-size:14px;font-weight:500;margin-bottom:4px">Anteprima widget</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Come apparirà sulla tua schermata home</div>
+    <div id="wp-preview-title" style="font-size:14px;font-weight:500;margin-bottom:4px">Anteprima widget</div>
+    <div id="wp-preview-sub" style="font-size:12px;color:var(--muted);margin-bottom:4px">Come apparirà sulla tua schermata home</div>
     <div class="widget-preview" id="widget-preview">
-      <div class="widget-preview-lbl">SALDO DEL MESE</div>
+      <div class="widget-preview-lbl" id="wp-balance-lbl">SALDO DEL MESE</div>
       <div class="widget-preview-val" id="wp-saldo">€ 0,00</div>
       <div class="widget-preview-row">
         <div class="widget-preview-item">
-          <div class="widget-preview-sub">↑ ENTRATE</div>
+          <div class="widget-preview-sub" id="wp-income-lbl">↑ ENTRATE</div>
           <div class="widget-preview-num" id="wp-e" style="color:#4ade80">€ 0,00</div>
         </div>
         <div class="widget-preview-item" style="text-align:right">
-          <div class="widget-preview-sub">↓ USCITE</div>
+          <div class="widget-preview-sub" id="wp-expenses-lbl">↓ USCITE</div>
           <div class="widget-preview-num" id="wp-u" style="color:#f87171">€ 0,00</div>
         </div>
       </div>
@@ -1168,7 +1168,7 @@ body.light .share-box{background:#fff}
           <div class="widget-preview-num" id="wp-budget" style="color:#fbbf24">—</div>
         </div>
         <div class="widget-preview-item" style="text-align:right">
-          <div class="widget-preview-sub">AGGIORNATO</div>
+          <div class="widget-preview-sub" id="wp-updated-lbl">AGGIORNATO</div>
           <div class="widget-preview-num" id="wp-time" style="font-size:12px;color:rgba(255,255,255,.4)">—</div>
         </div>
       </div>
@@ -1176,37 +1176,37 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="widget-info-card">
-    <div style="font-size:14px;font-weight:500;margin-bottom:14px">Come aggiungere il widget</div>
+    <div id="wp-how-title" style="font-size:14px;font-weight:500;margin-bottom:14px">Come aggiungere il widget</div>
     <div class="widget-step">
       <div class="widget-step-num">1</div>
-      <div class="widget-step-text"><strong>Installa Budgly come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.</div>
+      <div id="wp-step1" class="widget-step-text"><strong>Installa Budgly come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.</div>
     </div>
     <div class="widget-step">
       <div class="widget-step-num">2</div>
-      <div class="widget-step-text"><strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Budgly"</em> nella lista app o usa Scriptable con il codice qui sotto.</div>
+      <div id="wp-step2" class="widget-step-text"><strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Budgly"</em> nella lista app o usa Scriptable con il codice qui sotto.</div>
     </div>
     <div class="widget-step">
       <div class="widget-step-num">3</div>
-      <div class="widget-step-text"><strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l'app Budgly installata come PWA. In alternativa usa KWGT con il codice JSON.</div>
+      <div id="wp-step3" class="widget-step-text"><strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l'app Budgly installata come PWA. In alternativa usa KWGT con il codice JSON.</div>
     </div>
     <div class="widget-step">
       <div class="widget-step-num">4</div>
-      <div class="widget-step-text"><strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Budgly.</div>
+      <div id="wp-step4" class="widget-step-text"><strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Budgly.</div>
     </div>
   </div>
 
   <div class="widget-info-card">
-    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Codice Scriptable (iOS)</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Installa <strong>Scriptable</strong> dall'App Store, crea un nuovo script e incolla questo codice.</div>
+    <div id="wp-scriptable-title" style="font-size:14px;font-weight:500;margin-bottom:8px">Codice Scriptable (iOS)</div>
+    <div id="wp-scriptable-sub" style="font-size:12px;color:var(--muted);margin-bottom:10px">Installa <strong>Scriptable</strong> dall'App Store, crea un nuovo script e incolla questo codice.</div>
     <div style="background:var(--bg3);border-radius:var(--rs);padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:#a0c4ff;line-height:1.6;overflow-x:auto;white-space:pre" id="scriptable-code"></div>
-    <button class="widget-copy-btn" onclick="copyWidgetCode()">📋 Copia codice Scriptable</button>
+    <button id="wp-copy-scriptable" class="widget-copy-btn" onclick="copyWidgetCode()">📋 Copia codice Scriptable</button>
   </div>
 
   <div class="widget-info-card" style="margin-bottom:20px">
-    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Dati widget (JSON)</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Questi dati vengono letti dal widget. Si aggiornano ad ogni apertura dell'app.</div>
+    <div id="wp-json-title" style="font-size:14px;font-weight:500;margin-bottom:8px">Dati widget (JSON)</div>
+    <div id="wp-json-sub" style="font-size:12px;color:var(--muted);margin-bottom:10px">Questi dati vengono letti dal widget. Si aggiornano ad ogni apertura dell'app.</div>
     <div style="background:var(--bg3);border-radius:var(--rs);padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:#a0c4ff;line-height:1.6;overflow-x:auto;white-space:pre;max-height:120px;overflow-y:auto" id="widget-json-preview"></div>
-    <button class="widget-copy-btn" onclick="copyWidgetJSON()" style="background:var(--bg3);color:var(--blue);border:.5px solid rgba(96,165,250,.3);margin-top:8px">📋 Copia JSON</button>
+    <button id="wp-copy-json" class="widget-copy-btn" onclick="copyWidgetJSON()" style="background:var(--bg3);color:var(--blue);border:.5px solid rgba(96,165,250,.3);margin-top:8px">📋 Copia JSON</button>
   </div>
 </div>
 
@@ -1304,9 +1304,9 @@ body.light .share-box{background:#fff}
   <div class="top-bar"><div class="app-name">🔮 What if…</div></div>
 
   <div class="whatif-card">
-    <div style="font-size:14px;font-weight:500;margin-bottom:12px">Se risparmiassi…</div>
+    <div id="wi-title" style="font-size:14px;font-weight:500;margin-bottom:12px">Se risparmiassi…</div>
     <div class="field" style="margin-bottom:10px">
-      <label>Categoria da ridurre</label>
+      <label id="wi-cat-lbl">Categoria da ridurre</label>
       <select id="wi-cat">
         <option value="">Tutte le uscite</option>
         <option>Cibo & Ristoranti</option><option>Shopping</option><option>Svago</option>
@@ -1316,36 +1316,36 @@ body.light .share-box{background:#fff}
     </div>
     <div class="whatif-slider-wrap">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Risparmio mensile</label>
+        <label id="wi-savings-lbl" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Risparmio mensile</label>
         <span id="wi-slider-val" style="font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:var(--green)">€50</span>
       </div>
       <input type="range" class="whatif-slider" id="wi-slider" min="10" max="500" step="10" value="50" oninput="updateWhatIf()"/>
       <div class="whatif-slider-labels"><span>€10</span><span>€500</span></div>
     </div>
     <div class="field" style="margin-top:10px">
-      <label>In quanto tempo?</label>
+      <label id="wi-howlong-lbl">In quanto tempo?</label>
       <select id="wi-months" onchange="updateWhatIf()">
         <option value="3">3 mesi</option><option value="6" selected>6 mesi</option>
         <option value="12">1 anno</option><option value="24">2 anni</option>
         <option value="60">5 anni</option>
       </select>
     </div>
-    <button onclick="updateWhatIf()" style="width:100%;padding:12px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:10px">Calcola →</button>
+    <button id="wi-calc-btn" onclick="updateWhatIf()" style="width:100%;padding:12px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:10px">Calcola →</button>
   </div>
 
   <div class="whatif-result" id="wi-result">
-    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avresti risparmiato</div>
+    <div id="wi-you-saved-lbl" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Avresti risparmiato</div>
     <div class="whatif-result-big" id="wi-total">€0</div>
     <div class="whatif-result-sub" id="wi-sub"></div>
   </div>
 
   <div class="whatif-card" id="wi-scenarios-card" style="display:none">
-    <div style="font-size:13px;font-weight:500;margin-bottom:10px">📊 Confronto scenari</div>
+    <div id="wi-scenarios-title" style="font-size:13px;font-weight:500;margin-bottom:10px">📊 Confronto scenari</div>
     <div class="whatif-scenarios" id="wi-scenarios"></div>
   </div>
 
   <div class="whatif-card">
-    <div style="font-size:13px;font-weight:500;margin-bottom:10px">💡 Idee rapide basate sulle tue spese</div>
+    <div id="wi-suggestions-title" style="font-size:13px;font-weight:500;margin-bottom:10px">💡 Idee rapide basate sulle tue spese</div>
     <div id="wi-suggestions" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
 </div>
@@ -1520,6 +1520,45 @@ const I18N={
     no_expenses_month:'Nessuna spesa questo mese',
     empty_transactions:'Nessuna transazione',
     saved_green:'Salvato ✓',
+    first_month:'Primo mese',
+    // Preset challenges
+    ch_no_resto:'No ristoranti per 2 settimane',ch_no_resto_d:'Cucina a casa per 14 giorni di fila. Risparmi in media €80–150.',
+    ch_budget_spesa:'Budget spesa €50/settimana',ch_budget_spesa_d:'Limita la spesa al supermercato a €50 per 4 settimane.',
+    ch_no_shopping:'No shopping per 30 giorni',ch_no_shopping_d:'Niente acquisti non essenziali per un mese intero.',
+    ch_caffe:'Caffè solo a casa',ch_caffe_d:'Niente bar per 2 settimane. Risparmia €2–4 al giorno.',
+    ch_52weeks:'Sfida 52 settimane',ch_52weeks_d:'Settimana 1: €1, settimana 2: €2... fino a €52. Tot: €1.378!',
+    ch_no_subs:'Revisione abbonamenti',ch_no_subs_d:'Disdici almeno 1 abbonamento non usato questo mese.',
+    ch_transport:'Meno auto per 2 settimane',ch_transport_d:'Usa mezzi pubblici o bici. Risparmia su carburante e parcheggi.',
+    ch_save20:'Risparmia il 20% delle entrate',ch_save20_d:'Questo mese metti da parte almeno il 20% di quello che guadagni.',
+    // Daily challenges
+    dc_no_resto:'Niente ristoranti oggi',dc_no_resto_d:'Cucina a casa per tutto il giorno. Ogni pasto fuori conta come fallimento.',
+    dc_no_bar:'Niente bar oggi',dc_no_bar_d:'Preparati il caffè a casa. Risparmia €2-5 in un colpo solo.',
+    dc_no_shopping:'Zero acquisti non essenziali',dc_no_shopping_d:'Niente shopping oggi — solo cibo e necessità. Tutto il resto può aspettare.',
+    dc_transport5:'Spendi meno di €5 in trasporti',dc_transport5_d:'Prendi la bici, cammina o usa i mezzi pubblici economici.',
+    dc_total20:'Spendi meno di €20 in totale',dc_total20_d:'Una giornata da minimalista. Tieni le uscite sotto i €20.',
+    dc_cook_all:'Cucina tutti i pasti',dc_cook_all_d:'Zero cibo fuori casa — colazione, pranzo e cena fatti in casa.',
+    dc_no_subs:'Niente abbonamenti oggi',dc_no_subs_d:'Controlla se puoi disdire qualcosa che non usi. Almeno non aggiungerne.',
+    dc_save10:'Risparmia €10 oggi',dc_save10_d:'Trova un modo per mettere da parte €10 extra — una spesa evitata conta!',
+    dc_one_tx:'Una sola spesa oggi',dc_one_tx_d:'Permetti a te stesso massimo 1 transazione in uscita. Sceglila bene.',
+    dc_bills3:'Spendi meno di €3 in bollette',dc_bills3_d:'Stacca la spina dagli sprechi — luci spente, riscaldamento al minimo.',
+    dc_no_fun:'Niente svago a pagamento',dc_no_fun_d:'Cinema, concerti, aperitivi — oggi solo divertimento gratuito.',
+    dc_grocery15:'Spesa massimo €15',dc_grocery15_d:'Vai al supermercato con lista e budget. Niente impulsi.',
+    dc_track_all:'Registra ogni singola spesa',dc_track_all_d:'Anche il caffè da €1. Traccia tutto al centesimo per 24h.',
+    dc_walk:'Usa solo i piedi oggi',dc_walk_d:'Niente taxi, niente Uber, niente carburante. A piedi o bici.',
+    widget_preview_sub:'Come apparirà sulla tua schermata home',
+    widget_how_add:'Come aggiungere il widget',
+    widget_scriptable_sub:'Installa Scriptable dall\'App Store, crea un nuovo script e incolla questo codice.',
+    widget_json_title:'Dati widget (JSON)',
+    widget_json_sub:'Questi dati vengono letti dal widget. Si aggiornano ad ogni apertura dell\'app.',
+    wp_step1:'<strong>Installa Budgly come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.',
+    wp_step2:'<strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Budgly"</em> nella lista app o usa Scriptable con il codice qui sotto.',
+    wp_step3:'<strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l\'app Budgly installata come PWA. In alternativa usa KWGT con il codice JSON.',
+    wp_step4:'<strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Budgly.',
+    conv_receipt_desc:'Quando aggiungi una spesa in valuta estera, Budgly la salva nella valuta originale. Usa questo convertitore per verificare l\'equivalente in €.',
+    salary_countdown_desc:'Il countdown parte dal giorno di accredito al mese successivo.',
+    ch_placeholder:'es. Niente Amazon per 30 giorni',
+    months_3:'3 mesi',months_6:'6 mesi',year_1:'1 anno',years_2:'2 anni',years_5:'5 anni',
+    inizia:'Inizia →',
   },
   en:{
     home:'Home',ai:'AI',challenges:'Challenges',rank:'Rank',
@@ -1647,6 +1686,46 @@ const I18N={
     no_expenses_month:'No expenses this month',
     empty_transactions:'No transactions',
     saved_green:'Saved ✓',
+    first_month:'First month',
+    // Preset challenges
+    ch_no_resto:'No restaurants for 2 weeks',ch_no_resto_d:'Cook at home for 14 days straight. Save €80–150 on average.',
+    ch_budget_spesa:'Grocery budget €50/week',ch_budget_spesa_d:'Limit supermarket spending to €50 for 4 weeks.',
+    ch_no_shopping:'No shopping for 30 days',ch_no_shopping_d:'No non-essential purchases for a whole month.',
+    ch_caffe:'Coffee only at home',ch_caffe_d:'No café stops for 2 weeks. Save €2–4 a day.',
+    ch_52weeks:'52-week challenge',ch_52weeks_d:'Week 1: €1, week 2: €2... up to €52. Total: €1,378!',
+    ch_no_subs:'Subscription review',ch_no_subs_d:'Cancel at least 1 unused subscription this month.',
+    ch_transport:'Less car for 2 weeks',ch_transport_d:'Use public transport or bike. Save on fuel and parking.',
+    ch_save20:'Save 20% of income',ch_save20_d:'This month set aside at least 20% of what you earn.',
+    // Daily challenges
+    dc_no_resto:'No restaurants today',dc_no_resto_d:'Cook at home all day. Any meal out counts as a fail.',
+    dc_no_bar:'No café today',dc_no_bar_d:'Make coffee at home. Save €2-5 in one shot.',
+    dc_no_shopping:'Zero non-essential purchases',dc_no_shopping_d:'No shopping today — only food and necessities.',
+    dc_transport5:'Spend less than €5 on transport',dc_transport5_d:'Bike, walk or use cheap public transport.',
+    dc_total20:'Spend less than €20 total',dc_total20_d:'A minimalist day. Keep all expenses under €20.',
+    dc_cook_all:'Cook every meal',dc_cook_all_d:'Zero food outside — breakfast, lunch and dinner at home.',
+    dc_no_subs:'No subscriptions today',dc_no_subs_d:'Check if you can cancel something unused. At least don\'t add new ones.',
+    dc_save10:'Save €10 today',dc_save10_d:'Find a way to set aside an extra €10 — an avoided expense counts!',
+    dc_one_tx:'Only one expense today',dc_one_tx_d:'Allow yourself max 1 outgoing transaction. Choose wisely.',
+    dc_bills3:'Spend less than €3 on bills',dc_bills3_d:'Unplug waste — lights off, heating low.',
+    dc_no_fun:'No paid entertainment',dc_no_fun_d:'Cinema, concerts, drinks out — free fun only today.',
+    dc_grocery15:'Grocery max €15',dc_grocery15_d:'Go to the supermarket with a list and budget. No impulse buys.',
+    dc_track_all:'Record every single expense',dc_track_all_d:'Even the €1 coffee. Track everything to the cent for 24h.',
+    dc_walk:'On foot only today',dc_walk_d:'No taxi, no Uber, no fuel. Walk or bike.',
+    dc_zero:'Zero discretionary spending',dc_zero_d:'Fixed and necessary expenses only. Everything else waits until tomorrow.',
+    widget_preview_sub:'How it will look on your home screen',
+    widget_how_add:'How to add the widget',
+    widget_scriptable_sub:'Install Scriptable from the App Store, create a new script and paste this code.',
+    widget_json_title:'Widget data (JSON)',
+    widget_json_sub:'This data is read by the widget. It updates every time you open Budgly.',
+    wp_step1:'<strong>Install Budgly as a PWA</strong> — open Safari, tap the Share button (□↑) and choose <em>"Add to Home Screen"</em>.',
+    wp_step2:'<strong>On iOS</strong>: long press the Home Screen → tap <em>"+"</em> top left → search <em>"Budgly"</em> in the app list or use Scriptable with the code below.',
+    wp_step3:'<strong>On Android</strong>: long press the Home Screen → <em>"Widget"</em> → find the Budgly PWA app. Alternatively use KWGT with the JSON code.',
+    wp_step4:'<strong>Auto update</strong>: the widget reads locally saved data, it updates every time you open Budgly.',
+    conv_receipt_desc:'When you add an expense in a foreign currency, Budgly saves it in the original currency. Use this converter to check the equivalent in €.',
+    salary_countdown_desc:'The countdown starts from the payday to the next one.',
+    ch_placeholder:'e.g. No Amazon for 30 days',
+    months_3:'3 months',months_6:'6 months',year_1:'1 year',years_2:'2 years',years_5:'5 years',
+    inizia:'Start →',
   }
 };
 
@@ -1970,8 +2049,8 @@ function updHome(){
   animateNum(document.getElementById('h-e'),eM,true);
   animateNum(document.getElementById('h-u'),uM,true);
   const chEl=document.getElementById('saldo-change');
-  if(!txP.length){chEl.textContent='Primo mese';chEl.className='saldo-change eq'}
-  else{const d=sM-sP;chEl.className='saldo-change '+(d>0?'up':d<0?'dn':'eq');chEl.textContent=d>0?'▲ '+fmt(d)+' rispetto a '+mp:d<0?'▼ '+fmt(Math.abs(d))+' rispetto a '+mp:'Uguale a '+mp}
+  if(!txP.length){chEl.textContent=t('first_month');chEl.className='saldo-change eq'}
+  else{const d=sM-sP;chEl.className='saldo-change '+(d>0?'up':d<0?'dn':'eq');chEl.textContent=d>0?'▲ '+fmt(d)+' '+(currentLang==='en'?'vs':' rispetto a')+' '+mp:d<0?'▼ '+fmt(Math.abs(d))+' '+(currentLang==='en'?'vs':'rispetto a')+' '+mp:t('same_as')+' '+mp}
   if(budgetMensile>0){
     const pct=Math.min(100,Math.round(uM/budgetMensile*100));
     document.getElementById('budget-section').style.display='block';
@@ -1989,7 +2068,7 @@ function updHome(){
   }else document.getElementById('preview-card').classList.remove('show');
   const cats={};txM.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
   const sorted=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,3);const max=sorted[0]?sorted[0][1]:1;
-  document.getElementById('topcats').innerHTML=sorted.length?sorted.map(([c,v],i)=>`<div class="topcat-item"><span class="topcat-name">${c}</span><div class="topcat-bar-wrap"><div class="topcat-bar" style="width:${Math.round(v/max*100)}%;background:${DC[i]}"></div></div><span class="topcat-val">-${fmt(v)}</span></div>`).join(''):'<div style="font-size:13px;color:var(--muted)">Nessuna spesa questo mese</div>';
+  document.getElementById('topcats').innerHTML=sorted.length?sorted.map(([c,v],i)=>`<div class="topcat-item"><span class="topcat-name">${c}</span><div class="topcat-bar-wrap"><div class="topcat-bar" style="width:${Math.round(v/max*100)}%;background:${DC[i]}"></div></div><span class="topcat-val">-${fmt(v)}</span></div>`).join(''):`<div style="font-size:13px;color:var(--muted)">${t('no_expenses_month')}</div>`;
   renderAccounts();
 }
 
@@ -2722,16 +2801,17 @@ function localChatEngine(msg){
 // ══════════════════════════════════════════
 // 🎯 SFIDE RISPARMIO
 // ══════════════════════════════════════════
-const PRESET_CHALLENGES=[
-  {id:'no-resto',ico:'🍕',name:'No ristoranti per 2 settimane',desc:'Cucina a casa per 14 giorni di fila. Risparmi in media €80–150.',cat:'Cibo & Ristoranti',target:0,days:14,type:'avoid',difficulty:'medium'},
-  {id:'budget-spesa',ico:'🛒',name:'Budget spesa €50/settimana',desc:'Limita la spesa al supermercato a €50 per 4 settimane.',cat:'Cibo & Ristoranti',target:200,days:28,type:'limit',difficulty:'easy'},
-  {id:'no-shopping',ico:'🛍️',name:'No shopping per 30 giorni',desc:'Niente acquisti non essenziali per un mese intero.',cat:'Shopping',target:0,days:30,type:'avoid',difficulty:'hard'},
-  {id:'caffè',ico:'☕',name:'Caffè solo a casa',desc:'Niente bar per 2 settimane. Risparmia €2–4 al giorno.',cat:'Cibo & Ristoranti',target:0,days:14,type:'avoid',difficulty:'easy'},
-  {id:'52weeks',ico:'💰',name:'Sfida 52 settimane',desc:'Settimana 1: €1, settimana 2: €2... fino a €52. Tot: €1.378!',cat:null,target:1378,days:365,type:'save',difficulty:'hard'},
-  {id:'no-abbonamenti',ico:'📺',name:'Revisione abbonamenti',desc:'Disdici almeno 1 abbonamento non usato questo mese.',cat:'Abbonamenti',target:0,days:30,type:'cancel',difficulty:'easy'},
-  {id:'trasporti',ico:'🚌',name:'Meno auto per 2 settimane',desc:'Usa mezzi pubblici o bici. Risparmia su carburante e parcheggi.',cat:'Trasporti',target:0,days:14,type:'avoid',difficulty:'medium'},
-  {id:'risparmio-20',ico:'🏦',name:'Risparmia il 20% delle entrate',desc:'Questo mese metti da parte almeno il 20% di quello che guadagni.',cat:null,target:0,days:30,type:'save_pct',difficulty:'hard'},
-];
+function getPresetChallenges(){return[
+  {id:'no-resto',ico:'🍕',name:t('ch_no_resto'),desc:t('ch_no_resto_d'),cat:'Cibo & Ristoranti',target:0,days:14,type:'avoid',difficulty:'medium'},
+  {id:'budget-spesa',ico:'🛒',name:t('ch_budget_spesa'),desc:t('ch_budget_spesa_d'),cat:'Cibo & Ristoranti',target:200,days:28,type:'limit',difficulty:'easy'},
+  {id:'no-shopping',ico:'🛍️',name:t('ch_no_shopping'),desc:t('ch_no_shopping_d'),cat:'Shopping',target:0,days:30,type:'avoid',difficulty:'hard'},
+  {id:'caffe',ico:'☕',name:t('ch_caffe'),desc:t('ch_caffe_d'),cat:'Cibo & Ristoranti',target:0,days:14,type:'avoid',difficulty:'easy'},
+  {id:'52weeks',ico:'💰',name:t('ch_52weeks'),desc:t('ch_52weeks_d'),cat:null,target:1378,days:365,type:'save',difficulty:'hard'},
+  {id:'no-abbonamenti',ico:'📺',name:t('ch_no_subs'),desc:t('ch_no_subs_d'),cat:'Abbonamenti',target:0,days:30,type:'cancel',difficulty:'easy'},
+  {id:'trasporti',ico:'🚌',name:t('ch_transport'),desc:t('ch_transport_d'),cat:'Trasporti',target:0,days:14,type:'avoid',difficulty:'medium'},
+  {id:'risparmio-20',ico:'🏦',name:t('ch_save20'),desc:t('ch_save20_d'),cat:null,target:0,days:30,type:'save_pct',difficulty:'hard'},
+]}
+const PRESET_CHALLENGES=getPresetChallenges();
 
 let activeChallenges=[];
 try{activeChallenges=JSON.parse(localStorage.getItem('bch')||'[]')}catch(e){}
@@ -2790,17 +2870,17 @@ function renderChallenges(){
 
   // Disponibili (non ancora attive)
   const activeIds=activeChallenges.filter(c=>!c.abandoned).map(c=>c.id);
-  const available=PRESET_CHALLENGES.filter(c=>!activeIds.includes(c.id));
+  const available=getPresetChallenges().filter(c=>!activeIds.includes(c.id));
   const diff2={easy:'🟢 Facile',medium:'🟡 Media',hard:'🔴 Difficile'};
   document.getElementById('challenges-list').innerHTML=completedHtml+available.map(ch=>`<div class="challenge-card">
     <div class="challenge-header"><div class="challenge-ico">${ch.ico}</div><div class="challenge-info"><div class="challenge-name">${ch.name}</div><div class="challenge-desc">${ch.desc}</div></div></div>
     <div class="challenge-meta"><span class="challenge-tag">${diff2[ch.difficulty]||''}</span><span class="challenge-tag">${ch.days} giorni</span>${ch.cat?`<span class="challenge-tag blue">${ch.cat}</span>`:''}</div>
-    <div class="challenge-footer"><div></div><button class="challenge-btn start" onclick="startChallenge('${ch.id}')">Inizia →</button></div>
+    <div class="challenge-footer"><div></div><button class="challenge-btn start" onclick="startChallenge('${ch.id}')">${t('inizia')}</button></div>
   </div>`).join('');
 }
 
 function startChallenge(id){
-  const ch=PRESET_CHALLENGES.find(c=>c.id===id);if(!ch)return;
+  const ch=getPresetChallenges().find(c=>c.id===id);if(!ch)return;
   const newCh={...ch,startDate:new Date().toISOString().split('T')[0],saved:0};
   activeChallenges.push(newCh);saveChallenges();
   renderChallenges();haptic('medium');showAlert('🎯 Sfida "'+ch.name+'" iniziata!','green');
@@ -2999,7 +3079,6 @@ Script.setWidget(w);
 Script.complete();`;
 
 function initWidget(){
-  // Aggiorna anteprima con dati reali
   const mc=getMC();
   const txM=txs.filter(t=>t.mese===mc);
   const e=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
@@ -3010,12 +3089,27 @@ function initWidget(){
   document.getElementById('wp-e').textContent='+'+fmt(e);
   document.getElementById('wp-u').textContent='-'+fmt(u);
   document.getElementById('wp-budget').textContent=budgetMensile>0?Math.min(100,Math.round(u/budgetMensile*100))+'%':'—';
-  document.getElementById('wp-time').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('wp-time').textContent=new Date().toLocaleTimeString(currentLang==='en'?'en-GB':'it-IT',{hour:'2-digit',minute:'2-digit'});
 
-  // Codice Scriptable
+  // Preview labels
+  document.querySelector('.widget-preview-lbl').textContent=currentLang==='en'?'MONTHLY BALANCE':'SALDO DEL MESE';
+  const previewSubs=document.querySelectorAll('.widget-preview-sub');
+  if(previewSubs[0])previewSubs[0].textContent=currentLang==='en'?'↑ INCOME':'↑ ENTRATE';
+  if(previewSubs[1])previewSubs[1].textContent=currentLang==='en'?'↓ EXPENSES':'↓ USCITE';
+  if(previewSubs[2])previewSubs[2].textContent=currentLang==='en'?'BUDGET':'BUDGET';
+  if(previewSubs[3])previewSubs[3].textContent=currentLang==='en'?'UPDATED':'AGGIORNATO';
+
+  // Static card titles
+  const widgetCards=document.querySelectorAll('.widget-info-card > div:first-child');
+  if(widgetCards[0])widgetCards[0].textContent=t('widget_preview');
+  if(widgetCards[1])widgetCards[1].textContent=t('how_to_add');
+  if(widgetCards[2])widgetCards[2].textContent=t('scriptable_code');
+
+  // Buttons
+  const copyScriptBtn=document.querySelector('.widget-copy-btn:not([style*="background:var(--bg3)"])');
+  if(copyScriptBtn)copyScriptBtn.textContent=t('copy_scriptable');
+
   document.getElementById('scriptable-code').textContent=SCRIPTABLE_CODE;
-
-  // JSON widget
   const widgetData={saldo,entrate:e,uscite:u,budget:budgetMensile,mese:mc,aggiornato:new Date().toISOString(),valuta:defaultCur};
   localStorage.setItem('budly_widget',JSON.stringify(widgetData));
   document.getElementById('widget-json-preview').textContent=JSON.stringify(widgetData,null,2);
@@ -3070,9 +3164,33 @@ const QUOTES=[
   '"Conosci il prezzo di tutto e il valore di niente? Rileggi le tue spese."',
 ];
 
+const QUOTES_EN=[
+  '"It\'s not how much you make, it\'s how much you keep." — Robert Kiyosaki',
+  '"An investment in knowledge pays the best interest." — Benjamin Franklin',
+  '"Do not save what is left after spending; instead spend what is left after saving." — Warren Buffett',
+  '"Beware of small expenses; a small leak will sink a great ship." — Benjamin Franklin',
+  '"Financial freedom is available to those who learn about it and work for it." — Robert Kiyosaki',
+  '"The secret of getting ahead is getting started." — Mark Twain',
+  '"Spend less than you earn. Invest the difference. Be patient."',
+  '"A budget is telling your money where to go instead of wondering where it went." — Dave Ramsey',
+  '"He who cannot manage little, cannot manage much."',
+  '"Money is a tool. Like all tools, its value depends on who uses it."',
+  '"Save when you can, not when you must."',
+  '"Every euro saved today is a euro working for you tomorrow."',
+  '"The best time to start saving was yesterday. The second best time is now."',
+  '"Track every euro — awareness is the first step."',
+  '"Distinguish between what you want and what you need."',
+  '"Don\'t buy things you don\'t need with money you don\'t have to impress people you don\'t know." — Will Rogers',
+  '"Simplicity is the ultimate sophistication." — Leonardo da Vinci',
+  '"It\'s not your income that makes you rich, it\'s your lifestyle."',
+  '"Start small, think big, act now."',
+  '"Financial discipline today is financial freedom tomorrow."',
+];
+
 function renderDailyQuote(){
   const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
-  const q=QUOTES[dayOfYear%QUOTES.length];
+  const arr=currentLang==='en'?QUOTES_EN:QUOTES;
+  const q=arr[dayOfYear%arr.length];
   const el=document.getElementById('daily-quote');
   if(el)el.textContent=q;
 }
@@ -3113,19 +3231,20 @@ function renderSubs(){
 
   // Lista abbonamenti rilevati dalle transazioni ricorrenti
   const list=document.getElementById('subs-list');
+  const L=currentLang;
   if(!subs.length){
-    list.innerHTML='<div class="empty">Nessun abbonamento rilevato.<br><span style="font-size:12px">Segna una transazione come 🔁 Ricorrente per vederla qui.</span></div>';
+    list.innerHTML=`<div class="empty">${t('no_subs')}<br><span style="font-size:12px">${t('no_subs_hint')}</span></div>`;
   }else{
     list.innerHTML=subs.map(s=>`
       <div class="sub-card">
         <div class="sub-ico">${getSubIcon(s.nome)}</div>
         <div class="sub-info">
           <div class="sub-name">${s.nome}</div>
-          <div class="sub-meta">${s.categoria} · pagato ${s.count}× · ultimo ${s.lastDate}</div>
+          <div class="sub-meta">${s.categoria} · ${L==='en'?'paid':'pagato'} ${s.count}× · ${L==='en'?'last':'ultimo'} ${s.lastDate}</div>
         </div>
         <div class="sub-right">
-          <div class="sub-amt">-${fmt(s.importo)}/mese</div>
-          <div class="sub-yearly">${fmt(s.importo*12)}/anno</div>
+          <div class="sub-amt">-${fmt(s.importo)}${L==='en'?'/month':'/mese'}</div>
+          <div class="sub-yearly">${fmt(s.importo*12)}${L==='en'?'/year':'/anno'}</div>
         </div>
       </div>`).join('');
   }
@@ -3139,7 +3258,6 @@ function renderSubs(){
     const match=known.find(k=>n.includes(k));
     if(match&&!seen.has(match)){
       seen.add(match);
-      // Conta quante volte appare
       const count=txs.filter(tx=>tx.nome.toLowerCase().includes(match)&&tx.tipo==='uscita').length;
       if(count>=2)detected.push({nome:t.nome,importo:t.importo,match,count});
     }
@@ -3147,21 +3265,27 @@ function renderSubs(){
 
   const detEl=document.getElementById('subs-detected');
   if(!detected.length){
-    detEl.innerHTML='<div style="font-size:13px;color:var(--muted)">Nessun abbonamento nascosto rilevato 👍</div>';
+    detEl.innerHTML=`<div style="font-size:13px;color:var(--muted)">${t('no_hidden_subs')}</div>`;
   }else{
     detEl.innerHTML=detected.map(d=>`
       <div class="sub-card detected">
         <div class="sub-ico">${getSubIcon(d.nome)}</div>
         <div class="sub-info">
           <div class="sub-name">${d.nome}</div>
-          <div class="sub-meta" style="color:var(--yellow)">⚠️ Trovato ${d.count}× — non segnato come ricorrente</div>
+          <div class="sub-meta" style="color:var(--yellow)">⚠️ ${L==='en'?'Found':'Trovato'} ${d.count}× — ${L==='en'?'not marked as recurring':'non segnato come ricorrente'}</div>
         </div>
         <div class="sub-right">
           <div class="sub-amt">-${fmt(d.importo)}</div>
-          <div class="sub-yearly" style="color:var(--yellow);font-size:11px">~${fmt(d.importo*12)}/anno</div>
+          <div class="sub-yearly" style="color:var(--yellow);font-size:11px">~${fmt(d.importo*12)}${L==='en'?'/year':'/anno'}</div>
         </div>
       </div>`).join('');
   }
+  // Update static labels
+  document.getElementById('subs-monthly').previousElementSibling&&(document.querySelectorAll('#p-subs .inv-slbl')[0].textContent=t('monthly'));
+  const slbls=document.querySelectorAll('#p-subs .inv-slbl');
+  if(slbls[0])slbls[0].textContent=t('monthly');
+  if(slbls[1])slbls[1].textContent=t('yearly');
+  if(slbls[2])slbls[2].textContent=t('active');
 }
 
 // ══════════════════════════════════════════
@@ -3245,19 +3369,26 @@ function renderMapData(){
   document.getElementById('map-countries').textContent=sorted.length;
   document.getElementById('map-total').textContent=fmt(totExt);
 
+  // Update static labels
+  const mapSlbls=document.querySelectorAll('#p-map .inv-slbl');
+  if(mapSlbls[0])mapSlbls[0].textContent=t('visited_countries');
+  if(mapSlbls[1])mapSlbls[1].textContent=t('spent_abroad');
+
   const list=document.getElementById('map-country-list');
   if(!sorted.length){
-    list.innerHTML='<div class="empty">Nessuna spesa geografica ancora.<br><span style="font-size:12px">Assegna un paese alle tue transazioni qui sotto.</span></div>';
+    list.innerHTML=`<div class="empty">${currentLang==='en'?'No geographic expenses yet.<br><span style="font-size:12px">Assign a country to your transactions below.</span>':'Nessuna spesa geografica ancora.<br><span style="font-size:12px">Assegna un paese alle tue transazioni qui sotto.</span>'}</div>`;
     return;
   }
   list.innerHTML=sorted.map(([code,amt])=>{
     const c=COUNTRIES.find(x=>x.code===code)||{flag:'🌍',name:code};
     const pct=Math.round(amt/maxAmt*100);
+    const txCount=Object.values(txCountries).filter(v=>v===code).length;
+    const txLabel=currentLang==='en'?`${txCount} transaction${txCount!==1?'s':''}`:`${txCount} transazioni`;
     return`<div class="map-country-item">
       <div class="map-flag">${c.flag}</div>
       <div class="map-country-info" style="flex:1">
         <div class="map-country-name">${c.name}</div>
-        <div class="map-country-meta">${Object.values(txCountries).filter(v=>v===code).length} transazioni</div>
+        <div class="map-country-meta">${txLabel}</div>
         <div class="map-country-bar" style="width:${pct}%"></div>
       </div>
       <div class="map-country-amt">-${fmt(amt)}</div>
@@ -3327,40 +3458,44 @@ function buildWrappedSlides(){
     return Object.entries(mesi).sort((a,b)=>(b[1].e-b[1].u)-(a[1].e-a[1].u))[0]||['—',{e:0,u:0}];
   };
   const bm=bestMonth();
-  const savePct=totE>0?Math.round((saved/totE)*100):0;
-  const personality=savePct>=30?{ico:'🧘',name:'Guru del risparmio'}:savePct>=15?{ico:'💡',name:'Risparmiatore sagace'}:savePct>=0?{ico:'⚖️',name:'Equilibrista'}:{ico:'🎢',name:'Viveur'};
+  const L=currentLang;
+  const personality=savePct>=30
+    ?{ico:'🧘',name:L==='en'?'Savings Guru':'Guru del risparmio'}
+    :savePct>=15?{ico:'💡',name:L==='en'?'Smart Saver':'Risparmiatore sagace'}
+    :savePct>=0?{ico:'⚖️',name:L==='en'?'Balancer':'Equilibrista'}
+    :{ico:'🎢',name:L==='en'?'Big Spender':'Viveur'};
 
   return [
     {bg:'linear-gradient(135deg,#1a1a2e,#16213e)',content:`
       <div class="wrapped-emoji" style="animation:popIn .5s ease">🎵</div>
-      <div class="wrapped-title">Il tuo ${yr}<br>in cifre</div>
-      <div class="wrapped-sub">Ecco come è andata finanziariamente quest'anno</div>`},
+      <div class="wrapped-title">${t('wrapped_your_year').replace('{yr}',yr)}</div>
+      <div class="wrapped-sub">${t('wrapped_subtitle')}</div>`},
     {bg:'linear-gradient(135deg,rgba(74,222,128,.15),rgba(74,222,128,.03))',content:`
-      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Hai guadagnato</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${t('wrapped_earned')}</div>
       <div class="wrapped-big green">${fmt(totE)}</div>
-      <div class="wrapped-sub">in entrate totali nel ${yr}</div>`},
+      <div class="wrapped-sub">${L==='en'?'in total income in '+yr:'in entrate totali nel '+yr}</div>`},
     {bg:'linear-gradient(135deg,rgba(248,113,113,.15),rgba(248,113,113,.03))',content:`
-      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Hai speso</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${t('wrapped_spent')}</div>
       <div class="wrapped-big red">${fmt(totU)}</div>
-      <div class="wrapped-sub">in ${txCount} transazioni — in media ${fmt(avgDay)}/giorno</div>`},
+      <div class="wrapped-sub">${L==='en'?`in ${txCount} transactions — avg ${fmt(avgDay)}/day`:`in ${txCount} transazioni — in media ${fmt(avgDay)}/giorno`}</div>`},
     {bg:'linear-gradient(135deg,rgba(96,165,250,.15),rgba(96,165,250,.03))',content:`
-      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">La tua categoria #1</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${t('wrapped_top_cat')}</div>
       <div class="wrapped-emoji">${topCat[0]==='—'?'🤔':'💸'}</div>
       <div class="wrapped-title">${topCat[0]}</div>
       <div class="wrapped-big blue">${fmt(topCat[1])}</div>
-      <div class="wrapped-sub">${topCat[1]>0?Math.round(topCat[1]/totU*100)+'% di tutte le uscite':''}</div>`},
+      <div class="wrapped-sub">${topCat[1]>0?Math.round(topCat[1]/totU*100)+(L==='en'?'% of all expenses':'% di tutte le uscite'):''}</div>`},
     {bg:'linear-gradient(135deg,rgba(251,191,36,.12),rgba(251,191,36,.03))',content:`
-      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Top 5 categorie</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${t('wrapped_top5')}</div>
       <div class="wrapped-list">${topCats.map(([c,v],i)=>`<div class="wrapped-list-item"><div class="wrapped-list-rank">${i+1}</div><div class="wrapped-list-name">${c}</div><div class="wrapped-list-val">-${fmt(v)}</div></div>`).join('')}</div>`},
     {bg:'linear-gradient(135deg,rgba(74,222,128,.12),rgba(96,165,250,.08))',content:`
-      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Hai risparmiato</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${t('wrapped_saved')}</div>
       <div class="wrapped-big ${saved>=0?'green':'red'}">${fmt(Math.abs(saved))}</div>
-      <div class="wrapped-sub">${savePct}% delle entrate · Mese migliore: <strong>${bm[0]}</strong></div>`},
+      <div class="wrapped-sub">${savePct}% ${L==='en'?'of income · Best month:':'delle entrate · Mese migliore:'} <strong>${bm[0]}</strong></div>`},
     {bg:'linear-gradient(135deg,rgba(167,139,250,.15),rgba(167,139,250,.03))',content:`
       <div class="wrapped-emoji">${personality.ico}</div>
-      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">La tua personalità finanziaria</div>
+      <div style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${t('wrapped_personality')}</div>
       <div class="wrapped-title">${personality.name}</div>
-      <div class="wrapped-sub">${savePct>=30?'Eccezionale! Risparmi oltre il 30% delle entrate.':savePct>=15?'Ottimo equilibrio tra spesa e risparmio.':savePct>=0?'Stai pareggiando — prova a mettere da parte qualcosa in più.':'Hai speso più di quanto guadagnato — rivedi il budget.'}</div>`},
+      <div class="wrapped-sub">${savePct>=30?(L==='en'?'Outstanding! You save over 30% of your income.':'Eccezionale! Risparmi oltre il 30% delle entrate.'):savePct>=15?(L==='en'?'Great balance between spending and saving.':'Ottimo equilibrio tra spesa e risparmio.'):savePct>=0?(L==='en'?'Breaking even — try to set a bit more aside.':'Stai pareggiando — prova a mettere da parte qualcosa in più.'):(L==='en'?'You spent more than you earned — review your budget.':'Hai speso più di quanto guadagnato — rivedi il budget.')}</div>`},
   ];
 }
 
@@ -3376,9 +3511,7 @@ function renderWrappedSlide(){
   const bg=document.getElementById('wrapped-bg');
   bg.style.background=s.bg;
   cont.innerHTML=`<div class="wrapped-content">${s.content}</div>`;
-  // Dots
   document.getElementById('wrapped-dots').innerHTML=wrappedSlides.map((_,i)=>`<div class="wrapped-dot${i===wrappedIdx?' active':''}"></div>`).join('');
-  // Nav buttons
   document.getElementById('wrapped-prev').style.visibility=wrappedIdx===0?'hidden':'visible';
   document.getElementById('wrapped-prev').textContent=t('wrapped_prev');
   document.getElementById('wrapped-next').textContent=wrappedIdx===wrappedSlides.length-1?t('wrapped_end'):t('wrapped_next');
@@ -3386,7 +3519,7 @@ function renderWrappedSlide(){
 
 function wrappedNext(){
   if(wrappedIdx<wrappedSlides.length-1){wrappedIdx++;renderWrappedSlide();haptic('light')}
-  else{showAlert('🎉 Questo è stato il tuo anno!','green')}
+  else{showAlert(currentLang==='en'?'🎉 That was your year!':'🎉 Questo è stato il tuo anno!','green')}
 }
 function wrappedPrev(){if(wrappedIdx>0){wrappedIdx--;renderWrappedSlide();haptic('light')}}
 
@@ -3429,18 +3562,18 @@ function renderSalary(){
   const elapsed=totalDays-daysLeft;
   const pct=Math.min(100,Math.round(elapsed/totalDays*100));
 
-  document.getElementById('salary-days').textContent=daysLeft===0?'Oggi! 🎉':daysLeft;
+  document.getElementById('salary-days').textContent=daysLeft===0?'🎉':daysLeft;
   document.getElementById('salary-days').className='salary-days'+(daysLeft<=3?' urgent':'');
-  document.getElementById('salary-label').textContent=daysLeft===0?'Oggi arriva lo stipendio!':daysLeft===1?'Domani arriva lo stipendio!':'giorni allo stipendio';
+  document.getElementById('salary-label').textContent=daysLeft===0?t('today_salary'):daysLeft===1?t('tomorrow_salary'):t('days_label');
 
   const prog=document.getElementById('salary-progress');
   prog.style.width=pct+'%';
   prog.style.background=pct>80?'var(--green)':pct>50?'var(--yellow)':'var(--red)';
 
-  document.getElementById('salary-period-start').textContent=lastSalary.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
-  document.getElementById('salary-period-end').textContent=nextSalary.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+  const locale=currentLang==='en'?'en-GB':'it-IT';
+  document.getElementById('salary-period-start').textContent=lastSalary.toLocaleDateString(locale,{day:'numeric',month:'short'});
+  document.getElementById('salary-period-end').textContent=nextSalary.toLocaleDateString(locale,{day:'numeric',month:'short'});
 
-  // Spese dal giorno dello stipendio
   const lastStr=lastSalary.toISOString().split('T')[0];
   const spent=txs.filter(t=>t.tipo==='uscita'&&t.data>=lastStr).reduce((s,t)=>s+t.importo,0);
   const left=salaryAmt>0?salaryAmt-spent:0;
@@ -3451,16 +3584,31 @@ function renderSalary(){
   leftEl.textContent=salaryAmt>0?fmt(Math.max(0,left)):'—';
   leftEl.style.color=left<0?'var(--red)':left<salaryAmt*0.2?'var(--yellow)':'var(--green)';
   document.getElementById('salary-per-day').textContent=fmt(perDay);
+
+  // Static labels
+  const salSlbls=document.querySelectorAll('#p-salary .inv-slbl');
+  if(salSlbls[0])salSlbls[0].textContent=t('spent');
+  if(salSlbls[1])salSlbls[1].textContent=t('left');
+  if(salSlbls[2])salSlbls[2].textContent=t('per_day');
+  const salSetTitle=document.querySelector('#p-salary .salary-setup > div');
+  if(salSetTitle)salSetTitle.textContent=t('salary_settings');
+  document.querySelector('#p-salary .salary-hero > div:first-child').textContent=t('next_salary');
+  const salLabels=document.querySelectorAll('#p-salary .field label');
+  salLabels.forEach(l=>{
+    if(l.textContent.includes('netto')||l.textContent.includes('Net'))l.textContent=t('net_amount');
+    if(l.textContent.includes('accredito')||l.textContent.includes('Payday'))l.textContent=t('payday');
+  });
 }
 
 // ══════════════════════════════════════════
 // 🔮 SIMULATORE WHAT IF
 // ══════════════════════════════════════════
 function initWhatIf(){
-  // Popola categorie con quelle reali dell'utente
   const mc=getMC();
   const cats={};txs.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
   const catSel=document.getElementById('wi-cat');
+  // Update first option
+  if(catSel.options[0])catSel.options[0].textContent=t('all_expenses');
   const existing=[...catSel.options].map(o=>o.value);
   Object.keys(cats).forEach(c=>{if(!existing.includes(c)){const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o)}});
 
@@ -3477,6 +3625,7 @@ function updateWhatIf(){
 
   document.getElementById('wi-result').classList.add('show');
   document.getElementById('wi-total').textContent=fmt(total);
+  document.querySelector('.whatif-result > div:first-child').textContent=t('you_would_save');
 
   const cat=document.getElementById('wi-cat').value;
   const mc=getMC();
@@ -3485,21 +3634,23 @@ function updateWhatIf(){
     :txs.filter(t=>t.tipo==='uscita'&&t.mese===mc).reduce((s,t)=>s+t.importo,0);
 
   const pctReduction=currentSpend>0?Math.round(val/currentSpend*100):0;
-  const label=cat?`su ${cat}`:'in totale';
+  const L=currentLang;
+  const label=cat?`${L==='en'?'on':'su'} ${cat}`:(L==='en'?'in total':'in totale');
   document.getElementById('wi-sub').innerHTML=
-    `Riducendo <strong>€${val}/mese</strong> ${label} per <strong>${months} mesi</strong>`+
-    (currentSpend>0?`<br>Equivale al <strong>${pctReduction}%</strong> della tua spesa attuale in questa categoria`:'');
+    `${L==='en'?'Reducing':'Riducendo'} <strong>€${val}/${L==='en'?'month':'mese'}</strong> ${label} ${L==='en'?'for':'per'} <strong>${months} ${L==='en'?(months===1?'month':'months'):(months===1?t('months1'):t('months'))}</strong>`+
+    (currentSpend>0?`<br>${L==='en'?'Equals':'Equivale al'} <strong>${pctReduction}%</strong> ${L==='en'?'of your current spending in this category':'della tua spesa attuale in questa categoria'}`:'');
 
-  // Scenari
   const scenarios=[
-    {label:'☕ Niente caffè fuori (€3/die)',save:3*30},
-    {label:'🍕 -2 ristoranti/mese (€25 cad.)',save:50},
-    {label:'📺 Disdici 1 abbonamento',save:12},
-    {label:'🛍️ Niente shopping impulsivo',save:80},
-    {label:'🚗 Meno taxi/Uber',save:40},
+    {label:L==='en'?'☕ No coffee out (€3/day)':'☕ Niente caffè fuori (€3/die)',save:3*30},
+    {label:L==='en'?'🍕 -2 restaurants/month (€25 each)':'🍕 -2 ristoranti/mese (€25 cad.)',save:50},
+    {label:L==='en'?'📺 Cancel 1 subscription':'📺 Disdici 1 abbonamento',save:12},
+    {label:L==='en'?'🛍️ No impulse shopping':'🛍️ Niente shopping impulsivo',save:80},
+    {label:L==='en'?'🚗 Less taxi/Uber':'🚗 Meno taxi/Uber',save:40},
   ];
   const scCard=document.getElementById('wi-scenarios-card');
   scCard.style.display='block';
+  const wiScenariosTitle=document.getElementById('wi-scenarios-title');
+  if(wiScenariosTitle)wiScenariosTitle.textContent=t('scenarios');
   document.getElementById('wi-scenarios').innerHTML=scenarios.map(sc=>{
     const tot=sc.save*months;
     return`<div class="whatif-scenario" onclick="document.getElementById('wi-slider').value=${sc.save};updateWhatIf()">
@@ -3513,13 +3664,15 @@ function renderWhatIfSuggestions(){
   const mc=getMC();
   const cats={};txs.filter(t=>t.tipo==='uscita'&&t.mese===mc).forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
   const sorted=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  const cutTxt=currentLang==='en'?'Cut 20% from':'Taglia 20% da';
+  const monthTxt=currentLang==='en'?'month':'mese';
   document.getElementById('wi-suggestions').innerHTML=sorted.map(([c,v])=>{
-    const cut10=v*0.1,cut20=v*0.2;
+    const cut20=v*0.2;
     return`<div class="whatif-scenario" onclick="document.getElementById('wi-cat').value='${c}';document.getElementById('wi-slider').value=${Math.round(cut20)};updateWhatIf()">
-      <span class="whatif-scenario-lbl">Taglia 20% da <strong>${c}</strong></span>
-      <span class="whatif-scenario-val">-${fmt(cut20)}/mese</span>
+      <span class="whatif-scenario-lbl">${cutTxt} <strong>${c}</strong></span>
+      <span class="whatif-scenario-val">-${fmt(cut20)}/${monthTxt}</span>
     </div>`;
-  }).join('')||'<div style="font-size:13px;color:var(--muted)">Aggiungi qualche transazione per vedere i suggerimenti</div>';
+  }).join('')||`<div style="font-size:13px;color:var(--muted)">${currentLang==='en'?'Add some transactions to see suggestions':'Aggiungi qualche transazione per vedere i suggerimenti'}</div>`;
 }
 
 // ══════════════════════════════════════════
@@ -3759,28 +3912,29 @@ function selectAvatar(emoji){
 // ══════════════════════════════════════════
 // 🎲 SFIDA GIORNALIERA
 // ══════════════════════════════════════════
-const DAILY_CHALLENGES=[
-  {ico:'🍕',title:'Niente ristoranti oggi',desc:'Cucina a casa per tutto il giorno. Ogni pasto fuori conta come fallimento.',cat:'Cibo & Ristoranti',type:'avoid',limit:0},
-  {ico:'☕',title:'Niente bar oggi',desc:'Preparati il caffè a casa. Risparmia €2-5 in un colpo solo.',cat:'Cibo & Ristoranti',type:'avoid_keyword',keyword:'bar'},
-  {ico:'🛍️',title:'Zero acquisti non essenziali',desc:'Niente shopping oggi — solo cibo e necessità. Tutto il resto può aspettare.',cat:'Shopping',type:'avoid',limit:0},
-  {ico:'🚗',title:'Spendi meno di €5 in trasporti',desc:'Prendi la bici, cammina o usa i mezzi pubblici economici.',cat:'Trasporti',type:'limit',limit:5},
-  {ico:'💸',title:'Spendi meno di €20 in totale',desc:'Una giornata da minimalista. Tieni le uscite sotto i €20.',cat:null,type:'total_limit',limit:20},
-  {ico:'🍔',title:'Cucina tutti i pasti',desc:'Zero cibo fuori casa — colazione, pranzo e cena fatti in casa.',cat:'Cibo & Ristoranti',type:'avoid',limit:0},
-  {ico:'📱',title:'Niente abbonamenti oggi',desc:'Controlla se puoi disdire qualcosa che non usi. Almeno non aggiungerne.',cat:'Abbonamenti',type:'avoid',limit:0},
-  {ico:'🏦',title:'Risparmia €10 oggi',desc:'Trova un modo per mettere da parte €10 extra — una spesa evitata conta!',cat:null,type:'save',limit:10},
-  {ico:'🎯',title:'Una sola spesa oggi',desc:'Permetti a te stesso massimo 1 transazione in uscita. Sceglila bene.',cat:null,type:'max_tx',limit:1},
-  {ico:'⚡',title:'Spendi meno di €3 in bollette/utility',desc:'Stacca la spina dagli sprechi — luci spente, riscaldamento al minimo.',cat:'Bollette',type:'limit',limit:3},
-  {ico:'🎬',title:'Niente svago a pagamento',desc:'Cinema, concerti, aperitivi — oggi solo divertimento gratuito.',cat:'Svago',type:'avoid',limit:0},
-  {ico:'🛒',title:'Spesa massimo €15',desc:'Vai al supermercato con lista e budget. Niente impulsi.',cat:'Cibo & Ristoranti',type:'limit',limit:15},
-  {ico:'💰',title:'Registra ogni singola spesa',desc:'Anche il caffè da €1. Traccia tutto al centesimo per 24h.',cat:null,type:'tracking'},
-  {ico:'🚶',title:'Usa solo i piedi oggi',desc:'Niente taxi, niente Uber, niente carburante. A piedi o bici.',cat:'Trasporti',type:'avoid',limit:0},
-  {ico:'🧘',title:'Giornata da €0 di uscite discrezionali',desc:'Solo spese fisse e necessarie. Tutto il resto aspetta domani.',cat:null,type:'total_limit',limit:0},
-];
+function getDailyChallengesArr(){return[
+  {ico:'🍕',title:t('dc_no_resto'),desc:t('dc_no_resto_d'),cat:'Cibo & Ristoranti',type:'avoid',limit:0},
+  {ico:'☕',title:t('dc_no_bar'),desc:t('dc_no_bar_d'),cat:'Cibo & Ristoranti',type:'avoid_keyword',keyword:'bar'},
+  {ico:'🛍️',title:t('dc_no_shopping'),desc:t('dc_no_shopping_d'),cat:'Shopping',type:'avoid',limit:0},
+  {ico:'🚗',title:t('dc_transport5'),desc:t('dc_transport5_d'),cat:'Trasporti',type:'limit',limit:5},
+  {ico:'💸',title:t('dc_total20'),desc:t('dc_total20_d'),cat:null,type:'total_limit',limit:20},
+  {ico:'🍔',title:t('dc_cook_all'),desc:t('dc_cook_all_d'),cat:'Cibo & Ristoranti',type:'avoid',limit:0},
+  {ico:'📱',title:t('dc_no_subs'),desc:t('dc_no_subs_d'),cat:'Abbonamenti',type:'avoid',limit:0},
+  {ico:'🏦',title:t('dc_save10'),desc:t('dc_save10_d'),cat:null,type:'save',limit:10},
+  {ico:'🎯',title:t('dc_one_tx'),desc:t('dc_one_tx_d'),cat:null,type:'max_tx',limit:1},
+  {ico:'⚡',title:t('dc_bills3'),desc:t('dc_bills3_d'),cat:'Bollette',type:'limit',limit:3},
+  {ico:'🎬',title:t('dc_no_fun'),desc:t('dc_no_fun_d'),cat:'Svago',type:'avoid',limit:0},
+  {ico:'🛒',title:t('dc_grocery15'),desc:t('dc_grocery15_d'),cat:'Cibo & Ristoranti',type:'limit',limit:15},
+  {ico:'💰',title:t('dc_track_all'),desc:t('dc_track_all_d'),cat:null,type:'tracking'},
+  {ico:'🚶',title:t('dc_walk'),desc:t('dc_walk_d'),cat:'Trasporti',type:'avoid',limit:0},
+  {ico:'🧘',title:t('dc_zero'),desc:t('dc_zero_d'),cat:null,type:'total_limit',limit:0},
+]}
+const DAILY_CHALLENGES=getDailyChallengesArr();
 
 function getDailyChallenge(){
-  // Stessa sfida per tutto il giorno, cambia a mezzanotte
+  const arr=getDailyChallengesArr();
   const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
-  return DAILY_CHALLENGES[dayOfYear%DAILY_CHALLENGES.length];
+  return arr[dayOfYear%arr.length];
 }
 
 function getDailyChallengeKey(){
@@ -4135,6 +4289,55 @@ function applyTranslations(){
 
   // ── Barchart ──
   const barchartTitle=document.querySelector('.barchart-title');if(barchartTitle)barchartTitle.textContent=t('last_6_months');
+
+  // ── Converter ──
+  const convMainLbl=document.getElementById('conv-main-rates-lbl');if(convMainLbl)convMainLbl.textContent=t('main_rates');
+  const convReceiptLbl=document.getElementById('conv-receipt-lbl');if(convReceiptLbl)convReceiptLbl.textContent=t('convert_receipt');
+  const convReceiptDesc=document.getElementById('conv-receipt-desc');if(convReceiptDesc)convReceiptDesc.textContent=t('conv_receipt_desc');
+
+  // ── What if ──
+  const wiTitle=document.getElementById('wi-title');if(wiTitle)wiTitle.textContent=t('if_i_saved');
+  const wiCatLbl=document.getElementById('wi-cat-lbl');if(wiCatLbl)wiCatLbl.textContent=t('category_to_cut');
+  const wiSavingsLbl=document.getElementById('wi-savings-lbl');if(wiSavingsLbl)wiSavingsLbl.textContent=t('monthly_savings');
+  const wiHowLbl=document.getElementById('wi-howlong-lbl');if(wiHowLbl)wiHowLbl.textContent=t('how_long');
+  const wiCalcBtn=document.getElementById('wi-calc-btn');if(wiCalcBtn)wiCalcBtn.textContent=t('calculate');
+  const wiYouSaved=document.getElementById('wi-you-saved-lbl');if(wiYouSaved)wiYouSaved.textContent=t('you_would_save');
+  const wiScenariosTitle=document.getElementById('wi-scenarios-title');if(wiScenariosTitle)wiScenariosTitle.textContent=t('scenarios');
+  const wiSuggestionsTitle=document.getElementById('wi-suggestions-title');if(wiSuggestionsTitle)wiSuggestionsTitle.textContent=t('suggestions');
+  // Update months dropdown
+  const wiMonths=document.getElementById('wi-months');
+  if(wiMonths){const vals=['3','6','12','24','60'];const txts=[t('months_3'),t('months_6'),t('year_1'),t('years_2'),t('years_5')];[...wiMonths.options].forEach((o,i)=>{if(vals[i])o.textContent=txts[i]})}
+
+  // ── Challenges ──
+  const chAvailLbl=document.getElementById('ch-available-lbl');if(chAvailLbl)chAvailLbl.textContent=t('available_challenges');
+  const chCustomTitle=document.getElementById('ch-custom-title');if(chCustomTitle)chCustomTitle.textContent='✏️ '+t('custom_challenge').replace('✏️ ','');
+  const chNomeLbl=document.getElementById('ch-nome-lbl');if(chNomeLbl)chNomeLbl.textContent=t('challenge_name');
+  const chBudgetLbl=document.getElementById('ch-budget-lbl');if(chBudgetLbl)chBudgetLbl.textContent=t('max_budget');
+  const chDaysLbl=document.getElementById('ch-days-lbl');if(chDaysLbl)chDaysLbl.textContent=t('days');
+  const chCreateBtn=document.getElementById('ch-create-btn');if(chCreateBtn)chCreateBtn.textContent=t('create_challenge');
+  const chNomeInput=document.getElementById('ch-nome');if(chNomeInput)chNomeInput.placeholder=t('ch_placeholder');
+
+  // ── Widget ──
+  const wpPreviewTitle=document.getElementById('wp-preview-title');if(wpPreviewTitle)wpPreviewTitle.textContent=t('widget_preview');
+  const wpPreviewSub=document.getElementById('wp-preview-sub');if(wpPreviewSub)wpPreviewSub.textContent=t('widget_preview_sub');
+  const wpBalanceLbl=document.getElementById('wp-balance-lbl');if(wpBalanceLbl)wpBalanceLbl.textContent=currentLang==='en'?'MONTHLY BALANCE':'SALDO DEL MESE';
+  const wpIncomeLbl=document.getElementById('wp-income-lbl');if(wpIncomeLbl)wpIncomeLbl.textContent=currentLang==='en'?'↑ INCOME':'↑ ENTRATE';
+  const wpExpensesLbl=document.getElementById('wp-expenses-lbl');if(wpExpensesLbl)wpExpensesLbl.textContent=currentLang==='en'?'↓ EXPENSES':'↓ USCITE';
+  const wpUpdatedLbl=document.getElementById('wp-updated-lbl');if(wpUpdatedLbl)wpUpdatedLbl.textContent=currentLang==='en'?'UPDATED':'AGGIORNATO';
+  const wpHowTitle=document.getElementById('wp-how-title');if(wpHowTitle)wpHowTitle.textContent=t('how_to_add');
+  const wpStep1=document.getElementById('wp-step1');if(wpStep1)wpStep1.innerHTML=t('wp_step1');
+  const wpStep2=document.getElementById('wp-step2');if(wpStep2)wpStep2.innerHTML=t('wp_step2');
+  const wpStep3=document.getElementById('wp-step3');if(wpStep3)wpStep3.innerHTML=t('wp_step3');
+  const wpStep4=document.getElementById('wp-step4');if(wpStep4)wpStep4.innerHTML=t('wp_step4');
+  const wpScriptableTitle=document.getElementById('wp-scriptable-title');if(wpScriptableTitle)wpScriptableTitle.textContent=t('scriptable_code');
+  const wpScriptableSub=document.getElementById('wp-scriptable-sub');if(wpScriptableSub)wpScriptableSub.innerHTML=t('widget_scriptable_sub');
+  const wpCopyScriptable=document.getElementById('wp-copy-scriptable');if(wpCopyScriptable)wpCopyScriptable.textContent=t('copy_scriptable');
+  const wpJsonTitle=document.getElementById('wp-json-title');if(wpJsonTitle)wpJsonTitle.textContent=t('widget_json_title');
+  const wpJsonSub=document.getElementById('wp-json-sub');if(wpJsonSub)wpJsonSub.textContent=t('widget_json_sub');
+  const wpCopyJson=document.getElementById('wp-copy-json');if(wpCopyJson)wpCopyJson.textContent=t('copy_json');
+
+  // ── Salary countdown desc ──
+  const salDesc=document.querySelector('#p-salary .salary-setup > div:last-child');if(salDesc&&salDesc.style&&salDesc.style.fontSize==='12px')salDesc.textContent=t('salary_countdown_desc');
 
   // Re-render dynamic pages
   updHome();
