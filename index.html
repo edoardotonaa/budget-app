@@ -3763,8 +3763,9 @@ function initSupa(){
     auth:{
       persistSession:true,
       autoRefreshToken:true,
-      detectSessionInUrl:true,
-      storage:localStorage
+      detectSessionInUrl:false,
+      storageKey:'sb-ippakrkwvaklwmumfubr-auth-token',
+      storage:window.localStorage
     }
   });
   return supa;
