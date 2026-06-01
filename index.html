@@ -3767,7 +3767,9 @@ let supaReady=false;
 
 function getSupa(){
   if(!supa&&typeof supabase!=='undefined'){
-    supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+    supa=supabase.createClient(SUPA_URL,SUPA_KEY,{
+      auth:{storageKey:'cyrwall-auth-v1'}
+    });
   }
   return supa;
 }
