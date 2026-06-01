@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#0f0f0f"/>
-<title>Budgly</title>
+<title>Cyrwall</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
 <link rel="apple-touch-icon" href="icon-512.png"/>
@@ -585,7 +585,7 @@ body.light .share-box{background:#fff}
 ══════════════════════════════════════════ -->
 <div id="auth-screen">
   <div class="auth-logo">💰</div>
-  <div class="auth-app-name">Budgly</div>
+  <div class="auth-app-name">Cyrwall</div>
   <div class="auth-tagline">Il tuo tracker finanziario personale</div>
 
   <div class="auth-tabs" style="max-width:340px">
@@ -679,7 +679,7 @@ body.light .share-box{background:#fff}
 <!-- ONBOARDING -->
 <div id="onboarding">
   <div class="ob-steps"><div class="ob-step active" id="obs0"></div><div class="ob-step" id="obs1"></div><div class="ob-step" id="obs2"></div><div class="ob-step" id="obs3"></div></div>
-  <div class="ob-slide active" id="ob0"><div class="ob-emoji">👋</div><div class="ob-title">Benvenuto su Budgly</div><div class="ob-desc">Il modo più semplice per tenere traccia delle tue spese. In pochi secondi sei pronto.</div><button class="ob-btn" onclick="obNext()">Iniziamo →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
+  <div class="ob-slide active" id="ob0"><div class="ob-emoji">👋</div><div class="ob-title">Benvenuto su Cyrwall</div><div class="ob-desc">Il modo più semplice per tenere traccia delle tue spese. In pochi secondi sei pronto.</div><button class="ob-btn" onclick="obNext()">Iniziamo →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
   <div class="ob-slide" id="ob1"><div class="ob-emoji">💸</div><div class="ob-title">Aggiungi in un tap</div><div class="ob-desc">Premi il tasto + al centro. Voce, scontrino o manuale.</div><button class="ob-btn" onclick="obNext()">Avanti →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
   <div class="ob-slide" id="ob2"><div class="ob-emoji">🎯</div><div class="ob-title">Imposta i tuoi Goals</div><div class="ob-desc">Vacanza, auto, risparmio. Tieni traccia di quanto manca ogni mese.</div><button class="ob-btn" onclick="obNext()">Avanti →</button><div class="ob-skip" onclick="obDone()">Salta</div></div>
   <div class="ob-slide" id="ob3"><div class="ob-emoji">🌍</div><div class="ob-title">Scegli valuta</div><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px"><button onclick="obSetCur('EUR')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">€ EUR</button><button onclick="obSetCur('USD')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">$ USD</button><button onclick="obSetCur('GBP')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">£ GBP</button><button onclick="obSetCur('CHF')" style="padding:10px 18px;border-radius:99px;border:.5px solid var(--border);background:var(--bg2);color:#f0f0f0;font-size:15px;cursor:pointer;font-family:inherit">CHF</button></div><button class="ob-btn" onclick="obDone()" style="margin-top:16px">Inizia 🚀</button></div>
@@ -712,7 +712,7 @@ body.light .share-box{background:#fff}
 <!-- HOME -->
 <div id="p-home" class="page on">
   <div class="top-bar">
-    <div class="app-name">💰 Budgly</div>
+    <div class="app-name">💰 Cyrwall</div>
     <div class="top-btns">
       <button class="icon-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
       <button class="icon-btn" onclick="goNav('p-settings')">⚙️</button>
@@ -756,7 +756,7 @@ body.light .share-box{background:#fff}
 <div id="drawer-overlay" onclick="closeDrawer()" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:120;display:none;opacity:0;transition:opacity .25s"></div>
 <div id="drawer" style="position:fixed;top:0;right:0;bottom:0;width:72%;max-width:280px;background:var(--bg2);border-left:.5px solid var(--border);z-index:121;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:56px 0 max(32px,env(safe-area-inset-bottom))">
   <div style="padding:0 20px 20px;border-bottom:.5px solid var(--border)">
-    <div style="font-size:18px;font-weight:600;margin-bottom:2px">💰 Budgly</div>
+    <div style="font-size:18px;font-weight:600;margin-bottom:2px">💰 Cyrwall</div>
     <div style="font-size:12px;color:var(--muted)">Menu</div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:12px 8px">
@@ -894,7 +894,7 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="setting-group">
-    <div class="setting-lbl">💰 Budgly mensile uscite</div>
+    <div class="setting-lbl">💰 Cyrwall mensile uscite</div>
     <div class="aw"><span class="esign">€</span><input type="number" id="budget-input" inputmode="decimal" placeholder="es. 1500" style="padding-left:42px" oninput="saveBudget()"/></div>
     <div class="setting-desc">Avviso all'80% e al 100%</div>
   </div>
@@ -958,7 +958,7 @@ body.light .share-box{background:#fff}
 
 <!-- GAMIFICATION PAGE -->
 <div id="p-game" class="page">
-  <div class="top-bar"><div class="app-name">🎮 Budgly</div></div>
+  <div class="top-bar"><div class="app-name">🎮 Cyrwall</div></div>
   <div id="streak-card" style="background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,191,36,.05));border:.5px solid rgba(251,191,36,.2);border-radius:var(--r);padding:20px;margin-bottom:14px;text-align:center">
     <div style="font-size:48px" id="streak-num">0</div>
     <div style="font-size:14px;color:var(--yellow);font-weight:500">🔥 giorni di streak</div>
@@ -1028,7 +1028,7 @@ body.light .share-box{background:#fff}
 
   <div class="lbl" id="conv-receipt-lbl" style="margin-top:18px;margin-bottom:8px">Converti da scontrino</div>
   <div id="conv-receipt-desc" style="font-size:13px;color:var(--muted);background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:13px">
-    Quando aggiungi una spesa in valuta estera, Budgly la salva nella valuta originale. Usa questo convertitore per verificare l'equivalente in €.
+    Quando aggiungi una spesa in valuta estera, Cyrwall la salva nella valuta originale. Usa questo convertitore per verificare l'equivalente in €.
   </div>
 </div>
 
@@ -1179,19 +1179,19 @@ body.light .share-box{background:#fff}
     <div id="wp-how-title" style="font-size:14px;font-weight:500;margin-bottom:14px">Come aggiungere il widget</div>
     <div class="widget-step">
       <div class="widget-step-num">1</div>
-      <div id="wp-step1" class="widget-step-text"><strong>Installa Budgly come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.</div>
+      <div id="wp-step1" class="widget-step-text"><strong>Installa Cyrwall come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.</div>
     </div>
     <div class="widget-step">
       <div class="widget-step-num">2</div>
-      <div id="wp-step2" class="widget-step-text"><strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Budgly"</em> nella lista app o usa Scriptable con il codice qui sotto.</div>
+      <div id="wp-step2" class="widget-step-text"><strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Cyrwall"</em> nella lista app o usa Scriptable con il codice qui sotto.</div>
     </div>
     <div class="widget-step">
       <div class="widget-step-num">3</div>
-      <div id="wp-step3" class="widget-step-text"><strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l'app Budgly installata come PWA. In alternativa usa KWGT con il codice JSON.</div>
+      <div id="wp-step3" class="widget-step-text"><strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l'app Cyrwall installata come PWA. In alternativa usa KWGT con il codice JSON.</div>
     </div>
     <div class="widget-step">
       <div class="widget-step-num">4</div>
-      <div id="wp-step4" class="widget-step-text"><strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Budgly.</div>
+      <div id="wp-step4" class="widget-step-text"><strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Cyrwall.</div>
     </div>
   </div>
 
@@ -1350,6 +1350,37 @@ body.light .share-box{background:#fff}
   </div>
 </div>
 
+<!-- ══ MODAL MODIFICA TRANSAZIONE ══ -->
+<div id="edit-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center">
+  <div style="background:var(--bg2);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px;max-height:85vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div id="edit-modal-title" style="font-size:16px;font-weight:600">✏️ Modifica</div>
+      <button onclick="closeEditModal()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div class="field"><label id="edit-nome-lbl">Descrizione</label><input type="text" id="edit-nome" placeholder="Nome"/></div>
+      <div class="field"><label id="edit-importo-lbl">Importo</label><div class="aw"><span class="esign">€</span><input type="number" id="edit-importo" inputmode="decimal" style="padding-left:42px"/></div></div>
+      <div class="field"><label id="edit-cat-lbl">Categoria</label>
+        <select id="edit-cat">
+          <option>🍕 Cibo & Ristoranti</option><option>🛍️ Shopping</option><option>🚗 Trasporti</option>
+          <option>🏠 Casa</option><option>💊 Salute</option><option>🎬 Svago</option>
+          <option>📚 Istruzione</option><option>✈️ Viaggi</option><option>💰 Stipendio</option>
+          <option>📺 Abbonamenti</option><option>💡 Bollette</option><option>❓ Altro</option>
+        </select>
+      </div>
+      <div class="field"><label id="edit-data-lbl">Data</label><input type="date" id="edit-data"/></div>
+      <div class="recurr-row">
+        <span id="edit-ricorrente-lbl">🔁 Ricorrente</span>
+        <label class="toggle"><input type="checkbox" id="edit-ricorrente"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button onclick="saveEdit()" style="flex:1;padding:13px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer" id="edit-save-btn">Salva</button>
+        <button onclick="deleteFromEdit()" style="padding:13px 16px;border-radius:var(--rs);border:.5px solid rgba(248,113,113,.2);background:rgba(248,113,113,.06);color:var(--red);font-size:15px;font-family:inherit;cursor:pointer" id="edit-delete-btn">🗑️</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <nav class="nav">
   <div class="nav-item active" id="nav-p-home" onclick="goNav('p-home')"><span>🏠</span><span>Home</span></div>
   <div class="nav-item" id="nav-p-chat" onclick="goNav('p-chat')"><span>💬</span><span>AI</span></div>
@@ -1372,7 +1403,7 @@ const I18N={
     // Nav
     home:'Home',ai:'AI',challenges:'Sfide',rank:'Rank',
     // Top bar
-    budgly_home:'💰 Budgly',budgly_game:'🎮 Budgly',
+    cyrwall_home:'💰 Cyrwall',cyrwall_game:'🎮 Cyrwall',
     // Home
     monthly_balance:'saldo del mese',add:'aggiungi',
     top_expenses:'Top spese questo mese',explore:'Esplora',
@@ -1402,7 +1433,7 @@ const I18N={
     add_savings:'+ Aggiungi risparmio',months:'mesi',months1:'mese',achieved:'🎉 Raggiunto!',
     // Settings
     settings:'Impostazioni',language:'🌐 Lingua',
-    accounts:'💳 Conti',monthly_expenses_budget:'💰 Budgly mensile uscite',
+    accounts:'💳 Conti',monthly_expenses_budget:'💰 Cyrwall mensile uscite',
     budget_warning:'Avviso all\'80% e al 100%',default_currency:'🌍 Valuta predefinita',
     pin_access:'🔐 PIN di accesso',set_pin:'Imposta / Cambia PIN',remove_pin:'Rimuovi PIN',
     pin_desc:'Blocca l\'app con un codice a 4 cifre',
@@ -1418,7 +1449,7 @@ const I18N={
     // PIN screen
     insert_pin:'Inserisci PIN',choose_pin:'Scegli PIN',pin_error:'PIN errato',
     // Onboarding
-    ob0_title:'Benvenuto su Budgly',ob0_desc:'Il modo più semplice per tenere traccia delle tue spese. In pochi secondi sei pronto.',
+    ob0_title:'Benvenuto su Cyrwall',ob0_desc:'Il modo più semplice per tenere traccia delle tue spese. In pochi secondi sei pronto.',
     ob1_title:'Aggiungi in un tap',ob1_desc:'Premi il tasto + al centro. Voce, scontrino o manuale.',
     ob2_title:'Imposta i tuoi Goals',ob2_desc:'Vacanza, auto, risparmio. Tieni traccia di quanto manca ogni mese.',
     ob3_title:'Scegli valuta',
@@ -1550,11 +1581,11 @@ const I18N={
     widget_scriptable_sub:'Installa Scriptable dall\'App Store, crea un nuovo script e incolla questo codice.',
     widget_json_title:'Dati widget (JSON)',
     widget_json_sub:'Questi dati vengono letti dal widget. Si aggiornano ad ogni apertura dell\'app.',
-    wp_step1:'<strong>Installa Budgly come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.',
-    wp_step2:'<strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Budgly"</em> nella lista app o usa Scriptable con il codice qui sotto.',
-    wp_step3:'<strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l\'app Budgly installata come PWA. In alternativa usa KWGT con il codice JSON.',
-    wp_step4:'<strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Budgly.',
-    conv_receipt_desc:'Quando aggiungi una spesa in valuta estera, Budgly la salva nella valuta originale. Usa questo convertitore per verificare l\'equivalente in €.',
+    wp_step1:'<strong>Installa Cyrwall come PWA</strong> — apri Safari, tocca il tasto Condividi (□↑) e scegli <em>"Aggiungi alla schermata Home"</em>.',
+    wp_step2:'<strong>Su iOS</strong>: tieni premuto sulla schermata Home → tocca <em>"+"</em> in alto a sinistra → cerca <em>"Cyrwall"</em> nella lista app o usa Scriptable con il codice qui sotto.',
+    wp_step3:'<strong>Su Android</strong>: tieni premuto sulla schermata Home → <em>"Widget"</em> → cerca l\'app Cyrwall installata come PWA. In alternativa usa KWGT con il codice JSON.',
+    wp_step4:'<strong>Aggiornamento automatico</strong>: il widget legge i dati salvati localmente, si aggiorna ogni volta che apri Cyrwall.',
+    conv_receipt_desc:'Quando aggiungi una spesa in valuta estera, Cyrwall la salva nella valuta originale. Usa questo convertitore per verificare l\'equivalente in €.',
     salary_countdown_desc:'Il countdown parte dal giorno di accredito al mese successivo.',
     ch_placeholder:'es. Niente Amazon per 30 giorni',
     months_3:'3 mesi',months_6:'6 mesi',year_1:'1 anno',years_2:'2 anni',years_5:'5 anni',
@@ -1562,7 +1593,7 @@ const I18N={
   },
   en:{
     home:'Home',ai:'AI',challenges:'Challenges',rank:'Rank',
-    budgly_home:'💰 Budgly',budgly_game:'🎮 Budgly',
+    cyrwall_home:'💰 Cyrwall',cyrwall_game:'🎮 Cyrwall',
     monthly_balance:'monthly balance',add:'add',
     top_expenses:'Top expenses this month',explore:'Explore',
     first_month:'First month',same_as:'Same as',
@@ -1598,7 +1629,7 @@ const I18N={
     danger:'⚠️ Danger zone',delete_all:'🗑️ Delete all data',
     notifications:'🔔 Notifications',enable_notifications:'Enable push notifications',
     insert_pin:'Enter PIN',choose_pin:'Choose PIN',pin_error:'Wrong PIN',
-    ob0_title:'Welcome to Budgly',ob0_desc:'The simplest way to track your expenses. Ready in seconds.',
+    ob0_title:'Welcome to Cyrwall',ob0_desc:'The simplest way to track your expenses. Ready in seconds.',
     ob1_title:'Add in one tap',ob1_desc:'Press the + button in the center. Voice, receipt or manual.',
     ob2_title:'Set your Goals',ob2_desc:'Vacation, car, savings. Track how much is left each month.',
     ob3_title:'Choose currency',
@@ -1716,12 +1747,12 @@ const I18N={
     widget_how_add:'How to add the widget',
     widget_scriptable_sub:'Install Scriptable from the App Store, create a new script and paste this code.',
     widget_json_title:'Widget data (JSON)',
-    widget_json_sub:'This data is read by the widget. It updates every time you open Budgly.',
-    wp_step1:'<strong>Install Budgly as a PWA</strong> — open Safari, tap the Share button (□↑) and choose <em>"Add to Home Screen"</em>.',
-    wp_step2:'<strong>On iOS</strong>: long press the Home Screen → tap <em>"+"</em> top left → search <em>"Budgly"</em> in the app list or use Scriptable with the code below.',
-    wp_step3:'<strong>On Android</strong>: long press the Home Screen → <em>"Widget"</em> → find the Budgly PWA app. Alternatively use KWGT with the JSON code.',
-    wp_step4:'<strong>Auto update</strong>: the widget reads locally saved data, it updates every time you open Budgly.',
-    conv_receipt_desc:'When you add an expense in a foreign currency, Budgly saves it in the original currency. Use this converter to check the equivalent in €.',
+    widget_json_sub:'This data is read by the widget. It updates every time you open Cyrwall.',
+    wp_step1:'<strong>Install Cyrwall as a PWA</strong> — open Safari, tap the Share button (□↑) and choose <em>"Add to Home Screen"</em>.',
+    wp_step2:'<strong>On iOS</strong>: long press the Home Screen → tap <em>"+"</em> top left → search <em>"Cyrwall"</em> in the app list or use Scriptable with the code below.',
+    wp_step3:'<strong>On Android</strong>: long press the Home Screen → <em>"Widget"</em> → find the Cyrwall PWA app. Alternatively use KWGT with the JSON code.',
+    wp_step4:'<strong>Auto update</strong>: the widget reads locally saved data, it updates every time you open Cyrwall.',
+    conv_receipt_desc:'When you add an expense in a foreign currency, Cyrwall saves it in the original currency. Use this converter to check the equivalent in €.',
     salary_countdown_desc:'The countdown starts from the payday to the next one.',
     ch_placeholder:'e.g. No Amazon for 30 days',
     months_3:'3 months',months_6:'6 months',year_1:'1 year',years_2:'2 years',years_5:'5 years',
@@ -1822,8 +1853,8 @@ async function tryBiometric(){
     // Prima volta — registra la credenziale biometrica
     const regCred=await navigator.credentials.create({publicKey:{
       challenge:crypto.getRandomValues(new Uint8Array(32)),
-      rp:{name:'Budgly',id:location.hostname||'localhost'},
-      user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'budgly-user',displayName:'Budgly User'},
+      rp:{name:'Cyrwall',id:location.hostname||'localhost'},
+      user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'cyrwall-user',displayName:'Cyrwall User'},
       pubKeyCredParams:[{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
       authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
       timeout:60000
@@ -2202,8 +2233,8 @@ function renderDati(){
   const cats={};filtered.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
   drawDonut(cats,u);drawBarChart();
   const list=document.getElementById('txlist');
-  if(!filtered.length){list.innerHTML='<div class="empty">Nessuna transazione</div>';return}
-  list.innerHTML=filtered.map(t=>`<div class="txi" data-id="${t.id}"><div class="dot ${t.tipo==='entrata'?'e':'u'}"></div><div class="txi-info"><div class="txi-name">${t.nome}${t.ricorrente?'<span class="recurr-badge">🔁</span>':''}${t.tag?`<span class="txi-tag">${t.tag}</span>`:''}</div><div class="txi-meta">${t.categoria}${t.conto&&t.conto!=='Principale'?' · '+t.conto:''} · ${t.data}${t.cur&&t.cur!=='EUR'?' · '+t.cur:''}</div></div><div class="txi-right"><div class="txi-amt ${t.tipo==='entrata'?'e':'u'}">${t.tipo==='entrata'?'+':'-'}${fmt(t.importo,t.cur)}</div></div></div>`).join('');
+  if(!filtered.length){list.innerHTML=`<div class="empty">${t('no_transactions')}</div>`;return}
+  list.innerHTML=filtered.map(t=>`<div class="txi" data-id="${t.id}" onclick="openEditModal(${t.id})"><div class="dot ${t.tipo==='entrata'?'e':'u'}"></div><div class="txi-info"><div class="txi-name">${t.nome}${t.ricorrente?'<span class="recurr-badge">🔁</span>':''}${t.tag?`<span class="txi-tag">${t.tag}</span>`:''}</div><div class="txi-meta">${t.categoria}${t.conto&&t.conto!=='Principale'?' · '+t.conto:''} · ${t.data}${t.cur&&t.cur!=='EUR'?' · '+t.cur:''}</div></div><div class="txi-right"><div class="txi-amt ${t.tipo==='entrata'?'e':'u'}">${t.tipo==='entrata'?'+':'-'}${fmt(t.importo,t.cur)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">✏️</div></div></div>`).join('');
   list.querySelectorAll('.txi').forEach(el=>{const id=parseInt(el.dataset.id);if(id)initSwipe(el,id)});
 }
 
@@ -2397,7 +2428,7 @@ async function requestNotifications(){
       const permission=await OneSignal.Notifications.requestPermission();
       if(permission){
         localStorage.setItem('notif_enabled','1');
-        await OneSignal.User.addTag('app','budgly');
+        await OneSignal.User.addTag('app','cyrwall');
         scheduleEvening();
         showAlert('🔔 Notifiche attivate!','green');
       }else{
@@ -2417,7 +2448,7 @@ function scheduleEvening(){
     if(!hasTx){
       // Notifica locale come fallback
       if(Notification.permission==='granted'){
-        new Notification('💰 Budgly',{body:'Hai inserito le spese di oggi?',icon:'/icon-192.png'});
+        new Notification('💰 Cyrwall',{body:'Hai inserito le spese di oggi?',icon:'/icon-192.png'});
       }
     }
     scheduleEvening();
@@ -2464,7 +2495,7 @@ function renderGame(){
   const badges=getAllBadges();
   document.getElementById("streak-num").textContent=streak;
   document.getElementById("streak-sub").textContent=streak===0?t('streak_zero'):streak===1?t('streak_one'):t('streak_many').replace('{n}',streak);
-  document.querySelector('#p-game .app-name').textContent=t('budgly_game');
+  document.querySelector('#p-game .app-name').textContent=t('cyrwall_game');
   document.querySelector('#streak-card div:nth-child(2)').textContent=t('streak_label');
   document.querySelectorAll('#p-game .lbl, #p-game [style*="uppercase"]').forEach(el=>{
     if(el.textContent.includes('livello')||el.textContent.includes('level'))el.textContent=t('your_level');
@@ -2697,13 +2728,13 @@ function localChatEngine(msg){
 
   // ── SALUTI E CHIACCHIERE ──
   if(/^(ciao|salve|hey|hei|hello|buongiorno|buonasera|buonanotte)/.test(m))
-    return `Ciao! 👋 Sono il tuo assistente finanziario su Budgly. Chiedimi delle tue spese, del budget, dei goal — ci sono per quello!`;
+    return `Ciao! 👋 Sono il tuo assistente finanziario su Cyrwall. Chiedimi delle tue spese, del budget, dei goal — ci sono per quello!`;
   if(/come (stai|va|stai andando|ti senti)/.test(m)||/come va/.test(m))
     return `Sto benissimo grazie! 😄 Sempre pronto ad analizzare le tue finanze. Tu come stai — e soprattutto, come sta il tuo portafoglio questo mese?`;
   if(/grazie|thanks|perfetto|ottimo|bravo/.test(m))
     return `Prego! 😊 Se hai altre domande sulle tue spese sono qui.`;
   if(/(chi sei|cosa sei|cosa fai|presentati)/.test(m))
-    return `Sono l'assistente AI di Budgly! 🤖 Conosco tutte le tue transazioni e posso aiutarti ad analizzare spese, entrate, risparmi e tendenze. Chiedimi pure!`;
+    return `Sono l'assistente AI di Cyrwall! 🤖 Conosco tutte le tue transazioni e posso aiutarti ad analizzare spese, entrate, risparmi e tendenze. Chiedimi pure!`;
   if(/(aiuto|help|cosa (posso|puoi)|cosa sai fare)/.test(m))
     return `Posso rispondere a domande come: "quanto ho speso in cibo?", "qual è la mia categoria top?", "sono in linea col budget?", "confronta questo mese col precedente". Prova!`;
   if(/bella|bello|figata|wow|fantastico/.test(m))
@@ -2742,7 +2773,7 @@ function localChatEngine(msg){
   if(/(risparmio|risparmiato|messo da parte)/.test(m)){
     const totE=txs.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
     const totU=txs.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
-    return `Questo mese hai risparmiato ${fmt(saldo)}. ${saldo>0?`In totale da quando usi Budgly hai accumulato ${fmt(totE-totU)}.`:'Questo mese sei in negativo, cerca di ridurre qualche spesa. 💡'}`;
+    return `Questo mese hai risparmiato ${fmt(saldo)}. ${saldo>0?`In totale da quando usi Cyrwall hai accumulato ${fmt(totE-totU)}.`:'Questo mese sei in negativo, cerca di ridurre qualche spesa. 💡'}`;
   }
 
   // ── CONFRONTO MESI ──
@@ -2990,7 +3021,7 @@ function renderInvestments(){
 // ══════════════════════════════════════════
 // 📱 WIDGET SCHERMATA HOME
 // ══════════════════════════════════════════
-const SCRIPTABLE_CODE=`// Budgly Widget — Scriptable iOS
+const SCRIPTABLE_CODE=`// Cyrwall Widget — Scriptable iOS
 // Installa Scriptable dall'App Store
 
 const mc = new Date().toLocaleString('it', {month:'long'})
@@ -3111,7 +3142,7 @@ function initWidget(){
 
   document.getElementById('scriptable-code').textContent=SCRIPTABLE_CODE;
   const widgetData={saldo,entrate:e,uscite:u,budget:budgetMensile,mese:mc,aggiornato:new Date().toISOString(),valuta:defaultCur};
-  localStorage.setItem('budly_widget',JSON.stringify(widgetData));
+  localStorage.setItem('cyrwall_widget',JSON.stringify(widgetData));
   document.getElementById('widget-json-preview').textContent=JSON.stringify(widgetData,null,2);
 }
 
@@ -3122,7 +3153,7 @@ function copyWidgetCode(){
 }
 
 function copyWidgetJSON(){
-  const d=localStorage.getItem('budly_widget')||'{}';
+  const d=localStorage.getItem('cyrwall_widget')||'{}';
   navigator.clipboard&&navigator.clipboard.writeText(d)
     .then(()=>showAlert('📋 JSON copiato!','green'))
     .catch(()=>showAlert('Copia manualmente il JSON'));
@@ -4109,7 +4140,7 @@ function applyTranslations(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(k)el.textContent=t(k)});
 
   // ── Page app-names ──
-  const pageTitles={'p-home':t('budgly_home'),'p-dati':t('transactions'),'p-goals':t('goals_title'),'p-settings':t('settings'),'p-game':t('budgly_game'),'p-challenges':t('challenges_title'),'p-converter':t('converter'),'p-invest':t('invest_title'),'p-salary':t('salary_title'),'p-whatif':t('whatif_title'),'p-widget':t('widget_title'),'p-subs':t('subscriptions'),'p-map':t('map_title'),'p-wrapped':'🎵 Wrapped','p-profile':t('profile'),'p-annual':t('annual'),'p-chat':'💬 '+t('ai')};
+  const pageTitles={'p-home':t('cyrwall_home'),'p-dati':t('transactions'),'p-goals':t('goals_title'),'p-settings':t('settings'),'p-game':t('cyrwall_game'),'p-challenges':t('challenges_title'),'p-converter':t('converter'),'p-invest':t('invest_title'),'p-salary':t('salary_title'),'p-whatif':t('whatif_title'),'p-widget':t('widget_title'),'p-subs':t('subscriptions'),'p-map':t('map_title'),'p-wrapped':'🎵 Wrapped','p-profile':t('profile'),'p-annual':t('annual'),'p-chat':'💬 '+t('ai')};
   Object.entries(pageTitles).forEach(([id,title])=>{const p=document.getElementById(id);if(p){const a=p.querySelector('.app-name');if(a)a.textContent=title}});
 
   // ── Home ──
@@ -4355,7 +4386,72 @@ function initLang(){
   }
 }
 
-checkOnboarding();
+// ══════════════════════════════════════════
+// ✏️ MODIFICA TRANSAZIONE
+// ══════════════════════════════════════════
+let editingTxId=null;
+
+function openEditModal(id){
+  const tx=txs.find(t=>t.id===id);if(!tx)return;
+  editingTxId=id;
+  document.getElementById('edit-nome').value=tx.nome||'';
+  document.getElementById('edit-importo').value=tx.importo||'';
+  document.getElementById('edit-data').value=tx.data||'';
+  document.getElementById('edit-ricorrente').checked=!!tx.ricorrente;
+  // Set categoria
+  const catSel=document.getElementById('edit-cat');
+  [...catSel.options].forEach(o=>{if(o.value===tx.categoria||o.textContent===tx.categoria||o.textContent.includes(tx.categoria))o.selected=true});
+  // Translate labels
+  document.getElementById('edit-modal-title').textContent=(currentLang==='en'?'✏️ Edit':'✏️ Modifica');
+  document.getElementById('edit-nome-lbl').textContent=t('description');
+  document.getElementById('edit-importo-lbl').textContent=t('amount');
+  document.getElementById('edit-cat-lbl').textContent=t('category');
+  document.getElementById('edit-data-lbl').textContent=t('date');
+  document.getElementById('edit-ricorrente-lbl').textContent='🔁 '+(currentLang==='en'?'Recurring':'Ricorrente');
+  document.getElementById('edit-save-btn').textContent=t('save');
+  // Show modal
+  const modal=document.getElementById('edit-modal');
+  modal.style.display='flex';
+  requestAnimationFrame(()=>modal.style.opacity='1');
+  haptic('light');playSound('click');
+}
+
+function closeEditModal(){
+  document.getElementById('edit-modal').style.display='none';
+  editingTxId=null;
+}
+
+function saveEdit(){
+  if(!editingTxId)return;
+  const tx=txs.find(t=>t.id===editingTxId);if(!tx)return;
+  const nome=document.getElementById('edit-nome').value.trim();
+  const importo=parseFloat(document.getElementById('edit-importo').value);
+  const data=document.getElementById('edit-data').value;
+  const cat=document.getElementById('edit-cat').value;
+  const ricorrente=document.getElementById('edit-ricorrente').checked;
+  if(!nome||!importo||!data){showAlert('⚠️ Compila tutti i campi');return}
+  tx.nome=nome;tx.importo=importo;tx.data=data;tx.categoria=cat;tx.ricorrente=ricorrente;
+  tx.mese=new Date(data+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
+  save();
+  // Sync to Supabase
+  if(supaUser){
+    const s=initSupa();if(s)s.from('transactions').update({nome:tx.nome,importo:tx.importo,data:tx.data,categoria:tx.categoria,ricorrente:tx.ricorrente,mese:tx.mese}).eq('id',editingTxId).eq('user_id',supaUser.id);
+  }
+  closeEditModal();
+  renderDati();updHome();
+  showAlert('✅ '+(currentLang==='en'?'Transaction updated':'Transazione aggiornata'),'green');
+  playSound('save');haptic('medium');
+}
+
+function deleteFromEdit(){
+  if(!editingTxId)return;
+  if(!confirm(currentLang==='en'?'Delete this transaction?':'Eliminare questa transazione?'))return;
+  elimina(editingTxId);
+  closeEditModal();
+}
+
+// Close modal on overlay click
+document.getElementById('edit-modal').addEventListener('click',function(e){if(e.target===this)closeEditModal()});
 renderDailyQuote();
 supaInit();
 scheduleDailyChallengeNotif();

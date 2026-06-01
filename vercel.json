@@ -7,5 +7,19 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/notify-daily",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/notify-evening",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/notify-weekly",
+      "schedule": "0 9 * * 1"
+    }
   ]
 }

@@ -1,7 +1,7 @@
 {
-  "name": "Budly",
-  "short_name": "Budly",
-  "description": "Tracker entrate e uscite",
+  "name": "Cyrwall",
+  "short_name": "Cyrwall",
+  "description": "Your personal finance tracker",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f0f0f",
