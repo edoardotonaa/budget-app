@@ -2745,23 +2745,29 @@ async function requestNotificationsFromSettings(){
   const btn=document.getElementById('notif-enable-btn');
   btn.textContent='⏳...';btn.disabled=true;
   try{
-    window.OneSignalDeferred=window.OneSignalDeferred||[];
-    window.OneSignalDeferred.push(async function(OneSignal){
-      const permission=await OneSignal.Notifications.requestPermission();
+    // Prova prima direttamente, poi via deferred
+    const OS=window.OneSignal;
+    if(OS&&OS.Notifications){
+      const permission=await OS.Notifications.requestPermission();
       if(permission){
         localStorage.setItem('notif_enabled','1');
-        await OneSignal.User.addTag('app','cyrwall');
-        await OneSignal.User.addTag('lang',currentLang);
+        try{await OS.User.addTag('app','cyrwall');await OS.User.addTag('lang',currentLang);}catch(e){}
         btn.textContent='✅ '+(currentLang==='en'?'Notifications enabled':'Notifiche attivate');
         btn.style.color='var(--green)';btn.style.borderColor='rgba(74,222,128,.3)';
         btn.disabled=false;
         showAlert('🔔 '+(currentLang==='en'?'Notifications enabled!':'Notifiche attivate!'),'green');
       }else{
         btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
+        btn.style.color='';btn.style.borderColor='';
         btn.disabled=false;
-        showAlert('⚠️ '+(currentLang==='en'?'Permission denied':'Permesso negato'));
+        showAlert('⚠️ '+(currentLang==='en'?'Permission denied — check iOS Settings':'Permesso negato — controlla Impostazioni iOS'));
       }
-    });
+    }else{
+      // OneSignal non ancora pronto
+      btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
+      btn.disabled=false;
+      showAlert('⚠️ '+(currentLang==='en'?'Reload the app and try again':'Ricarica l\'app e riprova'));
+    }
   }catch(e){
     btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
     btn.disabled=false;
