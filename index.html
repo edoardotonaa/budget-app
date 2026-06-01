@@ -3759,7 +3759,14 @@ let supa=null;
 function initSupa(){
   if(supa)return supa;
   if(typeof supabase==='undefined')return null;
-  supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+  supa=supabase.createClient(SUPA_URL,SUPA_KEY,{
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true,
+      storage:localStorage
+    }
+  });
   return supa;
 }
 let supaUser=null;
@@ -3769,12 +3776,12 @@ async function supaInit(){
   try{
     const {data:{session},error}=await s.auth.getSession();
     if(error||!session){
-      // Nessuna sessione — aspetta auth state change
       s.auth.onAuthStateChange(async(event,session)=>{
         if(event==='SIGNED_IN'&&session){
           supaUser=session.user;
           await loadSupaProfile();
           await syncFromSupabase();
+          updateAvatarUI();
           updHome();
         }
         if(event==='SIGNED_OUT'){supaUser=null}
@@ -3784,11 +3791,13 @@ async function supaInit(){
     supaUser=session.user;
     await loadSupaProfile();
     await syncFromSupabase();
+    updateAvatarUI();
+    updHome();
     s.auth.onAuthStateChange(async(event,session)=>{
-      if(event==='SIGNED_IN'&&session){supaUser=session.user;await loadSupaProfile();await syncFromSupabase()}
+      if(event==='SIGNED_IN'&&session){supaUser=session.user;await loadSupaProfile();await syncFromSupabase();updateAvatarUI();updHome()}
       if(event==='SIGNED_OUT'){supaUser=null}
     });
-  }catch(e){console.warn('Supabase init error:',e)}
+  }catch(e){console.warn('Supabase init:',e)}
 }
 
 async function loadSupaProfile(){
