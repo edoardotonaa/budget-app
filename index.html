@@ -865,6 +865,7 @@ body.light .share-box{background:#fff}
       <span>🔁 Ricorrente (mensile)</span>
       <label class="toggle"><input type="checkbox" id="recurr"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
     </div>
+    <div class="field"><label id="note-lbl">📝 Nota (opzionale)</label><input type="text" id="nota" placeholder="es. Pranzo con Mario, Regalo compleanno..."/></div>
     <div class="split-toggle" onclick="toggleSplit()">✂️ Dividi in più categorie</div>
     <div class="split-section" id="split-section">
       <div style="font-size:13px;color:var(--muted)">Suddividi l'importo per categoria</div>
@@ -1425,6 +1426,7 @@ body.light .share-box{background:#fff}
         </select>
       </div>
       <div class="field"><label id="edit-data-lbl">Data</label><input type="date" id="edit-data"/></div>
+      <div class="field"><label id="edit-nota-lbl">📝 Nota</label><input type="text" id="edit-nota" placeholder="Nota opzionale..."/></div>
       <div class="recurr-row">
         <span id="edit-ricorrente-lbl">🔁 Ricorrente</span>
         <label class="toggle"><input type="checkbox" id="edit-ricorrente"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
@@ -2049,7 +2051,7 @@ function pick(t){
   const curSel=document.getElementById('cur-sel');for(let i=0;i<curSel.options.length;i++){if(curSel.options[i].value===defaultCur){curSel.selectedIndex=i;break}}
   updateCurSign();
   document.getElementById('dt').value=new Date().toISOString().split('T')[0];
-  document.getElementById('imp').value='';document.getElementById('nome').value='';document.getElementById('tag').value='';
+  document.getElementById('imp').value='';document.getElementById('nome').value='';document.getElementById('tag').value='';document.getElementById('nota').value='';
   document.getElementById('smsg').textContent='';document.getElementById('sbtn').disabled=false;
   document.getElementById('recurr').checked=false;
   document.getElementById('split-section').classList.remove('open');document.getElementById('split-rows').innerHTML='';
@@ -2234,7 +2236,8 @@ async function salva(){
     }
   }
 
-  const tx={id:Date.now(),nome,importo,tipo,categoria:document.getElementById('cat').value,metodo:document.getElementById('met').value,data:dv,mese:new Date(dv+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()),ricorrente,tag,conto,cur};
+  const nota=document.getElementById('nota').value.trim();
+  const tx={id:Date.now(),nome,importo,tipo,categoria:document.getElementById('cat').value,metodo:document.getElementById('met').value,data:dv,mese:new Date(dv+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()),ricorrente,tag,conto,cur,nota};
   const btn=document.getElementById('sbtn'),msg=document.getElementById('smsg');btn.disabled=true;msg.textContent='Salvataggio...';
   try{
     const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'Salva su Notion e rispondi solo {"ok":true}.',messages:[{role:'user',content:`Crea pagina database Notion DS="${DS}": Nome="${tx.nome}",Tipo="${tipo==='entrata'?'💰 Entrata':'💸 Uscita'}",Importo=${tx.importo},date:Data:start="${tx.data}",date:Data:is_datetime=0,Categoria="${CE[tx.categoria]||'❓ Altro'}",Metodo di Pagamento="${ME[tx.metodo]||'❓ Altro'}",Mese="${tx.mese}",Ricorrente=${ricorrente}. Rispondi {"ok":true}.`}],mcp_servers:[{type:'url',url:'https://mcp.notion.com/mcp',name:'notion'}]})});
@@ -2292,7 +2295,7 @@ function renderDati(){
   drawDonut(cats,u);drawBarChart();
   const list=document.getElementById('txlist');
   if(!filtered.length){list.innerHTML=`<div class="empty">${t('no_transactions')}</div>`;return}
-  list.innerHTML=filtered.map(tx=>`<div class="txi" data-id="${tx.id}" onclick="openEditModal(${tx.id})"><div class="dot ${tx.tipo==='entrata'?'e':'u'}"></div><div class="txi-info"><div class="txi-name">${tx.nome}${tx.ricorrente?'<span class="recurr-badge">🔁</span>':''}${tx.tag?`<span class="txi-tag">${tx.tag}</span>`:''}</div><div class="txi-meta">${tx.categoria}${tx.conto&&tx.conto!=='Principale'?' · '+tx.conto:''} · ${tx.data}${tx.cur&&tx.cur!=='EUR'?' · '+tx.cur:''}${tx.tipo==='uscita'?getWorkHours(tx.importo):''}</div></div><div class="txi-right"><div class="txi-amt ${tx.tipo==='entrata'?'e':'u'}">${tx.tipo==='entrata'?'+':'-'}${fmt(tx.importo,tx.cur)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">✏️</div></div></div>`).join('');
+  list.innerHTML=filtered.map(tx=>`<div class="txi" data-id="${tx.id}" onclick="openEditModal(${tx.id})"><div class="dot ${tx.tipo==='entrata'?'e':'u'}"></div><div class="txi-info"><div class="txi-name">${tx.nome}${tx.ricorrente?'<span class="recurr-badge">🔁</span>':''}${tx.tag?`<span class="txi-tag">${tx.tag}</span>`:''}</div><div class="txi-meta">${tx.categoria}${tx.conto&&tx.conto!=='Principale'?' · '+tx.conto:''} · ${tx.data}${tx.cur&&tx.cur!=='EUR'?' · '+tx.cur:''}${tx.tipo==='uscita'?getWorkHours(tx.importo):''}${tx.nota?'<br><span style="color:var(--muted);font-size:11px">📝 '+tx.nota+'</span>':''}</div></div><div class="txi-right"><div class="txi-amt ${tx.tipo==='entrata'?'e':'u'}">${tx.tipo==='entrata'?'+':'-'}${fmt(tx.importo,tx.cur)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">✏️</div></div></div>`).join('');
   list.querySelectorAll('.txi').forEach(el=>{const id=parseInt(el.dataset.id);if(id)initSwipe(el,id)});
 }
 
@@ -3868,7 +3871,7 @@ async function syncFromSupabase(){
 
   if(txData&&txData.length>0){
     // Cloud ha dati → usa quelli
-    txs=txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR'}));
+    txs=txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR',nota:t.nota||''}));
     save();
   } else if(txs.length>0){
     // Cloud vuoto ma locale ha dati → carica su cloud
@@ -3892,7 +3895,7 @@ async function syncFromSupabase(){
 
 async function pushTxToSupabase(tx){
   if(!supaUser)return;const s=initSupa();if(!s)return;
-  await s.from('transactions').insert({user_id:supaUser.id,nome:tx.nome,importo:tx.importo,tipo:tx.tipo,categoria:tx.categoria,metodo:tx.metodo,data:tx.data,mese:tx.mese,ricorrente:tx.ricorrente,tag:tx.tag,conto:tx.conto,cur:tx.cur});
+  await s.from('transactions').insert({user_id:supaUser.id,nome:tx.nome,importo:tx.importo,tipo:tx.tipo,categoria:tx.categoria,metodo:tx.metodo,data:tx.data,mese:tx.mese,ricorrente:tx.ricorrente,tag:tx.tag,conto:tx.conto,cur:tx.cur,nota:tx.nota||''});
 }
 
 async function deleteTxFromSupabase(id){
@@ -4680,6 +4683,7 @@ function openEditModal(id){
   document.getElementById('edit-importo').value=tx.importo||'';
   document.getElementById('edit-data').value=tx.data||'';
   document.getElementById('edit-ricorrente').checked=!!tx.ricorrente;
+  document.getElementById('edit-nota').value=tx.nota||'';
   // Set categoria
   const catSel=document.getElementById('edit-cat');
   [...catSel.options].forEach(o=>{if(o.value===tx.categoria||o.textContent===tx.categoria||o.textContent.includes(tx.categoria))o.selected=true});
@@ -4711,8 +4715,9 @@ function saveEdit(){
   const data=document.getElementById('edit-data').value;
   const cat=document.getElementById('edit-cat').value;
   const ricorrente=document.getElementById('edit-ricorrente').checked;
+  const nota=document.getElementById('edit-nota').value.trim();
   if(!nome||!importo||!data){showAlert('⚠️ Compila tutti i campi');return}
-  tx.nome=nome;tx.importo=importo;tx.data=data;tx.categoria=cat;tx.ricorrente=ricorrente;
+  tx.nome=nome;tx.importo=importo;tx.data=data;tx.categoria=cat;tx.ricorrente=ricorrente;tx.nota=nota;
   tx.mese=new Date(data+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
   save();
   // Sync to Supabase
