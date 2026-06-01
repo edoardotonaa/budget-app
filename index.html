@@ -543,6 +543,32 @@ select option{background:#222}
 .csv-btn.import{background:var(--accent);color:#0f0f0f}
 .csv-btn.cancel{background:var(--bg3);color:var(--muted)}
 
+/* ── DASHBOARD AVANZATA ── */
+#p-dashboard{padding-top:52px}
+.dash-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.dash-kpi{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:14px}
+.dash-kpi-ico{font-size:20px;margin-bottom:6px}
+.dash-kpi-val{font-size:22px;font-weight:500;font-family:'DM Mono',monospace;line-height:1;margin-bottom:3px}
+.dash-kpi-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.dash-kpi-trend{font-size:11px;margin-top:4px}
+.dash-section{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.dash-section-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.dash-chart-svg{width:100%;overflow:visible}
+.dash-line{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dash-area{opacity:.15}
+.dash-dot{cursor:pointer}
+.dash-tooltip{position:absolute;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rs);padding:6px 10px;font-size:12px;pointer-events:none;white-space:nowrap;z-index:100;display:none}
+.dash-bar-group{cursor:pointer}
+.dash-cat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dash-cat-name{font-size:12px;width:100px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.dash-cat-bar-wrap{flex:1;background:var(--bg3);border-radius:99px;height:6px;overflow:hidden}
+.dash-cat-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.dash-cat-val{font-size:12px;font-family:'DM Mono',monospace;width:55px;text-align:right;flex-shrink:0}
+.dash-tab-row{display:flex;gap:6px;margin-bottom:14px}
+.dash-tab{padding:6px 12px;border-radius:99px;border:.5px solid var(--border);background:none;font-size:12px;cursor:pointer;font-family:inherit;color:var(--muted)}
+.dash-tab.active{background:var(--accent);color:#0f0f0f;border-color:transparent}
+.dash-projection{background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(96,165,250,.03));border:.5px solid rgba(96,165,250,.2);border-radius:var(--rs);padding:12px;margin-top:10px;font-size:13px;color:var(--muted);line-height:1.5}
+
 /* LIGHT */
 body.light{background:#f5f5f5;color:#111}
 body.light .page{background:#f5f5f5}
@@ -867,6 +893,7 @@ body.light .share-box{background:#fff}
   </div>
   <div style="flex:1;overflow-y:auto;padding:12px 8px">
     <div class="drawer-item" onclick="closeDrawer();goNav('p-dati')"><span>📊</span><span>Dati & Grafici</span></div>
+    <div class="drawer-item" onclick="closeDrawer();goNav('p-dashboard')"><span>📈</span><span>Dashboard avanzata</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-goals')"><span>🎯</span><span>Goals</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-converter')"><span>💱</span><span>Convertitore valute</span></div>
     <div class="drawer-item" onclick="closeDrawer();goNav('p-invest')"><span>📈</span><span>Investimenti</span></div>
@@ -1161,6 +1188,20 @@ body.light .share-box{background:#fff}
 ══════════════════════════════════════════ -->
 <div id="p-chat" class="page">
   <div class="top-bar"><div class="app-name">💬 Assistente</div><button class="icon-btn" onclick="clearChat()">🗑️</button></div>
+
+  <!-- CONSIGLI AI SETTIMANALI -->
+  <div id="ai-tips-card" style="background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(167,139,250,.04));border:.5px solid rgba(167,139,250,.25);border-radius:var(--r);padding:16px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div>
+        <div style="font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;font-weight:500" id="tips-label">💡 Consigli della settimana</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="tips-last-updated"></div>
+      </div>
+      <button id="tips-btn" onclick="generateWeeklyTips()" style="padding:8px 14px;border-radius:99px;border:none;background:var(--purple);color:#fff;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer">Genera →</button>
+    </div>
+    <div id="tips-content" style="display:none;flex-direction:column;gap:8px"></div>
+    <div id="tips-empty" style="font-size:13px;color:var(--muted)">Premi "Genera" per ricevere 3 consigli personalizzati basati sulle tue spese reali.</div>
+  </div>
+
   <div class="chat-chips" id="chat-chips"></div>
   <div class="chat-msgs" id="chat-msgs"></div>
   <div class="chat-input-row">
@@ -1550,6 +1591,57 @@ body.light .share-box{background:#fff}
       <button class="csv-btn import" id="csv-import-btn" onclick="confirmCSVImport()">Importa →</button>
       <button class="csv-btn cancel" onclick="closeCSVModal()">Annulla</button>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     📊 DASHBOARD AVANZATA
+══════════════════════════════════════════ -->
+<div id="p-dashboard" class="page">
+  <div class="top-bar"><div class="app-name" id="dash-title">📊 Dashboard</div>
+    <button class="icon-btn" onclick="renderDashboard()">↻</button>
+  </div>
+
+  <!-- KPI -->
+  <div class="dash-kpi-grid" id="dash-kpi"></div>
+
+  <!-- Grafico linee entrate/uscite -->
+  <div class="dash-section">
+    <div class="dash-section-title">
+      <span id="dash-trend-title">Trend 6 mesi</span>
+      <div class="dash-tab-row" style="margin:0">
+        <button class="dash-tab active" id="dash-tab-both" onclick="dashSetView('both')">Entrambi</button>
+        <button class="dash-tab" id="dash-tab-in" onclick="dashSetView('in')">Entrate</button>
+        <button class="dash-tab" id="dash-tab-out" onclick="dashSetView('out')">Uscite</button>
+      </div>
+    </div>
+    <div style="position:relative">
+      <svg id="dash-line-chart" class="dash-chart-svg" height="160"></svg>
+      <div class="dash-tooltip" id="dash-tooltip"></div>
+    </div>
+    <div id="dash-projection" class="dash-projection"></div>
+  </div>
+
+  <!-- Categorie top -->
+  <div class="dash-section">
+    <div class="dash-section-title"><span id="dash-cats-title">Top categorie</span><span id="dash-cats-month" style="font-size:11px"></span></div>
+    <div id="dash-cats"></div>
+  </div>
+
+  <!-- Confronto mesi -->
+  <div class="dash-section">
+    <div class="dash-section-title"><span id="dash-compare-title">Confronto mesi</span></div>
+    <svg id="dash-bar-chart" class="dash-chart-svg" height="180"></svg>
+    <div style="display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:4px"><span id="dash-legend-in-dot" style="width:8px;height:8px;border-radius:2px;display:inline-block"></span><span id="dash-legend-in">Entrate</span></span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:rgba(248,113,113,.6);display:inline-block"></span><span id="dash-legend-out">Uscite</span></span>
+    </div>
+  </div>
+
+  <!-- Media giornaliera per giorno della settimana -->
+  <div class="dash-section">
+    <div class="dash-section-title"><span id="dash-weekday-title">Spesa per giorno</span></div>
+    <svg id="dash-weekday-chart" class="dash-chart-svg" height="120"></svg>
   </div>
 </div>
 
@@ -2136,8 +2228,9 @@ function goNav(id){
   if(id==='p-game')renderGame();
   if(id==='p-annual')renderAnnual();
   if(id==='p-converter'){initConverter()}
-  if(id==='p-chat'){initChat()}
+  if(id==='p-chat'){initChat();initTipsCard()}
   if(id==='p-challenges'){renderChallenges();renderDailyChallenge()}
+  if(id==='p-dashboard'){renderDashboard()}
   if(id==='p-invest'){renderInvestments()}
   if(id==='p-widget'){initWidget()}
   if(id==='p-subs'){renderSubs()}
@@ -4711,7 +4804,291 @@ function renderAccentPicker(){
 applyAccentColor(currentAccent);
 
 // ══════════════════════════════════════════
-// 🏦 IMPORTA CSV REVOLUT
+// 📊 DASHBOARD AVANZATA
+// ══════════════════════════════════════════
+let dashView='both';
+function dashSetView(v){
+  dashView=v;
+  document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('dash-tab-'+v).classList.add('active');
+  renderLineChart();
+}
+
+function getLast6Months(){
+  const months=[];const now=new Date();
+  for(let i=5;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const name=d.toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
+    months.push({name,label:d.toLocaleString('it-IT',{month:'short'})});
+  }
+  return months;
+}
+
+function renderDashboard(){
+  const L=currentLang;
+  const mc=getMC();
+  const months=getLast6Months();
+
+  // Traduzione titoli
+  document.getElementById('dash-title').textContent='📊 '+(L==='en'?'Dashboard':'Dashboard');
+  document.getElementById('dash-trend-title').textContent=L==='en'?'6-month trend':'Trend 6 mesi';
+  document.getElementById('dash-cats-title').textContent=L==='en'?'Top categories':'Top categorie';
+  document.getElementById('dash-cats-month').textContent=mc;
+  document.getElementById('dash-compare-title').textContent=L==='en'?'Monthly comparison':'Confronto mesi';
+  document.getElementById('dash-weekday-title').textContent=L==='en'?'Spending by day':'Spesa per giorno';
+  document.getElementById('dash-legend-in').textContent=L==='en'?'Income':'Entrate';
+  document.getElementById('dash-legend-out').textContent=L==='en'?'Expenses':'Uscite';
+  document.getElementById('dash-tab-both').textContent=L==='en'?'Both':'Entrambi';
+  document.getElementById('dash-tab-in').textContent=L==='en'?'Income':'Entrate';
+  document.getElementById('dash-tab-out').textContent=L==='en'?'Expenses':'Uscite';
+
+  // KPI
+  const txM=txs.filter(t=>t.mese===mc);
+  const eM=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const uM=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const saldo=eM-uM;
+  const daysInMonth=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+  const today=new Date().getDate();
+  const avgDaily=today>0?uM/today:0;
+  const projection=avgDaily*daysInMonth;
+  const txCount=txM.filter(t=>t.tipo==='uscita').length;
+  const avgTx=txCount>0?uM/txCount:0;
+  // Confronto mese precedente
+  const mp=getMC()===(new Date().toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()))?
+    new Date(new Date().getFullYear(),new Date().getMonth()-1,1).toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase()):mc;
+  const txP=txs.filter(t=>t.mese===mp);
+  const uP=txP.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const diffPct=uP>0?Math.round((uM-uP)/uP*100):0;
+
+  const kpis=[
+    {ico:'💰',val:fmt(saldo),lbl:L==='en'?'Balance':'Saldo',trend:saldo>=0?'✅':'⚠️',trendColor:saldo>=0?'var(--accent)':'var(--red)'},
+    {ico:'📉',val:fmt(avgDaily),lbl:L==='en'?'Daily avg':'Media/giorno',trend:(diffPct>=0?'▲':'▼')+Math.abs(diffPct)+'% '+(L==='en'?'vs prev':'vs prec'),trendColor:diffPct>0?'var(--red)':'var(--accent)'},
+    {ico:'🔮',val:fmt(projection),lbl:L==='en'?'Projection':'Proiezione',trend:L==='en'?'end of month':'fine mese',trendColor:'var(--muted)'},
+    {ico:'🧾',val:fmt(avgTx),lbl:L==='en'?'Avg/expense':'Media spesa',trend:txCount+' '+(L==='en'?'transactions':'transazioni'),trendColor:'var(--muted)'},
+  ];
+  document.getElementById('dash-kpi').innerHTML=kpis.map(k=>`
+    <div class="dash-kpi">
+      <div class="dash-kpi-ico">${k.ico}</div>
+      <div class="dash-kpi-val">${k.val}</div>
+      <div class="dash-kpi-lbl">${k.lbl}</div>
+      <div class="dash-kpi-trend" style="color:${k.trendColor}">${k.trend}</div>
+    </div>`).join('');
+
+  // Projection message
+  const projMsg=projection>budgetMensile&&budgetMensile>0
+    ?`⚠️ ${L==='en'?'Projected to exceed budget by':'Proiezione supera il budget di'} ${fmt(projection-budgetMensile)}`
+    :budgetMensile>0?`✅ ${L==='en'?'On track — projected to stay':'In linea — proiezione'} ${fmt(projection)} ${L==='en'?'(budget: ':'(budget: '}${fmt(budgetMensile)})`
+    :`📈 ${L==='en'?'Projected spending this month:':'Proiezione spese del mese:'} ${fmt(projection)}`;
+  document.getElementById('dash-projection').textContent=projMsg;
+
+  renderLineChart();
+  renderBarChart(months);
+  renderCatBars(mc);
+  renderWeekdayChart();
+}
+
+function renderLineChart(){
+  const months=getLast6Months();
+  const data=months.map(m=>{
+    const txM=txs.filter(t=>t.mese===m.name);
+    return{
+      label:m.label,
+      e:txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0),
+      u:txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0)
+    };
+  });
+
+  const svg=document.getElementById('dash-line-chart');
+  const W=svg.parentElement.offsetWidth||320;
+  const H=160;const PL=8;const PR=8;const PT=10;const PB=24;
+  svg.setAttribute('width',W);svg.setAttribute('height',H);
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+  const vals=[...data.map(d=>d.e),...data.map(d=>d.u)].filter(v=>v>0);
+  const maxV=vals.length?Math.max(...vals)*1.15:100;
+  const minV=0;
+  const scaleY=v=>PT+(H-PT-PB)*(1-(v-minV)/(maxV-minV));
+  const scaleX=i=>PL+(W-PL-PR)*i/(data.length-1||1);
+  const accent=currentAccent||'#4ade80';
+
+  let html='';
+
+  if(dashView==='both'||dashView==='in'){
+    // Entrate area
+    const areaE=data.map((d,i)=>`${i===0?'M':'L'}${scaleX(i)},${scaleY(d.e)}`).join(' ')+` L${scaleX(data.length-1)},${H-PB} L${scaleX(0)},${H-PB} Z`;
+    html+=`<path d="${areaE}" fill="${accent}" class="dash-area"/>`;
+    // Entrate line
+    const lineE=data.map((d,i)=>`${i===0?'M':'L'}${scaleX(i)},${scaleY(d.e)}`).join(' ');
+    html+=`<path d="${lineE}" class="dash-line" stroke="${accent}"/>`;
+    // Dots
+    data.forEach((d,i)=>{html+=`<circle cx="${scaleX(i)}" cy="${scaleY(d.e)}" r="3" fill="${accent}" class="dash-dot" onmouseenter="showDashTooltip(event,'${d.label}: ${fmt(d.e)}')" onmouseleave="hideDashTooltip()" ontouchstart="showDashTooltip(event,'${d.label}: ${fmt(d.e)}')"/>`});
+  }
+
+  if(dashView==='both'||dashView==='out'){
+    // Uscite area
+    const areaU=data.map((d,i)=>`${i===0?'M':'L'}${scaleX(i)},${scaleY(d.u)}`).join(' ')+` L${scaleX(data.length-1)},${H-PB} L${scaleX(0)},${H-PB} Z`;
+    html+=`<path d="${areaU}" fill="#f87171" class="dash-area"/>`;
+    // Uscite line
+    const lineU=data.map((d,i)=>`${i===0?'M':'L'}${scaleX(i)},${scaleY(d.u)}`).join(' ');
+    html+=`<path d="${lineU}" class="dash-line" stroke="#f87171"/>`;
+    data.forEach((d,i)=>{html+=`<circle cx="${scaleX(i)}" cy="${scaleY(d.u)}" r="3" fill="#f87171" class="dash-dot" onmouseenter="showDashTooltip(event,'${d.label}: ${fmt(d.u)}')" onmouseleave="hideDashTooltip()" ontouchstart="showDashTooltip(event,'${d.label}: ${fmt(d.u)}')"/>`});
+  }
+
+  // Labels asse X
+  data.forEach((d,i)=>{html+=`<text x="${scaleX(i)}" y="${H-4}" text-anchor="middle" font-size="10" fill="#666">${d.label}</text>`});
+
+  // Grid lines
+  const gridVals=[maxV*0.25,maxV*0.5,maxV*0.75].map(v=>Math.round(v));
+  gridVals.forEach(v=>{
+    const y=scaleY(v);
+    html+=`<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(255,255,255,.04)" stroke-width="1"/>`;
+    html+=`<text x="${PL}" y="${y-2}" font-size="9" fill="#444">${fmt(v).replace('€','')}</text>`;
+  });
+
+  svg.innerHTML=html;
+
+  // Legend dot color
+  const legendDot=document.getElementById('dash-legend-in-dot');
+  if(legendDot)legendDot.style.background=accent.replace(')',',0.6)').replace('rgb','rgba')||'rgba(74,222,128,.6)';
+}
+
+function renderBarChart(months){
+  const svg=document.getElementById('dash-bar-chart');
+  const W=svg.parentElement.offsetWidth||320;
+  const H=180;const PL=8;const PR=8;const PT=10;const PB=24;
+  const data=months.map(m=>{
+    const txM=txs.filter(t=>t.mese===m.name);
+    return{label:m.label,e:txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0),u:txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0)};
+  });
+  const maxV=Math.max(...data.map(d=>Math.max(d.e,d.u)),1)*1.1;
+  const scaleY=v=>PT+(H-PT-PB)*(1-v/maxV);
+  const barW=(W-PL-PR)/(data.length*2.5);
+  const accent=currentAccent||'#4ade80';
+  let html='';
+  data.forEach((d,i)=>{
+    const x=PL+(W-PL-PR)*i/data.length;
+    const eH=(H-PT-PB)*d.e/maxV;const uH=(H-PT-PB)*d.u/maxV;
+    html+=`<rect x="${x}" y="${scaleY(d.e)}" width="${barW}" height="${eH}" fill="${accent}" opacity=".7" rx="3"/>`;
+    html+=`<rect x="${x+barW+2}" y="${scaleY(d.u)}" width="${barW}" height="${uH}" fill="#f87171" opacity=".7" rx="3"/>`;
+    html+=`<text x="${x+barW}" y="${H-4}" text-anchor="middle" font-size="10" fill="#666">${d.label}</text>`;
+  });
+  svg.setAttribute('width',W);svg.setAttribute('height',H);svg.innerHTML=html;
+}
+
+function renderCatBars(mc){
+  const cats={};txs.filter(t=>t.mese===mc&&t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const sorted=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const max=sorted[0]?sorted[0][1]:1;
+  const COLORS=['#4ade80','#60a5fa','#a78bfa','#fb923c','#f472b6','#fbbf24'];
+  document.getElementById('dash-cats').innerHTML=sorted.map(([c,v],i)=>`
+    <div class="dash-cat-row">
+      <div class="dash-cat-name">${c}</div>
+      <div class="dash-cat-bar-wrap"><div class="dash-cat-bar-fill" style="width:${Math.round(v/max*100)}%;background:${COLORS[i]}"></div></div>
+      <div class="dash-cat-val" style="color:${COLORS[i]}">${fmt(v)}</div>
+    </div>`).join('')||`<div style="font-size:13px;color:var(--muted)">${currentLang==='en'?'No expenses this month':'Nessuna spesa questo mese'}</div>`;
+}
+
+function renderWeekdayChart(){
+  const days=currentLang==='en'?['Mon','Tue','Wed','Thu','Fri','Sat','Sun']:['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+  const totals=[0,0,0,0,0,0,0];const counts=[0,0,0,0,0,0,0];
+  txs.filter(t=>t.tipo==='uscita'&&t.data).forEach(t=>{
+    try{const d=new Date(t.data+'T12:00:00');const dow=(d.getDay()+6)%7;totals[dow]+=t.importo;counts[dow]++}catch(e){}
+  });
+  const avgs=totals.map((t,i)=>counts[i]>0?t/counts[i]:0);
+  const maxA=Math.max(...avgs,1);
+  const svg=document.getElementById('dash-weekday-chart');
+  const W=svg.parentElement.offsetWidth||320;const H=120;
+  const barW=(W-16)/7-4;const accent=currentAccent||'#4ade80';
+  let html='';
+  avgs.forEach((v,i)=>{
+    const x=8+i*((W-16)/7);const barH=(H-30)*v/maxA;const y=H-20-barH;
+    const opacity=v>0?0.4+0.6*(v/maxA):0.1;
+    html+=`<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="${accent}" opacity="${opacity}" rx="3"/>`;
+    html+=`<text x="${x+barW/2}" y="${H-4}" text-anchor="middle" font-size="10" fill="#666">${days[i]}</text>`;
+    if(v>0)html+=`<text x="${x+barW/2}" y="${y-3}" text-anchor="middle" font-size="9" fill="#777">${fmt(v).replace('€','')}</text>`;
+  });
+  svg.setAttribute('width',W);svg.setAttribute('height',H);svg.innerHTML=html;
+}
+
+function showDashTooltip(e,text){
+  const t=document.getElementById('dash-tooltip');
+  t.textContent=text;t.style.display='block';
+  t.style.left=(e.clientX-100)+'px';t.style.top=(e.clientY-40)+'px';
+}
+function hideDashTooltip(){document.getElementById('dash-tooltip').style.display='none'}
+
+// ══════════════════════════════════════════
+// 💡 CONSIGLI AI SETTIMANALI
+// ══════════════════════════════════════════
+async function generateWeeklyTips(){
+  const btn=document.getElementById('tips-btn');
+  const content=document.getElementById('tips-content');
+  const empty=document.getElementById('tips-empty');
+  const L=currentLang;
+  btn.textContent='⏳';btn.disabled=true;
+  empty.textContent=L==='en'?'Analyzing your expenses...':'Analizzando le tue spese...';
+  empty.style.display='block';content.style.display='none';
+  const mc=getMC();
+  const txM=txs.filter(t=>t.mese===mc);
+  const totU=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const totE=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const cats={};txM.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const topCats=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const saldo=totE-totU;
+  const savePct=totE>0?Math.round(saldo/totE*100):0;
+  const contextData=`Month:${mc} Income:€${totE.toFixed(0)} Expenses:€${totU.toFixed(0)} Balance:€${saldo.toFixed(0)} Savings:${savePct}% TopCategories:${topCats.map(([c,v])=>`${c}€${v.toFixed(0)}`).join(',')} Budget:${budgetMensile>0?'€'+budgetMensile:'none'} Transactions:${txM.length}`;
+  const prompt=L==='en'
+    ?`You are a personal financial advisor. Based on this data: ${contextData}\n\nGive EXACTLY 3 practical, specific tips. Return ONLY a JSON array: [{ico,titolo,descrizione}]. No markdown, no extra text.`
+    :`Sei un consulente finanziario. Dati: ${contextData}\n\nDa' ESATTAMENTE 3 consigli pratici e specifici. Rispondi SOLO con JSON array: [{ico,titolo,descrizione}]. Niente altro.`;
+  try{
+    const resp=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:prompt,history:[],context:''})});
+    let tips=null;
+    if(resp.ok){
+      const data=await resp.json();
+      const text=data.response||data.content||'';
+      try{tips=JSON.parse(text.replace(/```json|```/g,'').trim())}catch(e){tips=null}
+    }
+    if(!tips)tips=generateLocalTips(topCats,savePct,totU,totE,L);
+    content.innerHTML=tips.slice(0,3).map((tip,i)=>`
+      <div style="background:var(--bg2);border-radius:var(--rs);padding:12px;border:.5px solid rgba(167,139,250,.15)">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="font-size:22px;flex-shrink:0">${tip.ico||['💡','📉','🎯'][i]}</div>
+          <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">${tip.titolo||tip.title||''}</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5">${tip.descrizione||tip.description||''}</div></div>
+        </div>
+      </div>`).join('');
+    content.style.display='flex';empty.style.display='none';
+    localStorage.setItem('tips_last',new Date().toLocaleDateString(L==='en'?'en-GB':'it-IT'));
+    updateTipsTimestamp();
+    btn.textContent=L==='en'?'Refresh →':'Aggiorna →';btn.disabled=false;
+    haptic('medium');playSound('success');
+  }catch(e){
+    empty.textContent=L==='en'?'Error. Try again.':'Errore. Riprova.';
+    btn.textContent=L==='en'?'Retry →':'Riprova →';btn.disabled=false;
+  }
+}
+
+function generateLocalTips(topCats,savePct,totU,totE,L){
+  const tips=[];const top=topCats[0];
+  if(top&&totU>0){const pct=Math.round(top[1]/totU*100);tips.push(L==='en'?{ico:'📊',titolo:`${top[0]} is ${pct}% of expenses`,descrizione:`Your biggest category. Reducing it by 10% saves €${Math.round(top[1]*0.1)}/month.`}:{ico:'📊',titolo:`${top[0]} è il ${pct}% delle uscite`,descrizione:`La categoria principale. Ridurla del 10% risparmia €${Math.round(top[1]*0.1)}/mese.`})}
+  if(savePct<20){tips.push(L==='en'?{ico:'💰',titolo:'Savings below 20%',descrizione:`You save ${savePct}% of income. Try the 50/30/20 rule.`}:{ico:'💰',titolo:'Risparmio sotto il 20%',descrizione:`Risparmi il ${savePct}% delle entrate. Prova la regola 50/30/20.`})}else{tips.push(L==='en'?{ico:'🎉',titolo:`Saving ${savePct}%!`,descrizione:'Above the 20% benchmark. Consider investing the surplus.'}:{ico:'🎉',titolo:`Risparmi il ${savePct}%!`,descrizione:'Sopra il 20%. Considera di investire il surplus.'})}
+  tips.push(L==='en'?{ico:'🔄',titolo:'Review subscriptions',descrizione:'Unused subscriptions are often the easiest savings.'}:{ico:'🔄',titolo:'Rivedi gli abbonamenti',descrizione:'Gli abbonamenti inutilizzati sono spesso i risparmi più facili.'});
+  return tips;
+}
+
+function updateTipsTimestamp(){
+  const last=localStorage.getItem('tips_last');const el=document.getElementById('tips-last-updated');const L=currentLang;
+  if(el&&last)el.textContent=L==='en'?`Updated: ${last}`:`Aggiornato: ${last}`;
+}
+
+function initTipsCard(){
+  const L=currentLang;
+  const lbl=document.getElementById('tips-label');if(lbl)lbl.textContent=L==='en'?'💡 Weekly tips':'💡 Consigli della settimana';
+  const btn=document.getElementById('tips-btn');if(btn)btn.textContent=L==='en'?'Generate →':'Genera →';
+  const empty=document.getElementById('tips-empty');if(empty)empty.textContent=L==='en'?'Press "Generate" for 3 personalized tips.':'Premi "Genera" per 3 consigli personalizzati.';
+  updateTipsTimestamp();
+}
+
 // ══════════════════════════════════════════
 let csvParsed=[];
 
