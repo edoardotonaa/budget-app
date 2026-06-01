@@ -1093,6 +1093,12 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="setting-group">
+    <div class="setting-lbl" id="notif-setting-lbl">🔔 Notifiche push</div>
+    <button class="export-btn" id="notif-enable-btn" onclick="requestNotificationsFromSettings()">Attiva notifiche push</button>
+    <div class="setting-desc" id="notif-setting-desc">Sfida del giorno alle 9:00, reminder serale, recap lunedì</div>
+  </div>
+
+  <div class="setting-group">
     <div class="setting-lbl" style="color:var(--red)">⚠️ Pericoloso</div>
     <button class="export-btn" style="color:var(--red);border-color:rgba(248,113,113,.2)" onclick="resetAll()">🗑️ Cancella tutti i dati</button>
   </div>
@@ -2252,7 +2258,7 @@ function goNav(id){
   if(id==='p-annual')renderAnnual();
   if(id==='p-converter'){initConverter()}
   if(id==='p-chat'){initChat();initTipsCard()}
-  if(id==='p-challenges'){renderChallenges();renderDailyChallenge()}
+  if(id==='p-settings'){updateNotifBtn()}
   if(id==='p-dashboard'){renderDashboard()}
   if(id==='p-invest'){renderInvestments()}
   if(id==='p-widget'){initWidget()}
@@ -2735,7 +2741,9 @@ function checkSavingModeAlert(cat,importo){
 }
 
 // ── NOTIFICHE PUSH (OneSignal) ──
-async function requestNotifications(){
+async function requestNotificationsFromSettings(){
+  const btn=document.getElementById('notif-enable-btn');
+  btn.textContent='⏳...';btn.disabled=true;
   try{
     window.OneSignalDeferred=window.OneSignalDeferred||[];
     window.OneSignalDeferred.push(async function(OneSignal){
@@ -2744,13 +2752,38 @@ async function requestNotifications(){
         localStorage.setItem('notif_enabled','1');
         await OneSignal.User.addTag('app','cyrwall');
         await OneSignal.User.addTag('lang',currentLang);
-        scheduleEvening();
-        showAlert('🔔 Notifiche attivate!','green');
+        btn.textContent='✅ '+(currentLang==='en'?'Notifications enabled':'Notifiche attivate');
+        btn.style.color='var(--green)';btn.style.borderColor='rgba(74,222,128,.3)';
+        btn.disabled=false;
+        showAlert('🔔 '+(currentLang==='en'?'Notifications enabled!':'Notifiche attivate!'),'green');
       }else{
-        showAlert('⚠️ Permesso notifiche negato');
+        btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
+        btn.disabled=false;
+        showAlert('⚠️ '+(currentLang==='en'?'Permission denied':'Permesso negato'));
       }
     });
-  }catch(e){showAlert('⚠️ Errore: '+e.message)}
+  }catch(e){
+    btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
+    btn.disabled=false;
+    showAlert('⚠️ '+e.message);
+  }
+}
+
+function updateNotifBtn(){
+  const btn=document.getElementById('notif-enable-btn');
+  const lbl=document.getElementById('notif-setting-lbl');
+  const desc=document.getElementById('notif-setting-desc');
+  const L=currentLang;
+  if(!btn)return;
+  if(lbl)lbl.textContent='🔔 '+(L==='en'?'Push notifications':'Notifiche push');
+  if(desc)desc.textContent=L==='en'?'Challenge at 9am, evening reminder, Monday recap':'Sfida alle 9:00, reminder serale, recap lunedì';
+  if(localStorage.getItem('notif_enabled')){
+    btn.textContent='✅ '+(L==='en'?'Notifications enabled':'Notifiche attivate');
+    btn.style.color='var(--green)';btn.style.borderColor='rgba(74,222,128,.3)';
+  }else{
+    btn.textContent=L==='en'?'Enable push notifications':'Attiva notifiche push';
+    btn.style.color='';btn.style.borderColor='';
+  }
 }
 function scheduleEvening(){
   if(!localStorage.getItem('notif_enabled'))return;
