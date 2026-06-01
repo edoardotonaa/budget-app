@@ -2258,7 +2258,8 @@ function goNav(id){
   if(id==='p-annual')renderAnnual();
   if(id==='p-converter'){initConverter()}
   if(id==='p-chat'){initChat();initTipsCard()}
-  if(id==='p-settings'){updateNotifBtn()}
+  if(id==='p-challenges'){renderChallenges();renderDailyChallenge()}
+  if(id==='p-settings'){updateNotifBtn();renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click();initSoundsToggle()}
   if(id==='p-dashboard'){renderDashboard()}
   if(id==='p-invest'){renderInvestments()}
   if(id==='p-widget'){initWidget()}
@@ -2268,7 +2269,6 @@ function goNav(id){
   if(id==='p-wrapped'){initWrapped()}
   if(id==='p-salary'){renderSalary()}
   if(id==='p-whatif'){initWhatIf()}
-  if(id==='p-settings'){renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click();initSoundsToggle()}
   haptic('light');
 }
 
