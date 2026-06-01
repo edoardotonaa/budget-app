@@ -3759,49 +3759,39 @@ let supa=null;
 let supaUser=null;
 let supaReady=false;
 
-function initSupa(){
-  if(typeof supabase==='undefined')return null;
-  // Ricrea sempre un client fresco per evitare problemi di inizializzazione
-  if(!supa){
-    supa=supabase.createClient(SUPA_URL,SUPA_KEY,{
-      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
-    });
+
+function getSupa(){
+  if(!supa&&typeof supabase!=='undefined'){
+    supa=supabase.createClient(SUPA_URL,SUPA_KEY);
   }
   return supa;
 }
+function initSupa(){return getSupa();}
 
-// Inizializza subito al caricamento della pagina
 async function supaInit(){
-  const s=initSupa();if(!s)return;
+  let attempts=0;
+  while(typeof supabase==='undefined'&&attempts<20){
+    await new Promise(r=>setTimeout(r,100));
+    attempts++;
+  }
+  const s=getSupa();if(!s)return;
   try{
-    // Aspetta che la sessione sia pronta
     const {data:{session}}=await s.auth.getSession();
     if(session){
       supaUser=session.user;
       supaReady=true;
-    }
-    // Ascolta i cambiamenti di stato
-    s.auth.onAuthStateChange(async(event,session)=>{
-      if(event==='SIGNED_IN'&&session){
-        supaUser=session.user;
-        supaReady=true;
-        await loadSupaProfile();
-        await syncFromSupabase();
-        updateAvatarUI();
-        updHome();
-      }
-      if(event==='SIGNED_OUT'){
-        supaUser=null;
-        supaReady=false;
-      }
-    });
-    // Se c'è già una sessione carica i dati
-    if(supaUser){
       await loadSupaProfile();
       await syncFromSupabase();
       updateAvatarUI();
       updHome();
     }
+    s.auth.onAuthStateChange(async(event,session)=>{
+      if(event==='SIGNED_IN'&&session){
+        supaUser=session.user;supaReady=true;
+        await loadSupaProfile();await syncFromSupabase();updateAvatarUI();updHome();
+      }
+      if(event==='SIGNED_OUT'){supaUser=null;supaReady=false;}
+    });
   }catch(e){console.warn('Supabase:',e)}
 }
 
