@@ -520,6 +520,29 @@ select option{background:#222}
 .report-btn.share{background:var(--accent);color:#0f0f0f}
 .report-btn.close{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
 
+/* ── CSV IMPORT ── */
+#csv-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:flex-end;justify-content:center}
+#csv-modal.show{display:flex}
+.csv-box{background:var(--bg2);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px;max-height:85vh;display:flex;flex-direction:column}
+.csv-title{font-size:16px;font-weight:600;margin-bottom:4px}
+.csv-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.csv-preview{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;max-height:50vh}
+.csv-row{background:var(--bg3);border-radius:var(--rs);padding:10px 12px;display:flex;align-items:center;gap:10px}
+.csv-row-check{flex-shrink:0}
+.csv-row-info{flex:1;min-width:0}
+.csv-row-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csv-row-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.csv-row-amt{font-size:13px;font-weight:500;font-family:'DM Mono',monospace;flex-shrink:0}
+.csv-row-cat{font-size:11px;padding:2px 8px;border-radius:99px;border:.5px solid var(--border);color:var(--muted);cursor:pointer;flex-shrink:0}
+.csv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.csv-stat{background:var(--bg3);border-radius:var(--rs);padding:10px;text-align:center}
+.csv-stat-val{font-size:16px;font-weight:500;font-family:'DM Mono',monospace}
+.csv-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.csv-actions{display:flex;gap:10px}
+.csv-btn{flex:1;padding:13px;border-radius:var(--rs);border:none;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer}
+.csv-btn.import{background:var(--accent);color:#0f0f0f}
+.csv-btn.cancel{background:var(--bg3);color:var(--muted)}
+
 /* LIGHT */
 body.light{background:#f5f5f5;color:#111}
 body.light .page{background:#f5f5f5}
@@ -1028,6 +1051,13 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="setting-group">
+    <div class="setting-lbl">📥 Importa</div>
+    <button class="export-btn" onclick="document.getElementById('revolut-csv-input').click()" style="border-color:rgba(96,165,250,.25);color:var(--blue)">🏦 Importa da Revolut (CSV)</button>
+    <input type="file" id="revolut-csv-input" accept=".csv" style="display:none" onchange="parseRevolutCSV(this)"/>
+    <div class="setting-desc">Esporta il CSV da Revolut App → Profilo → Estratti conto → Esporta</div>
+  </div>
+
+  <div class="setting-group">
     <div class="setting-lbl">📤 Esporta</div>
     <button class="export-btn" onclick="exportCSV()">📥 Esporta CSV</button>
     <button class="export-btn" onclick="exportJSON()">📋 Esporta JSON (backup)</button>
@@ -1505,6 +1535,20 @@ body.light .share-box{background:#fff}
     <div class="report-actions">
       <button class="report-btn share" onclick="shareReport()">📤 Condividi</button>
       <button class="report-btn close" onclick="closeReport()">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL IMPORT CSV REVOLUT ══ -->
+<div id="csv-modal" onclick="if(event.target===this)closeCSVModal()">
+  <div class="csv-box">
+    <div class="csv-title">🏦 Importa da Revolut</div>
+    <div class="csv-sub" id="csv-sub">Anteprima transazioni trovate</div>
+    <div class="csv-stats" id="csv-stats"></div>
+    <div class="csv-preview" id="csv-preview"></div>
+    <div class="csv-actions">
+      <button class="csv-btn import" id="csv-import-btn" onclick="confirmCSVImport()">Importa →</button>
+      <button class="csv-btn cancel" onclick="closeCSVModal()">Annulla</button>
     </div>
   </div>
 </div>
@@ -4667,7 +4711,197 @@ function renderAccentPicker(){
 applyAccentColor(currentAccent);
 
 // ══════════════════════════════════════════
-// 📤 REPORT MENSILE
+// 🏦 IMPORTA CSV REVOLUT
+// ══════════════════════════════════════════
+let csvParsed=[];
+
+// Mappa categorie Revolut → Cyrwall
+const REVOLUT_CAT_MAP={
+  'Groceries':'Cibo & Ristoranti','Restaurants':'Cibo & Ristoranti','Food':'Cibo & Ristoranti',
+  'Shopping':'Shopping','Clothing':'Shopping','Electronics':'Shopping',
+  'Transport':'Trasporti','Taxi':'Trasporti','Public Transport':'Trasporti','Parking':'Trasporti',
+  'Health':'Salute','Pharmacy':'Salute','Medical':'Salute',
+  'Entertainment':'Svago','Hobbies':'Svago','Sport':'Svago',
+  'Travel':'Viaggi','Accommodation':'Viaggi','Flights':'Viaggi',
+  'Utilities':'Bollette','Bills':'Bollette','Subscriptions':'Abbonamenti',
+  'Education':'Istruzione','Services':'Altro','General':'Altro',
+  'Salary':'Stipendio','Income':'Stipendio','Transfers':'Altro',
+};
+
+function mapRevolutCategory(cat){
+  if(!cat)return 'Altro';
+  for(const[k,v]of Object.entries(REVOLUT_CAT_MAP)){
+    if(cat.toLowerCase().includes(k.toLowerCase()))return v;
+  }
+  return 'Altro';
+}
+
+function parseRevolutCSV(input){
+  const file=input.files[0];if(!file)return;
+  input.value=''; // reset so same file can be re-selected
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const text=e.target.result;
+      const lines=text.split('\n').filter(l=>l.trim());
+      if(!lines.length){showAlert('⚠️ File vuoto o non valido');return}
+
+      // Detect header row
+      const header=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+
+      // Revolut CSV columns: Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance
+      const dateCol=header.findIndex(h=>h.includes('completed')||h.includes('date'));
+      const descCol=header.findIndex(h=>h.includes('description'));
+      const amtCol=header.findIndex(h=>h.includes('amount'));
+      const typeCol=header.findIndex(h=>h==='type');
+      const stateCol=header.findIndex(h=>h==='state'||h==='status');
+      const catCol=header.findIndex(h=>h.includes('category'));
+
+      if(amtCol===-1||descCol===-1){
+        showAlert('⚠️ Formato CSV non riconosciuto. Assicurati di esportare da Revolut.');
+        return;
+      }
+
+      csvParsed=[];
+      for(let i=1;i<lines.length;i++){
+        const cols=parseCSVLine(lines[i]);
+        if(!cols||cols.length<3)continue;
+
+        // Skip pending or failed transactions
+        if(stateCol>-1){
+          const state=(cols[stateCol]||'').toLowerCase();
+          if(state!=='completed'&&state!=='')continue;
+        }
+
+        const rawAmt=parseFloat((cols[amtCol]||'0').replace(/[^0-9.\-]/g,''));
+        if(isNaN(rawAmt)||rawAmt===0)continue;
+
+        const desc=(cols[descCol]||'').replace(/"/g,'').trim();
+        const rawDate=(cols[dateCol]||'').replace(/"/g,'').trim();
+        const revolut_cat=(catCol>-1?(cols[catCol]||'').replace(/"/g,'').trim():'');
+        const txType=(typeCol>-1?(cols[typeCol]||'').replace(/"/g,'').trim():'');
+
+        // Parse date — Revolut uses YYYY-MM-DD HH:MM:SS
+        let dateStr='';
+        try{
+          const d=new Date(rawDate.split(' ')[0]);
+          if(!isNaN(d.getTime()))dateStr=d.toISOString().split('T')[0];
+        }catch(e){}
+        if(!dateStr)continue;
+
+        const importo=Math.abs(rawAmt);
+        const tipo=rawAmt>0?'entrata':'uscita';
+        const categoria=mapRevolutCategory(revolut_cat||txType||desc);
+        const mese=new Date(dateStr+'T12:00:00').toLocaleString('it-IT',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
+
+        csvParsed.push({
+          id:Date.now()+i,nome:desc||'Transazione',importo,tipo,
+          categoria,data:dateStr,mese,metodo:'Revolut',
+          conto:'Principale',cur:'EUR',tag:'',ricorrente:false,nota:'',
+          selected:true
+        });
+      }
+
+      if(!csvParsed.length){
+        showAlert('⚠️ Nessuna transazione valida trovata nel file');
+        return;
+      }
+
+      renderCSVPreview();
+      document.getElementById('csv-modal').classList.add('show');
+      haptic('light');
+    }catch(err){
+      showAlert('⚠️ Errore nel parsing: '+err.message);
+    }
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+function parseCSVLine(line){
+  // Gestisce virgole dentro le virgolette
+  const result=[];let current='';let inQuotes=false;
+  for(let i=0;i<line.length;i++){
+    if(line[i]==='"'){inQuotes=!inQuotes}
+    else if(line[i]===','&&!inQuotes){result.push(current.trim());current=''}
+    else{current+=line[i]}
+  }
+  result.push(current.trim());
+  return result;
+}
+
+function renderCSVPreview(){
+  const selected=csvParsed.filter(t=>t.selected);
+  const entrate=selected.filter(t=>t.tipo==='entrata');
+  const uscite=selected.filter(t=>t.tipo==='uscita');
+  const totE=entrate.reduce((s,t)=>s+t.importo,0);
+  const totU=uscite.reduce((s,t)=>s+t.importo,0);
+
+  document.getElementById('csv-sub').textContent=
+    `${csvParsed.length} transazioni trovate · ${selected.length} selezionate`;
+
+  document.getElementById('csv-stats').innerHTML=`
+    <div class="csv-stat"><div class="csv-stat-val" style="color:var(--accent)">+${fmt(totE)}</div><div class="csv-stat-lbl">Entrate</div></div>
+    <div class="csv-stat"><div class="csv-stat-val" style="color:var(--red)">-${fmt(totU)}</div><div class="csv-stat-lbl">Uscite</div></div>
+    <div class="csv-stat"><div class="csv-stat-val">${csvParsed.length}</div><div class="csv-stat-lbl">Totale</div></div>`;
+
+  document.getElementById('csv-import-btn').textContent=
+    `Importa ${selected.length} transazioni →`;
+
+  document.getElementById('csv-preview').innerHTML=csvParsed.map((tx,i)=>`
+    <div class="csv-row" style="${!tx.selected?'opacity:.4':''}">
+      <input type="checkbox" class="csv-row-check" ${tx.selected?'checked':''} onchange="csvToggle(${i},this.checked)"/>
+      <div class="csv-row-info">
+        <div class="csv-row-name">${tx.nome}</div>
+        <div class="csv-row-meta">${tx.data} · <span class="csv-row-cat" onclick="csvCycleCategory(${i})">${tx.categoria}</span></div>
+      </div>
+      <div class="csv-row-amt" style="color:${tx.tipo==='entrata'?'var(--accent)':'var(--red)'}">
+        ${tx.tipo==='entrata'?'+':'-'}${fmt(tx.importo)}
+      </div>
+    </div>`).join('');
+}
+
+function csvToggle(i,checked){
+  csvParsed[i].selected=checked;
+  renderCSVPreview();
+}
+
+const ALL_CATS=['Cibo & Ristoranti','Shopping','Trasporti','Casa','Salute','Svago','Istruzione','Viaggi','Stipendio','Abbonamenti','Bollette','Altro'];
+function csvCycleCategory(i){
+  const idx=ALL_CATS.indexOf(csvParsed[i].categoria);
+  csvParsed[i].categoria=ALL_CATS[(idx+1)%ALL_CATS.length];
+  renderCSVPreview();
+}
+
+async function confirmCSVImport(){
+  const toImport=csvParsed.filter(t=>t.selected);
+  if(!toImport.length){showAlert('⚠️ Nessuna transazione selezionata');return}
+  const btn=document.getElementById('csv-import-btn');
+  btn.textContent='⏳ Importazione...';btn.disabled=true;
+
+  let ok=0;
+  for(const tx of toImport){
+    // Evita duplicati — controlla se esiste già stessa data+nome+importo
+    const exists=txs.some(t=>t.data===tx.data&&t.nome===tx.nome&&t.importo===tx.importo);
+    if(exists)continue;
+    txs.unshift({...tx,id:Date.now()+Math.random()});
+    ok++;
+  }
+  save();
+  if(supaUser){
+    for(const tx of toImport){await pushTxToSupabase(tx)}
+  }
+  closeCSVModal();
+  updHome();
+  const msg='✅ Importate '+ok+' transazioni!'+(ok<toImport.length?' ('+(toImport.length-ok)+' duplicate saltate)':'');
+  showAlert(msg,'green');
+  playSound('success');haptic('medium');
+  goNav('p-dati');
+}
+
+function closeCSVModal(){
+  document.getElementById('csv-modal').classList.remove('show');
+  csvParsed=[];
+}
 // ══════════════════════════════════════════
 function generateMonthReport(){
   const mc=getMC(),mp=getMP();
@@ -4706,12 +4940,9 @@ function generateMonthReport(){
   }else{vsEl.textContent='—';vsEl.style.color='rgba(255,255,255,.4)'}
 
   // Top categorie
-  document.getElementById('report-cats').innerHTML=topCats.map(([c,v],i)=>`
-    <div class="report-cat-item">
-      <div class="report-cat-name">${c}</div>
-      <div class="report-cat-bar-wrap"><div class="report-cat-bar" style="width:${Math.round(v/maxCat*100)}%;background:${COLORS[i]}"></div></div>
-      <div class="report-cat-val">${fmt(v)}</div>
-    </div>`).join('');
+  document.getElementById('report-cats').innerHTML=topCats.map(function([c,v],i){
+    return '<div class="report-cat-item"><div class="report-cat-name">'+c+'</div><div class="report-cat-bar-wrap"><div class="report-cat-bar" style="width:'+Math.round(v/maxCat*100)+'%;background:'+COLORS[i]+'"></div></div><div class="report-cat-val">'+fmt(v)+'</div></div>';
+  }).join('');
 
   document.getElementById('report-quote').textContent=quote||'';
   document.getElementById('report-modal').classList.add('show');
