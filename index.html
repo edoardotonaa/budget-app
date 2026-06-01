@@ -2625,7 +2625,23 @@ function exportCSV(){
 function exportJSON(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({txs,goals,accounts},null,2)],{type:'application/json'}));a.download='budget-backup.json';a.click();
 }
-function resetAll(){if(!confirm('Sei sicuro? Tutti i dati verranno cancellati.'))return;txs=[];goals=[];save();saveGoals();updHome();showAlert('🗑️ Dati cancellati');haptic('heavy')}
+async function resetAll(){
+  const L=currentLang;
+  const msg=L==='en'?'Are you sure? ALL data will be deleted on ALL devices.':'Sei sicuro? TUTTI i dati verranno cancellati su TUTTI i dispositivi.';
+  if(!confirm(msg))return;
+  // Cancella locale
+  txs=[];goals=[];save();saveGoals();updHome();
+  // Cancella su Supabase
+  if(supaUser){
+    const s=initSupa();
+    if(s){
+      await s.from('transactions').delete().eq('user_id',supaUser.id);
+      await s.from('goals').delete().eq('user_id',supaUser.id);
+    }
+  }
+  showAlert(L==='en'?'🗑️ All data deleted on all devices':'🗑️ Dati cancellati su tutti i dispositivi','green');
+  haptic('heavy');
+}
 
 
 // ── ONBOARDING ──
