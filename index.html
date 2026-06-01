@@ -1124,7 +1124,28 @@ body.light .share-box{background:#fff}
     <div style="background:var(--bg3);border-radius:99px;height:6px;overflow:hidden"><div id="level-bar" style="height:100%;border-radius:99px;background:var(--green);transition:width .5s"></div></div>
   </div>
   <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Badge</div>
-  <div id="badges-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-bottom:20px"></div>
+  <div id="badges-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px"></div>
+
+  <!-- CLASSIFICA GLOBALE -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em" id="leaderboard-title">🏆 Classifica globale</div>
+    <div style="display:flex;gap:6px">
+      <button id="lb-tab-save" onclick="setLbTab('save')" style="padding:4px 10px;border-radius:99px;border:none;background:var(--accent);color:#0f0f0f;font-size:11px;font-weight:500;font-family:inherit;cursor:pointer">% Risparmio</button>
+      <button id="lb-tab-saldo" onclick="setLbTab('saldo')" style="padding:4px 10px;border-radius:99px;border:.5px solid var(--border);background:none;color:var(--muted);font-size:11px;font-family:inherit;cursor:pointer">Saldo</button>
+    </div>
+  </div>
+
+  <div id="my-rank-card" style="display:none;background:linear-gradient(135deg,rgba(74,222,128,.1),rgba(74,222,128,.03));border:.5px solid rgba(74,222,128,.2);border-radius:var(--rs);padding:12px;margin-bottom:10px;font-size:13px">
+    <span id="my-rank-text"></span>
+  </div>
+
+  <div id="leaderboard-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:20px">
+    <div style="font-size:13px;color:var(--muted);text-align:center;padding:20px" id="lb-loading">Caricamento...</div>
+  </div>
+
+  <button onclick="publishToLeaderboard()" id="lb-publish-btn" style="width:100%;padding:12px;border-radius:var(--rs);border:.5px solid rgba(74,222,128,.3);background:rgba(74,222,128,.06);color:var(--accent);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;margin-bottom:20px">
+    📤 Pubblica il mio risultato
+  </button>
 </div>
 
 <!-- ANNUAL VIEW PAGE -->
@@ -2225,7 +2246,7 @@ function goNav(id){
   if(id==='p-dati'){buildMonthFilter();renderDati();drawCal()}
   if(id==='p-home')updHome();
   if(id==='p-goals')renderGoals();
-  if(id==='p-game')renderGame();
+  if(id==='p-game'){renderGame();loadLeaderboard();}
   if(id==='p-annual')renderAnnual();
   if(id==='p-converter'){initConverter()}
   if(id==='p-chat'){initChat();initTipsCard()}
@@ -5018,7 +5039,89 @@ function showDashTooltip(e,text){
 function hideDashTooltip(){document.getElementById('dash-tooltip').style.display='none'}
 
 // ══════════════════════════════════════════
-// 💡 CONSIGLI AI SETTIMANALI
+// 🏆 CLASSIFICA GLOBALE
+// ══════════════════════════════════════════
+let lbTab='save';
+function setLbTab(tab){
+  lbTab=tab;
+  const L=currentLang;
+  document.getElementById('lb-tab-save').style.background=tab==='save'?'var(--accent)':'none';
+  document.getElementById('lb-tab-save').style.color=tab==='save'?'#0f0f0f':'var(--muted)';
+  document.getElementById('lb-tab-save').style.border=tab==='save'?'none':'.5px solid var(--border)';
+  document.getElementById('lb-tab-saldo').style.background=tab==='saldo'?'var(--accent)':'none';
+  document.getElementById('lb-tab-saldo').style.color=tab==='saldo'?'#0f0f0f':'var(--muted)';
+  document.getElementById('lb-tab-saldo').style.border=tab==='saldo'?'none':'.5px solid var(--border)';
+  loadLeaderboard();
+}
+
+async function loadLeaderboard(){
+  const s=initSupa();if(!s)return;
+  const el=document.getElementById('leaderboard-list');
+  el.innerHTML=`<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">${currentLang==='en'?'Loading...':'Caricamento...'}</div>`;
+  try{
+    const{data,error}=await s.from('leaderboard').select('*').eq('mese',getMC()).order(lbTab==='save'?'save_pct':'saldo',{ascending:false}).limit(20);
+    if(error||!data||!data.length){
+      el.innerHTML=`<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">${currentLang==='en'?'No data yet. Be the first to publish!':'Nessun dato ancora. Sii il primo a pubblicare!'}</div>`;
+      return;
+    }
+    const MEDALS=['🥇','🥈','🥉'];
+    el.innerHTML=data.map((u,i)=>{
+      const isMe=supaUser&&u.user_id===supaUser.id;
+      const medal=i<3?MEDALS[i]:`${i+1}.`;
+      const val=lbTab==='save'?`${u.save_pct}% risparmio`:`${fmt(u.saldo)} saldo`;
+      return`<div style="background:${isMe?'rgba(74,222,128,.08)':'var(--bg2)'};border:.5px solid ${isMe?'rgba(74,222,128,.25)':'var(--border)'};border-radius:var(--rs);padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:18px;width:28px;text-align:center">${medal}</div>
+        <div style="font-size:22px">${u.avatar||'🙂'}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${u.name||'Utente'}${isMe?' <span style="font-size:11px;color:var(--accent)">(tu)</span>':''}</div>
+          <div style="font-size:12px;color:var(--muted)">${val}</div>
+        </div>
+        ${i===0?'<div style="font-size:20px">👑</div>':''}
+      </div>`;
+    }).join('');
+
+    // Mostra posizione utente corrente
+    if(supaUser){
+      const myIdx=data.findIndex(u=>u.user_id===supaUser.id);
+      const myCard=document.getElementById('my-rank-card');
+      const myText=document.getElementById('my-rank-text');
+      if(myIdx>-1){
+        myCard.style.display='block';
+        myText.innerHTML=`🎯 ${currentLang==='en'?'Your rank:':'La tua posizione:'} <strong>#${myIdx+1}</strong> ${currentLang==='en'?'of':'di'} ${data.length}`;
+      }else{
+        myCard.style.display='none';
+      }
+    }
+  }catch(e){
+    el.innerHTML=`<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">${currentLang==='en'?'Error loading leaderboard':'Errore nel caricamento'}</div>`;
+  }
+}
+
+async function publishToLeaderboard(){
+  if(!supaUser){showAlert(currentLang==='en'?'⚠️ Login required':'⚠️ Devi essere loggato');return}
+  const s=initSupa();if(!s)return;
+  const btn=document.getElementById('lb-publish-btn');
+  btn.textContent='⏳...';btn.disabled=true;
+  const mc=getMC();
+  const txM=txs.filter(t=>t.mese===mc);
+  const totE=txM.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const totU=txM.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const saldo=totE-totU;
+  const save_pct=totE>0?Math.round((saldo/totE)*100):0;
+  const{error}=await s.from('leaderboard').upsert({
+    user_id:supaUser.id,
+    name:userProfile.name||supaUser.email?.split('@')[0]||'Utente',
+    avatar:userProfile.avatar||'🙂',
+    save_pct,saldo,mese:mc,
+    updated_at:new Date().toISOString()
+  });
+  btn.textContent='📤 '+(currentLang==='en'?'Publish my result':'Pubblica il mio risultato');
+  btn.disabled=false;
+  if(error){showAlert('⚠️ '+error.message);return}
+  showAlert(currentLang==='en'?'✅ Published!':'✅ Pubblicato!','green');
+  haptic('medium');playSound('success');
+  loadLeaderboard();
+}
 // ══════════════════════════════════════════
 async function generateWeeklyTips(){
   const btn=document.getElementById('tips-btn');
