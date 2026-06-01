@@ -966,7 +966,12 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="setting-group">
-    <div class="setting-group"><div class="setting-lbl">🟡 Modalità risparmio</div><button class="export-btn" onclick="toggleSavingMode()" id="saving-btn">Attiva / Disattiva</button><div class="setting-desc">Ti avvisa quando stai spendendo troppo in una categoria</div></div>
+    <div class="setting-group"><div class="setting-lbl">☁️ Cloud sync</div>
+    <button class="export-btn" onclick="syncLocalToCloud()" id="sync-cloud-btn">⬆️ Carica dati locali su cloud</button>
+    <div class="setting-desc">Carica tutte le transazioni e goals salvati sul dispositivo su Supabase</div>
+  </div>
+
+  <div class="setting-group"><div class="setting-lbl">🟡 Modalità risparmio</div><button class="export-btn" onclick="toggleSavingMode()" id="saving-btn">Attiva / Disattiva</button><div class="setting-desc">Ti avvisa quando stai spendendo troppo in una categoria</div></div>
     <div class="setting-lbl">🔊 Suoni</div>
     <div class="recurr-row" style="margin-bottom:8px"><span>Feedback sonoro</span><label class="toggle"><input type="checkbox" id="sounds-toggle" onchange="toggleSounds(this)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
     <div class="setting-desc" style="margin-bottom:12px">Tick e ding discreti per ogni azione</div>
@@ -3813,17 +3818,65 @@ async function loadSupaProfile(){
   }
 }
 
+async function syncLocalToCloud(){
+  if(!supaUser){showAlert('⚠️ Devi essere loggato');return}
+  const s=initSupa();if(!s){showAlert('⚠️ Connessione non disponibile');return}
+  const btn=document.getElementById('sync-cloud-btn');
+  btn.textContent='⏳ Caricamento...';btn.disabled=true;
+  try{
+    // Carica transazioni
+    let ok=0,fail=0;
+    for(const tx of txs){
+      const{error}=await s.from('transactions').upsert({
+        user_id:supaUser.id,nome:tx.nome,importo:tx.importo,tipo:tx.tipo,
+        categoria:tx.categoria,metodo:tx.metodo||'',data:tx.data,mese:tx.mese,
+        ricorrente:tx.ricorrente||false,tag:tx.tag||'',conto:tx.conto||'Principale',cur:tx.cur||'EUR'
+      });
+      if(error)fail++;else ok++;
+    }
+    // Carica goals
+    for(const g of goals){
+      await s.from('goals').upsert({
+        user_id:supaUser.id,nome:g.nome,target:g.target,saved:g.saved,monthly:g.monthly||0
+      });
+    }
+    // Carica profilo
+    await saveProfileToSupabase();
+    btn.textContent='⬆️ Carica dati locali su cloud';btn.disabled=false;
+    showAlert(`✅ Caricati ${ok} transazioni${fail>0?' ('+fail+' errori)':''}!`,'green');
+    playSound('success');
+  }catch(e){
+    btn.textContent='⬆️ Carica dati locali su cloud';btn.disabled=false;
+    showAlert('⚠️ Errore: '+e.message);
+  }
+}
+
 async function syncFromSupabase(){
   if(!supaUser)return;const s=initSupa();if(!s)return;
   const{data:txData,error:txErr}=await s.from('transactions').select('*').eq('user_id',supaUser.id).order('created_at',{ascending:false});
   if(txErr){console.warn('sync tx error:',txErr);return}
-  // Sovrascrivi sempre — anche se vuoto
-  txs=txData?txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR'})):[];
-  save();
+
+  if(txData&&txData.length>0){
+    // Cloud ha dati → usa quelli
+    txs=txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR'}));
+    save();
+  } else if(txs.length>0){
+    // Cloud vuoto ma locale ha dati → carica su cloud
+    for(const tx of txs){
+      await s.from('transactions').upsert({user_id:supaUser.id,nome:tx.nome,importo:tx.importo,tipo:tx.tipo,categoria:tx.categoria,metodo:tx.metodo||'',data:tx.data,mese:tx.mese,ricorrente:tx.ricorrente||false,tag:tx.tag||'',conto:tx.conto||'Principale',cur:tx.cur||'EUR'});
+    }
+  }
+
   const{data:gData,error:gErr}=await s.from('goals').select('*').eq('user_id',supaUser.id);
   if(!gErr){
-    goals=gData?gData.map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)})):[];
-    saveGoals();
+    if(gData&&gData.length>0){
+      goals=gData.map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
+      saveGoals();
+    } else if(goals.length>0){
+      for(const g of goals){
+        await s.from('goals').upsert({user_id:supaUser.id,nome:g.nome,target:g.target,saved:g.saved,monthly:g.monthly||0});
+      }
+    }
   }
 }
 
