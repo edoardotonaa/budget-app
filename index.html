@@ -3796,7 +3796,7 @@ async function supaInit(){
 }
 
 async function loadSupaProfile(){
-  if(!supaUser||!supaReady)return;const s=initSupa();if(!s)return;
+  if(!supaUser)return;const s=initSupa();if(!s)return;
   const{data,error}=await s.from('profiles').select('*').eq('id',supaUser.id).single();
   if(data){
     userProfile={name:data.name||supaUser.email?.split('@')[0]||'',email:supaUser.email||'',avatar:data.avatar||'🙂',since:data.since||new Date().toLocaleDateString('it-IT')};
@@ -3814,15 +3814,15 @@ async function loadSupaProfile(){
 }
 
 async function syncFromSupabase(){
-  if(!supaUser||!supaReady)return;const s=initSupa();if(!s)return;
-  const{data:txData}=await s.from('transactions').select('*').eq('user_id',supaUser.id).order('created_at',{ascending:false});
-  if(txData&&txData.length>0){
-    txs=txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR'}));
-    save();
-  }
-  const{data:gData}=await s.from('goals').select('*').eq('user_id',supaUser.id);
-  if(gData&&gData.length>0){
-    goals=gData.map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)}));
+  if(!supaUser)return;const s=initSupa();if(!s)return;
+  const{data:txData,error:txErr}=await s.from('transactions').select('*').eq('user_id',supaUser.id).order('created_at',{ascending:false});
+  if(txErr){console.warn('sync tx error:',txErr);return}
+  // Sovrascrivi sempre — anche se vuoto
+  txs=txData?txData.map(t=>({id:t.id,nome:t.nome,importo:parseFloat(t.importo),tipo:t.tipo,categoria:t.categoria||'Altro',metodo:t.metodo||'',data:t.data||'',mese:t.mese||'',ricorrente:t.ricorrente||false,tag:t.tag||'',conto:t.conto||'Principale',cur:t.cur||'EUR'})):[];
+  save();
+  const{data:gData,error:gErr}=await s.from('goals').select('*').eq('user_id',supaUser.id);
+  if(!gErr){
+    goals=gData?gData.map(g=>({supa_id:g.id,nome:g.nome,target:parseFloat(g.target),saved:parseFloat(g.saved),monthly:parseFloat(g.monthly||0)})):[];
     saveGoals();
   }
 }
@@ -3884,7 +3884,10 @@ async function doLogin(){
   const{data,error}=await s.auth.signInWithPassword({email,password:pw});
   btn.textContent='Accedi →';btn.disabled=false;
   if(error){showAlert('⚠️ '+error.message);playSound('error');return}
+  // Pulisci dati del vecchio account
+  clearLocalData();
   supaUser=data.user;
+  supaReady=true;
   await loadSupaProfile();
   await syncFromSupabase();
   localStorage.setItem('auth_done','1');
@@ -3894,6 +3897,17 @@ async function doLogin(){
   else{checkPin();if(!pinSet)initApp()}
   showAlert('👋 Bentornato, '+(userProfile.name||email)+'!','green');
   playSound('success');
+}
+
+function clearLocalData(){
+  // Rimuove solo i dati dell'app, non auth e impostazioni
+  localStorage.removeItem('btx');
+  localStorage.removeItem('bgoals');
+  localStorage.removeItem('bprofile');
+  localStorage.removeItem('binv');
+  localStorage.removeItem('bch');
+  localStorage.removeItem('btx_countries');
+  txs=[];goals=[];investments=[];activeChallenges=[];
 }
 
 async function doSignup(){
