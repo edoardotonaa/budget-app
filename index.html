@@ -3766,16 +3766,29 @@ let supaUser=null;
 
 async function supaInit(){
   const s=initSupa();if(!s)return;
-  const {data:{session}}=await s.auth.getSession();
-  if(session){
+  try{
+    const {data:{session},error}=await s.auth.getSession();
+    if(error||!session){
+      // Nessuna sessione — aspetta auth state change
+      s.auth.onAuthStateChange(async(event,session)=>{
+        if(event==='SIGNED_IN'&&session){
+          supaUser=session.user;
+          await loadSupaProfile();
+          await syncFromSupabase();
+          updHome();
+        }
+        if(event==='SIGNED_OUT'){supaUser=null}
+      });
+      return;
+    }
     supaUser=session.user;
     await loadSupaProfile();
     await syncFromSupabase();
-  }
-  s.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session){supaUser=session.user;await loadSupaProfile();await syncFromSupabase()}
-    if(event==='SIGNED_OUT'){supaUser=null}
-  });
+    s.auth.onAuthStateChange(async(event,session)=>{
+      if(event==='SIGNED_IN'&&session){supaUser=session.user;await loadSupaProfile();await syncFromSupabase()}
+      if(event==='SIGNED_OUT'){supaUser=null}
+    });
+  }catch(e){console.warn('Supabase init error:',e)}
 }
 
 async function loadSupaProfile(){
