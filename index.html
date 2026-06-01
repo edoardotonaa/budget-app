@@ -2745,33 +2745,32 @@ function checkSavingModeAlert(cat,importo){
 // ── NOTIFICHE PUSH (OneSignal) ──
 async function requestNotificationsFromSettings(){
   const btn=document.getElementById('notif-enable-btn');
+  const L=currentLang;
   btn.textContent='⏳...';btn.disabled=true;
   try{
-    // Prova prima direttamente, poi via deferred
-    const OS=window._OS||window.OneSignal;
-    if(OS&&OS.Notifications){
-      const permission=await OS.Notifications.requestPermission();
-      if(permission){
-        localStorage.setItem('notif_enabled','1');
-        try{await OS.User.addTag('app','cyrwall');await OS.User.addTag('lang',currentLang);}catch(e){}
-        btn.textContent='✅ '+(currentLang==='en'?'Notifications enabled':'Notifiche attivate');
-        btn.style.color='var(--green)';btn.style.borderColor='rgba(74,222,128,.3)';
-        btn.disabled=false;
-        showAlert('🔔 '+(currentLang==='en'?'Notifications enabled!':'Notifiche attivate!'),'green');
-      }else{
-        btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
-        btn.style.color='';btn.style.borderColor='';
-        btn.disabled=false;
-        showAlert('⚠️ '+(currentLang==='en'?'Permission denied — check iOS Settings':'Permesso negato — controlla Impostazioni iOS'));
-      }
-    }else{
-      // OneSignal non ancora pronto
-      btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
-      btn.disabled=false;
-      showAlert('⚠️ '+(currentLang==='en'?'Reload the app and try again':'Ricarica l\'app e riprova'));
-    }
+    await new Promise((resolve,reject)=>{
+      window.OneSignalDeferred=window.OneSignalDeferred||[];
+      window.OneSignalDeferred.push(async function(OneSignal){
+        try{
+          const permission=await OneSignal.Notifications.requestPermission();
+          if(permission){
+            localStorage.setItem('notif_enabled','1');
+            try{await OneSignal.User.addTag('app','cyrwall');await OneSignal.User.addTag('lang',currentLang);}catch(e){}
+            btn.textContent='✅ '+(L==='en'?'Notifications enabled':'Notifiche attivate');
+            btn.style.color='var(--green)';btn.style.borderColor='rgba(74,222,128,.3)';
+            showAlert('🔔 '+(L==='en'?'Notifications enabled!':'Notifiche attivate!'),'green');
+          }else{
+            btn.textContent=L==='en'?'Enable push notifications':'Attiva notifiche push';
+            btn.style.color='';btn.style.borderColor='';
+            showAlert('⚠️ '+(L==='en'?'Permission denied':'Permesso negato'));
+          }
+          btn.disabled=false;
+          resolve();
+        }catch(e){reject(e)}
+      });
+    });
   }catch(e){
-    btn.textContent=currentLang==='en'?'Enable push notifications':'Attiva notifiche push';
+    btn.textContent=L==='en'?'Enable push notifications':'Attiva notifiche push';
     btn.disabled=false;
     showAlert('⚠️ '+e.message);
   }
@@ -5112,13 +5111,12 @@ function checkAutoBackup(){
   const lastBackup=localStorage.getItem('last_backup');
   const today=now.toISOString().split('T')[0];
   if(!isMonday||lastBackup===today)return;
-  // È lunedì e non abbiamo ancora fatto il backup oggi
   localStorage.setItem('last_backup',today);
+  // Mostra banner invece di scaricare automaticamente
   setTimeout(()=>{
     const L=currentLang;
-    showAlert(L==='en'?'💾 Weekly backup downloaded!':'💾 Backup settimanale scaricato!','green');
-    doBackupDownload();
-  },3000); // aspetta 3 secondi dopo l'avvio
+    showAlert(L==='en'?'💾 Weekly backup ready — check Settings to download':'💾 Backup settimanale pronto — vai in Impostazioni per scaricarlo','green');
+  },5000);
 }
 
 function doBackupDownload(){
