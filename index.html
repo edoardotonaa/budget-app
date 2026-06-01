@@ -738,9 +738,16 @@ body.light .share-box{background:#fff}
 <div id="splash">
   <div class="splash-logo">💰</div>
   <div class="splash-name">Cyrwall</div>
-  <div class="splash-sub">Your personal finance tracker</div>
+  <div class="splash-sub" id="splash-sub">Il tuo tracker finanziario personale</div>
   <div class="splash-bar"><div class="splash-bar-fill"></div></div>
 </div>
+<script>
+  (function(){
+    const lang=localStorage.getItem('lang')||'it';
+    const sub=document.getElementById('splash-sub');
+    if(sub)sub.textContent=lang==='en'?'Your personal finance tracker':'Il tuo tracker finanziario personale';
+  })();
+</script>
 
 <!-- ONBOARDING -->
 <div id="onboarding">
