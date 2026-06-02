@@ -1588,6 +1588,7 @@ body.light .share-box{background:#fff}
       </div>
       <div style="display:flex;gap:10px;margin-top:4px">
         <button onclick="saveEdit()" style="flex:1;padding:13px;border-radius:var(--rs);border:none;background:var(--green);color:#0f0f0f;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer" id="edit-save-btn">Salva</button>
+        <button onclick="shareTx()" style="padding:13px 16px;border-radius:var(--rs);border:.5px solid rgba(96,165,250,.2);background:rgba(96,165,250,.06);color:var(--blue);font-size:15px;font-family:inherit;cursor:pointer" id="edit-share-btn">📤</button>
         <button onclick="deleteFromEdit()" style="padding:13px 16px;border-radius:var(--rs);border:.5px solid rgba(248,113,113,.2);background:rgba(248,113,113,.06);color:var(--red);font-size:15px;font-family:inherit;cursor:pointer" id="edit-delete-btn">🗑️</button>
       </div>
     </div>
@@ -5676,6 +5677,34 @@ function openEditModal(id){
   modal.style.display='flex';
   requestAnimationFrame(()=>modal.style.opacity='1');
   haptic('light');playSound('click');
+}
+
+async function shareTx(){
+  if(!editingTxId)return;
+  const tx=txs.find(t=>t.id===editingTxId);if(!tx)return;
+  const L=currentLang;
+  const tipo=tx.tipo==='uscita'?'💸':'💰';
+  const segno=tx.tipo==='uscita'?'-':'+';
+  const emoji={
+    'Cibo & Ristoranti':'🍕','Shopping':'🛍️','Trasporti':'🚗','Casa':'🏠',
+    'Salute':'💊','Svago':'🎬','Istruzione':'📚','Viaggi':'✈️',
+    'Stipendio':'💼','Abbonamenti':'📺','Bollette':'💡','Altro':'💳'
+  }[tx.categoria]||'💳';
+
+  const text=L==='en'
+    ?`${tipo} ${emoji} ${tx.nome}\n${segno}${fmt(tx.importo)} · ${tx.categoria}\n${tx.data}\n\nTracked with Cyrwall 💰\ncyrwall.com`
+    :`${tipo} ${emoji} ${tx.nome}\n${segno}${fmt(tx.importo)} · ${tx.categoria}\n${tx.data}\n\nTenuto traccia con Cyrwall 💰\ncyrwall.com`;
+
+  try{
+    if(navigator.share){
+      await navigator.share({text,title:'Cyrwall'});
+    }else{
+      await navigator.clipboard.writeText(text);
+      showAlert(L==='en'?'📋 Copied!':'📋 Copiato!','green');
+    }
+  }catch(e){
+    // User cancelled share — no error needed
+  }
 }
 
 function closeEditModal(){
