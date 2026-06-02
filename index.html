@@ -1310,6 +1310,31 @@ body.light .share-box{background:#fff}
     </div>
     <button id="ch-create-btn" class="goal-add-btn" onclick="createCustomChallenge()" style="background:var(--purple)">Crea sfida</button>
   </div>
+
+  <!-- SFIDA 1v1 -->
+  <div style="background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(251,191,36,.03));border:.5px solid rgba(251,191,36,.25);border-radius:var(--r);padding:18px;margin-top:4px">
+    <div style="font-size:11px;color:var(--yellow);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:8px" id="v1-label">⚔️ Sfida 1v1</div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:6px" id="v1-title">Sfida un amico</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px" id="v1-desc">Chi spende meno questa settimana? Manda il codice invito al tuo amico.</div>
+    <div id="v1-active" style="display:none"></div>
+    <div id="v1-pending" style="display:none"></div>
+    <div id="v1-create">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <select id="v1-duration" style="flex:1;padding:10px;border-radius:var(--rs);border:.5px solid var(--border);background:var(--bg3);color:#f0f0f0;font-family:inherit;font-size:13px">
+          <option value="7">7 giorni</option>
+          <option value="14">14 giorni</option>
+          <option value="30">30 giorni</option>
+        </select>
+        <button onclick="create1v1()" style="padding:10px 16px;border-radius:var(--rs);border:none;background:var(--yellow);color:#0f0f0f;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer" id="v1-create-btn">⚔️ Crea sfida</button>
+      </div>
+      <div style="height:.5px;background:var(--border);margin:12px 0"></div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px" id="v1-join-label">Hai un codice invito?</div>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="v1-code-input" placeholder="Inserisci codice..." style="flex:1;padding:10px;border-radius:var(--rs);border:.5px solid var(--border);background:var(--bg3);color:#f0f0f0;font-family:inherit;font-size:13px;text-transform:uppercase"/>
+        <button onclick="join1v1()" style="padding:10px 14px;border-radius:var(--rs);border:none;background:var(--purple);color:#fff;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer">Unisciti</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -2277,7 +2302,7 @@ function goNav(id){
   if(id==='p-annual')renderAnnual();
   if(id==='p-converter'){initConverter()}
   if(id==='p-chat'){initChat();initTipsCard()}
-  if(id==='p-challenges'){renderChallenges();renderDailyChallenge()}
+  if(id==='p-challenges'){renderChallenges();renderDailyChallenge();load1v1()}
   if(id==='p-settings'){updateNotifBtn();renderSettingsAccounts();if(budgetMensile)document.getElementById('budget-input').value=budgetMensile;document.getElementById('cur-'+defaultCur).click();initSoundsToggle()}
   if(id==='p-dashboard'){renderDashboard()}
   if(id==='p-invest'){renderInvestments()}
@@ -5119,7 +5144,151 @@ function showDashTooltip(e,text){
 function hideDashTooltip(){document.getElementById('dash-tooltip').style.display='none'}
 
 // ══════════════════════════════════════════
-// 💾 BACKUP AUTOMATICO SETTIMANALE
+// ⚔️ SFIDA 1v1
+// ══════════════════════════════════════════
+function gen1v1Code(){
+  return Math.random().toString(36).substring(2,8).toUpperCase();
+}
+
+async function create1v1(){
+  if(!supaUser){showAlert('⚠️ '+(currentLang==='en'?'Login required':'Devi essere loggato'));return}
+  const s=initSupa();if(!s)return;
+  const btn=document.getElementById('v1-create-btn');
+  btn.textContent='⏳...';btn.disabled=true;
+  const days=parseInt(document.getElementById('v1-duration').value);
+  const start=new Date().toISOString().split('T')[0];
+  const end=new Date(Date.now()+days*86400000).toISOString().split('T')[0];
+  const code=gen1v1Code();
+  const{data,error}=await s.from('challenges_1v1').insert({
+    challenger_id:supaUser.id,
+    challenger_name:userProfile.name||'Utente',
+    challenger_avatar:userProfile.avatar||'🙂',
+    start_date:start,
+    end_date:end,
+    invite_code:code,
+    status:'pending'
+  }).select().single();
+  btn.textContent='⚔️ '+(currentLang==='en'?'Create challenge':'Crea sfida');btn.disabled=false;
+  if(error){showAlert('⚠️ '+error.message);return}
+  // Mostra codice invito
+  show1v1Invite(code,days);
+  load1v1();
+  haptic('medium');playSound('save');
+}
+
+function show1v1Invite(code,days){
+  const L=currentLang;
+  const msg=L==='en'
+    ?`⚔️ I challenge you on Cyrwall!\n\nCode: ${code}\n${days}-day challenge: who spends less?\n\nJoin at cyrwall.com`
+    :`⚔️ Ti sfido su Cyrwall!\n\nCodice: ${code}\nSfida ${days} giorni: chi spende meno?\n\nUnisciti su cyrwall.com`;
+  if(navigator.share){
+    navigator.share({text:msg,title:'Cyrwall 1v1'}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(msg);
+    showAlert(L==='en'?'📋 Invite copied! Share it with your friend.':'📋 Invito copiato! Mandalo al tuo amico.','green');
+  }
+}
+
+async function join1v1(){
+  if(!supaUser){showAlert('⚠️ '+(currentLang==='en'?'Login required':'Devi essere loggato'));return}
+  const code=document.getElementById('v1-code-input').value.trim().toUpperCase();
+  if(!code){showAlert('⚠️ '+(currentLang==='en'?'Enter a code':'Inserisci il codice'));return}
+  const s=initSupa();if(!s)return;
+  const{data,error}=await s.from('challenges_1v1').select('*').eq('invite_code',code).eq('status','pending').single();
+  if(error||!data){showAlert('⚠️ '+(currentLang==='en'?'Code not found or already used':'Codice non trovato o già usato'));return}
+  if(data.challenger_id===supaUser.id){showAlert('⚠️ '+(currentLang==='en'?'You can\'t join your own challenge':'Non puoi unirti alla tua stessa sfida'));return}
+  const{error:err}=await s.from('challenges_1v1').update({
+    opponent_id:supaUser.id,
+    opponent_name:userProfile.name||'Utente',
+    opponent_avatar:userProfile.avatar||'🙂',
+    status:'active'
+  }).eq('id',data.id);
+  if(err){showAlert('⚠️ '+err.message);return}
+  document.getElementById('v1-code-input').value='';
+  showAlert('🎉 '+(currentLang==='en'?'Challenge accepted! Good luck!':'Sfida accettata! In bocca al lupo!'),'green');
+  haptic('heavy');playSound('success');
+  load1v1();
+}
+
+async function load1v1(){
+  if(!supaUser)return;
+  const s=initSupa();if(!s)return;
+  const{data}=await s.from('challenges_1v1').select('*').or(`challenger_id.eq.${supaUser.id},opponent_id.eq.${supaUser.id}`).neq('status','completed').order('created_at',{ascending:false}).limit(5);
+  if(!data||!data.length){
+    document.getElementById('v1-active').style.display='none';
+    document.getElementById('v1-pending').style.display='none';
+    document.getElementById('v1-create').style.display='block';
+    return;
+  }
+  // Aggiorna le spese dell'utente corrente nelle sfide attive
+  for(const ch of data.filter(c=>c.status==='active')){
+    const isChallenger=ch.challenger_id===supaUser.id;
+    const spent=calcSpentInPeriod(ch.start_date,ch.end_date);
+    const field=isChallenger?'challenger_spent':'opponent_spent';
+    await s.from('challenges_1v1').update({[field]:spent}).eq('id',ch.id);
+  }
+  // Ricarica dopo aggiornamento
+  const{data:fresh}=await s.from('challenges_1v1').select('*').or(`challenger_id.eq.${supaUser.id},opponent_id.eq.${supaUser.id}`).neq('status','completed').order('created_at',{ascending:false}).limit(5);
+  render1v1List(fresh||data);
+}
+
+function calcSpentInPeriod(start,end){
+  return txs.filter(t=>t.tipo==='uscita'&&t.data>=start&&t.data<=end).reduce((s,t)=>s+t.importo,0);
+}
+
+function render1v1List(challenges){
+  const L=currentLang;
+  const active=challenges.filter(c=>c.status==='active');
+  const pending=challenges.filter(c=>c.status==='pending');
+  const activeEl=document.getElementById('v1-active');
+  const pendingEl=document.getElementById('v1-pending');
+
+  if(active.length){
+    activeEl.style.display='block';
+    activeEl.innerHTML=active.map(ch=>{
+      const isChallenger=ch.challenger_id===supaUser.id;
+      const mySpent=isChallenger?ch.challenger_spent:ch.opponent_spent;
+      const oppSpent=isChallenger?ch.opponent_spent:ch.challenger_spent;
+      const oppName=isChallenger?ch.opponent_name:ch.challenger_name;
+      const oppAvatar=isChallenger?ch.opponent_avatar:ch.challenger_avatar;
+      const winning=mySpent<=oppSpent;
+      const daysLeft=Math.max(0,Math.ceil((new Date(ch.end_date)-new Date())/(1000*60*60*24)));
+      return`<div style="background:var(--bg2);border-radius:var(--rs);padding:12px;margin-bottom:8px;border:.5px solid ${winning?'rgba(74,222,128,.2)':'rgba(248,113,113,.2)'}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--muted)">${L==='en'?`${daysLeft} days left`:`${daysLeft} giorni rimasti`} · ${ch.end_date}</div>
+          <div style="font-size:11px;font-weight:500;color:${winning?'var(--green)':'var(--red)'}">${winning?(L==='en'?'🏆 Winning':'🏆 In vantaggio'):(L==='en'?'📉 Losing':'📉 Indietro')}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="text-align:center;flex:1">
+            <div style="font-size:22px">🙂</div>
+            <div style="font-size:12px;font-weight:500">${L==='en'?'You':'Tu'}</div>
+            <div style="font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:${mySpent<=oppSpent?'var(--green)':'var(--red)'}">${fmt(mySpent)}</div>
+          </div>
+          <div style="font-size:20px">⚔️</div>
+          <div style="text-align:center;flex:1">
+            <div style="font-size:22px">${oppAvatar}</div>
+            <div style="font-size:12px;font-weight:500">${oppName||'?'}</div>
+            <div style="font-size:16px;font-weight:500;font-family:'DM Mono',monospace;color:${oppSpent<=mySpent?'var(--green)':'var(--red)'}">${oppSpent>0?fmt(oppSpent):'...'}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }else{activeEl.style.display='none';}
+
+  if(pending.length){
+    pendingEl.style.display='block';
+    pendingEl.innerHTML=pending.map(ch=>`
+      <div style="background:var(--bg2);border-radius:var(--rs);padding:12px;margin-bottom:8px;border:.5px solid rgba(251,191,36,.2)">
+        <div style="font-size:13px;color:var(--muted)">${L==='en'?'Waiting for opponent…':'In attesa dell\'avversario…'}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:600;color:var(--yellow);letter-spacing:.1em">${ch.invite_code}</div>
+          <button onclick="show1v1Invite('${ch.invite_code}',${Math.ceil((new Date(ch.end_date)-new Date(ch.start_date))/(1000*60*60*24))})" style="padding:6px 12px;border-radius:99px;border:none;background:var(--yellow);color:#0f0f0f;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer">📤 ${L==='en'?'Share':'Condividi'}</button>
+        </div>
+      </div>`).join('');
+  }else{pendingEl.style.display='none';}
+
+  document.getElementById('v1-create').style.display='block';
+}
 // ══════════════════════════════════════════
 function checkAutoBackup(){
   if(!txs.length)return;
