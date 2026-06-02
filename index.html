@@ -780,6 +780,24 @@ body.light .share-box{background:#fff}
   </div>
 
   <div class="profile-section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="profile-section-title" id="personality-title">🧠 Personalità finanziaria</div>
+      <button id="personality-btn" onclick="generatePersonality()" style="padding:6px 12px;border-radius:99px;border:none;background:var(--purple);color:#fff;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer">Analizza →</button>
+    </div>
+    <div id="personality-empty" style="font-size:13px;color:var(--muted)">Premi "Analizza" per scoprire la tua personalità finanziaria basata sulle tue spese reali.</div>
+    <div id="personality-result" style="display:none">
+      <div style="display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(167,139,250,.04));border:.5px solid rgba(167,139,250,.2);border-radius:var(--rs);padding:14px">
+        <div style="font-size:42px" id="personality-ico">🧘</div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:600;margin-bottom:4px" id="personality-name">—</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5" id="personality-desc">—</div>
+        </div>
+      </div>
+      <div id="personality-traits" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="profile-section">
     <div class="profile-section-title" id="accent-section-title">🎨 Accent color</div>
     <div class="accent-picker" id="accent-picker"></div>
   </div>
@@ -4359,6 +4377,7 @@ function renderProfile(){
   document.getElementById('prof-name-input').value=userProfile.name||'';
   renderAccentPicker();
   initHourlyRate();
+  initPersonality();
 
   // Rank
   const pts=Math.min(txs.length,200);
@@ -5144,7 +5163,106 @@ function showDashTooltip(e,text){
 function hideDashTooltip(){document.getElementById('dash-tooltip').style.display='none'}
 
 // ══════════════════════════════════════════
-// ⚔️ SFIDA 1v1
+// 🧠 PERSONALITÀ FINANZIARIA
+// ══════════════════════════════════════════
+const PERSONALITIES={
+  it:[
+    {ico:'🎢',name:'Il Viveur',desc:'Vivi nel momento, spendi senza rimpianti. La vita è troppo corta per risparmiare tutto.',traits:['Impulsivo','Goditore','Spontaneo'],check:(c,savePct)=>savePct<0},
+    {ico:'🛍️',name:'Lo Shopper Seriale',desc:'Amazon è il tuo migliore amico. Ogni problema ha una soluzione acquistabile.',traits:['Amante dello shopping','Impulsivo','Brand-oriented'],check:(c)=>c['Shopping']>0&&c['Shopping']===Math.max(...Object.values(c))},
+    {ico:'🍕',name:'Il Foodie',desc:'Il cibo è la tua religione. Ristoranti, delivery, bar — la vita è troppo breve per mangiare male.',traits:['Gourmet','Social','Generoso'],check:(c)=>c['Cibo & Ristoranti']>0&&c['Cibo & Ristoranti']===Math.max(...Object.values(c))},
+    {ico:'✈️',name:'Il Viaggiatore',desc:'Il mondo è il tuo ufficio. Ogni risparmio è un biglietto aereo.',traits:['Avventuroso','Curioso','Libero'],check:(c)=>c['Viaggi']>0&&c['Viaggi']===Math.max(...Object.values(c))},
+    {ico:'🧘',name:'Il Guru del Risparmio',desc:'Ogni euro conta. Sei il re/la regina dell\'ottimizzazione finanziaria.',traits:['Metodico','Paziente','Disciplinato'],check:(c,savePct)=>savePct>=30},
+    {ico:'⚖️',name:'L\'Equilibrista',desc:'Sai bilanciare piaceri e risparmi. Non troppo, non poco — la via di mezzo è la tua.',traits:['Bilanciato','Razionale','Strategico'],check:(c,savePct)=>savePct>=10&&savePct<30},
+    {ico:'📱',name:'Il Dipendente Digitale',desc:'Abbonamenti a tutto, sempre connesso. Netflix, Spotify, Amazon — il tuo ecosistema digitale è completo.',traits:['Tech-savvy','Comodità','Sempre online'],check:(c)=>c['Abbonamenti']>0&&c['Abbonamenti']===Math.max(...Object.values(c))},
+    {ico:'🚗',name:'Il Pendolare',desc:'Gran parte del tuo reddito va in movimento. Benzina, mezzi, taxi — sei sempre in viaggio.',traits:['Dinamico','Indipendente','In movimento'],check:(c)=>c['Trasporti']>0&&c['Trasporti']===Math.max(...Object.values(c))},
+  ],
+  en:[
+    {ico:'🎢',name:'The Thrill Spender',desc:'You live in the moment and spend without regrets. Life is too short to save everything.',traits:['Impulsive','Enjoyer','Spontaneous'],check:(c,savePct)=>savePct<0},
+    {ico:'🛍️',name:'The Serial Shopper',desc:'Amazon is your best friend. Every problem has a purchasable solution.',traits:['Shopping lover','Impulsive','Brand-oriented'],check:(c)=>c['Shopping']>0&&c['Shopping']===Math.max(...Object.values(c))},
+    {ico:'🍕',name:'The Foodie',desc:'Food is your religion. Restaurants, delivery, cafés — life is too short to eat badly.',traits:['Gourmet','Social','Generous'],check:(c)=>c['Cibo & Ristoranti']>0&&c['Cibo & Ristoranti']===Math.max(...Object.values(c))},
+    {ico:'✈️',name:'The Traveler',desc:'The world is your office. Every saving is a plane ticket.',traits:['Adventurous','Curious','Free'],check:(c)=>c['Viaggi']>0&&c['Viaggi']===Math.max(...Object.values(c))},
+    {ico:'🧘',name:'The Savings Guru',desc:'Every euro counts. You are the king/queen of financial optimization.',traits:['Methodical','Patient','Disciplined'],check:(c,savePct)=>savePct>=30},
+    {ico:'⚖️',name:'The Balancer',desc:'You balance pleasures and savings perfectly. Not too much, not too little.',traits:['Balanced','Rational','Strategic'],check:(c,savePct)=>savePct>=10&&savePct<30},
+    {ico:'📱',name:'The Digital Addict',desc:'Subscriptions for everything, always connected. Netflix, Spotify, Amazon — your digital ecosystem is complete.',traits:['Tech-savvy','Comfort-lover','Always online'],check:(c)=>c['Abbonamenti']>0&&c['Abbonamenti']===Math.max(...Object.values(c))},
+    {ico:'🚗',name:'The Commuter',desc:'Much of your income goes to movement. Fuel, transport, taxis — you\'re always on the go.',traits:['Dynamic','Independent','On the move'],check:(c)=>c['Trasporti']>0&&c['Trasporti']===Math.max(...Object.values(c))},
+  ]
+};
+
+async function generatePersonality(){
+  const btn=document.getElementById('personality-btn');
+  const L=currentLang;
+  btn.textContent='⏳...';btn.disabled=true;
+
+  // Calcola dati spesa
+  const cats={};txs.filter(t=>t.tipo==='uscita').forEach(t=>{cats[t.categoria]=(cats[t.categoria]||0)+t.importo});
+  const totE=txs.filter(t=>t.tipo==='entrata').reduce((s,t)=>s+t.importo,0);
+  const totU=txs.filter(t=>t.tipo==='uscita').reduce((s,t)=>s+t.importo,0);
+  const savePct=totE>0?Math.round((totE-totU)/totE*100):0;
+
+  if(!Object.keys(cats).length){
+    btn.textContent=L==='en'?'Analyze →':'Analizza →';btn.disabled=false;
+    showAlert(L==='en'?'⚠️ Add some transactions first':'⚠️ Aggiungi prima alcune transazioni');
+    return;
+  }
+
+  // Prova AI prima
+  let personality=null;
+  try{
+    const topCats=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const prompt=L==='en'
+      ?`Based on spending: ${topCats.map(([c,v])=>`${c}:€${v.toFixed(0)}`).join(',')} savings:${savePct}%. Give ONE financial personality in JSON: {ico,name,desc,traits:[3 words]}. Be creative and funny. Only JSON.`
+      :`Basandoti sulle spese: ${topCats.map(([c,v])=>`${c}:€${v.toFixed(0)}`).join(',')} risparmio:${savePct}%. Dai UNA personalità finanziaria creativa in JSON: {ico,name,desc,traits:[3 parole]}. Sii creativo e divertente. Solo JSON.`;
+    const resp=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:prompt,history:[],context:''})});
+    if(resp.ok){
+      const data=await resp.json();
+      const text=data.response||data.content||'';
+      try{personality=JSON.parse(text.replace(/```json|```/g,'').trim())}catch(e){personality=null}
+    }
+  }catch(e){personality=null}
+
+  // Fallback locale
+  if(!personality){
+    const list=PERSONALITIES[L]||PERSONALITIES['it'];
+    personality=list.find(p=>p.check(cats,savePct))||list[5]; // default equilibrista
+  }
+
+  // Salva in localStorage
+  localStorage.setItem('personality',JSON.stringify(personality));
+
+  // Mostra risultato
+  document.getElementById('personality-empty').style.display='none';
+  document.getElementById('personality-result').style.display='block';
+  document.getElementById('personality-ico').textContent=personality.ico||'🧘';
+  document.getElementById('personality-name').textContent=personality.name||'';
+  document.getElementById('personality-desc').textContent=personality.desc||'';
+  document.getElementById('personality-traits').innerHTML=(personality.traits||[]).map(t=>`<span style="padding:4px 10px;border-radius:99px;background:rgba(167,139,250,.1);border:.5px solid rgba(167,139,250,.2);font-size:11px;color:var(--purple)">${t}</span>`).join('');
+
+  btn.textContent=L==='en'?'Re-analyze →':'Rianalizza →';btn.disabled=false;
+  haptic('medium');playSound('success');
+}
+
+function initPersonality(){
+  const saved=localStorage.getItem('personality');
+  const L=currentLang;
+  const btn=document.getElementById('personality-btn');
+  const title=document.getElementById('personality-title');
+  if(title)title.textContent='🧠 '+(L==='en'?'Financial personality':'Personalità finanziaria');
+  const empty=document.getElementById('personality-empty');
+  if(empty)empty.textContent=L==='en'?'Press "Analyze" to discover your financial personality.':'Premi "Analizza" per scoprire la tua personalità finanziaria.';
+  if(btn)btn.textContent=L==='en'?'Analyze →':'Analizza →';
+  if(saved){
+    try{
+      const p=JSON.parse(saved);
+      document.getElementById('personality-empty').style.display='none';
+      document.getElementById('personality-result').style.display='block';
+      document.getElementById('personality-ico').textContent=p.ico||'🧘';
+      document.getElementById('personality-name').textContent=p.name||'';
+      document.getElementById('personality-desc').textContent=p.desc||'';
+      document.getElementById('personality-traits').innerHTML=(p.traits||[]).map(t=>`<span style="padding:4px 10px;border-radius:99px;background:rgba(167,139,250,.1);border:.5px solid rgba(167,139,250,.2);font-size:11px;color:var(--purple)">${t}</span>`).join('');
+      if(btn)btn.textContent=L==='en'?'Re-analyze →':'Rianalizza →';
+    }catch(e){}
+  }
+}
 // ══════════════════════════════════════════
 function gen1v1Code(){
   return Math.random().toString(36).substring(2,8).toUpperCase();
